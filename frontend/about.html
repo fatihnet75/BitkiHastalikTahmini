@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkında - Dr.PlantAI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Dr.PlantAI</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="index.html"><i class="fas fa-home"></i> Anasayfa</a>
+                    </li>
+                    <li>
+                        <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                    </li>
+                    <li class="active">
+                        <a href="about.html"><i class="fas fa-info-circle"></i> Hakkında</a>
+                    </li>
+                    <li>
+                        <a href="admin.html"><i class="fas fa-lock"></i> Admin Girişi</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="sidebar-toggle" class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Hakkında</h1>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="content">
+                <div class="about-container">
+                    <section class="about-section">
+                        <h2>Dr.PlantAI Nedir?</h2>
+                        <p>Dr.PlantAI, yapay zeka teknolojisini kullanarak bitki hastalıklarını tespit eden ve toprak analizleri yapan yenilikçi bir platformdur. Amacımız, çiftçilere ve bitki yetiştiricilerine hızlı, doğru ve ekonomik çözümler sunmaktır.</p>
+                    </section>
+
+                    <section class="about-section">
+                        <h2>Özelliklerimiz</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <i class="fas fa-camera"></i>
+                                <h3>Görüntü Analizi</h3>
+                                <p>Yapay zeka destekli görüntü analizi ile bitki hastalıklarını hızlı ve doğru şekilde tespit ediyoruz.</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-flask"></i>
+                                <h3>Toprak Analizi</h3>
+                                <p>Toprak değerlerini analiz ederek en uygun gübre ve bakım önerilerini sunuyoruz.</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-clock"></i>
+                                <h3>Hızlı Sonuç</h3>
+                                <p>Saniyeler içinde analiz sonuçlarını alın ve çözüm önerilerimizden faydalanın.</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-users"></i>
+                                <h3>Uzman Desteği</h3>
+                                <p>Tarım uzmanlarımız tarafından hazırlanan öneriler ve çözümler.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="about-section">
+                        <h2>Nasıl Çalışır?</h2>
+                        <div class="how-it-works">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <h3>Fotoğraf Yükleyin veya Değerleri Girin</h3>
+                                <p>Bitkinizin fotoğrafını yükleyin veya toprak değerlerini girin.</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <h3>Analiz</h3>
+                                <p>Yapay zeka sistemimiz verileri analiz eder.</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <h3>Sonuç ve Öneriler</h3>
+                                <p>Detaylı analiz sonuçlarını ve çözüm önerilerini alın.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="about-section">
+                        <h2>İletişim</h2>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <p>info@drplantai.com</p>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <p>+90 (555) 123 4567</p>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>Teknoloji Vadisi, İstanbul</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <p>Bitkilerinizin sağlığı bizim önceliğimizdir.</p>
+                    <p class="copyright">© <span id="currentYear"></span> Dr.PlantAI</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitki Hastalık Tespit</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Giriş Yap</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>E-posta:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre:</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="login-submit">Giriş Yap</button>
+                </div>
+                <p class="register-link">Hesabınız yok mu? <a href="#" onclick="toggleRegisterModal()">Kayıt Ol</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Kayıt Ol</h2>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Ad Soyad:</label>
+                    <input type="text" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label>E-posta:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre:</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre Tekrar:</label>
+                    <input type="password" name="passwordConfirm" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="login-submit">Kayıt Ol</button>
+                </div>
+                <p class="register-link">Zaten hesabınız var mı? <a href="#" onclick="toggleLoginModal()">Giriş Yap</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Dr.PlantAI</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="index.html"><i class="fas fa-home"></i> Anasayfa</a>
+                    </li>
+                    <li>
+                        <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                    </li>
+                    <li>
+                        <a href="about.html"><i class="fas fa-info-circle"></i> Hakkında</a>
+                    </li>
+                    <li>
+                        <a href="admin-login.html"><i class="fas fa-lock"></i> Admin Girişi</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="sidebar-toggle" class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Bitki Hastalık Tespit Sistemi</h1>
+                </div>
+                <div class="header-right">
+                    <button class="login-button">
+                        <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="content">
+                <div id="trialError" class="trial-error" style="display: none;"></div>
+
+                <div class="analysis-buttons">
+                    <button class="analysis-choice-button" onclick="toggleSection('soil')">
+                        <h3>Toprak Hastalık Analizi</h3>
+                        <p>pH, nem ve gübre değerlerini girerek analiz yapın</p>
+                        <small class="trials-left" id="soilTrials">Kalan deneme: 2</small>
+                    </button>
+                    <button class="analysis-choice-button" onclick="toggleSection('image')">
+                        <h3>Görüntü ile Hastalık Tespiti</h3>
+                        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın</p>
+                        <small class="trials-left" id="imageTrials">Kalan deneme: 2</small>
+                    </button>
+                </div>
+
+                <div id="soilPanel" class="analysis-panel soil-panel" style="display: none;">
+                    <div class="analysis-content">
+                        <button class="close-button" onclick="toggleSection('soil')">×</button>
+                        <div class="analysis-form">
+                            <h2>Toprak Hastalık Analizi</h2>
+                            <form id="soilForm" onsubmit="handleSoilAnalysis(event)">
+                                <div class="form-group">
+                                    <label>pH Değeri:</label>
+                                    <input type="number" step="0.1" name="ph" placeholder="6.0-8.0 arası bir değer girin" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nem Oranı (%):</label>
+                                    <input type="number" name="moisture" placeholder="0-100 arası bir değer girin" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gübre Miktarı (kg/m²):</label>
+                                    <input type="number" step="0.1" name="fertilizer" placeholder="Gübre miktarını girin" required>
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="submit" class="analyze-button">Analiz Et</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="soilResult" class="result-container" style="display: none;">
+                            <h3>Analiz Sonucu</h3>
+                            <p id="soilResultText"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="imagePanel" class="analysis-panel image-panel" style="display: none;">
+                    <div class="analysis-content">
+                        <button class="close-button" onclick="toggleSection('image')">×</button>
+                        <div class="analysis-form">
+                            <h2>Görüntü ile Hastalık Tespiti</h2>
+                            <form id="imageForm" onsubmit="handleImageAnalysis(event)">
+                                <div class="form-group">
+                                    <label>Bitki Fotoğrafı:</label>
+                                    <div class="image-upload-container">
+                                        <input type="file" accept="image/*" onchange="handleImageChange(event)" required>
+                                        <div id="imagePreview" class="image-preview"></div>
+                                    </div>
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="submit" class="analyze-button">Analiz Et</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="imageResult" class="result-container" style="display: none;">
+                            <h3>Analiz Sonucu</h3>
+                            <p id="imageResultText"></p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <p id="footerText">Bitkilerinizin sağlığı bizim önceliğimizdir.</p>
+                    <p class="copyright">© <span id="currentYear"></span> Dr.PlantAI</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
