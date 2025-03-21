@@ -1,0 +1,245 @@
+﻿/* Genel Stil */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+/* Sidebar Stil */
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    background-color: #444;
+    text-align: center;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .sidebar-nav ul li {
+        padding: 15px 20px;
+    }
+
+        .sidebar-nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+            .sidebar-nav ul li a i {
+                margin-right: 10px;
+            }
+
+        .sidebar-nav ul li.active {
+            background-color: #555;
+        }
+
+/* Main Content Stil */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-left h1 {
+    margin: 0;
+}
+
+.header-right .login-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+    .header-right .login-button i {
+        margin-right: 5px;
+    }
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.analysis-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.analysis-choice-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 20px;
+    cursor: pointer;
+    text-align: center;
+    width: 45%;
+}
+
+    .analysis-choice-button h3 {
+        margin: 0;
+    }
+
+    .analysis-choice-button p {
+        margin: 10px 0;
+    }
+
+.trials-left {
+    font-size: 0.9em;
+    color: #ddd;
+}
+
+.analysis-panel {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+    .analysis-panel .close-button {
+        background-color: #ff0000;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        float: right;
+    }
+
+.analysis-form .form-group {
+    margin-bottom: 15px;
+}
+
+    .analysis-form .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .analysis-form .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+.analysis-form .button-group {
+    text-align: right;
+}
+
+.analysis-form .analyze-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.result-container {
+    margin-top: 20px;
+}
+
+    .result-container h3 {
+        margin-top: 0;
+    }
+
+/* Footer Stil */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+/* Modal Stil */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+.button-group {
+    text-align: right;
+}
+
+.login-submit {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 10px;
+}
