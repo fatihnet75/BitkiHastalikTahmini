@@ -1,6 +1,5 @@
 using BitkiHastalikTahmini;
 using BitkiHastalikTahmini.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
@@ -19,31 +18,46 @@ using (var scope = app.Services.CreateScope())
 {
     try
     {
-        // MongoDbContext servisini al
         var mongoContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+        var collection = mongoContext.Users;
 
-        // Baðlantý kontrolü yapmak için bir koleksiyon çaðýrýyoruz
-        var collection = mongoContext.GetCollection<User>("Users");
+        // Eðer hiç kullanýcý yoksa, bir kullanýcý ekle
+        var userCount = collection.CountDocuments(FilterDefinition<User>.Empty);
+
+        if (userCount == 0)
+        {
+            var defaultUser = new User
+            {
+                FirstName = "Örnek",
+                LastName = "Kullanýcý",
+                Email = "ornek@mail.com",
+                Password = "12345"
+            };
+
+            collection.InsertOne(defaultUser);
+            Console.WriteLine("Varsayýlan kullanýcý eklendi!");
+        }
+
+        Console.WriteLine($"Toplam {userCount} kullanýcý bulundu.");
         Console.WriteLine("MongoDB baðlantýsý baþarýlý!");
     }
     catch (Exception ex)
     {
         Console.WriteLine($"MongoDB baðlantý hatasý: {ex.Message}");
-        // Hata ayýklamak için detaylý stack trace yazdýr
         Console.WriteLine(ex.StackTrace);
     }
 }
 
 if (!app.Environment.IsDevelopment())
-{   
+{
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();  // Bu satýrda gereksiz bir `IApplicationBuilder` tanýmlamasý vardý, kaldýrdým
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();  // Authorization iþlevini ekledim ancak burada doðru kullanýmý saðladým.
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
