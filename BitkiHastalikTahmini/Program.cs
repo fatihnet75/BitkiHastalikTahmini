@@ -1,11 +1,20 @@
+using BitkiHastalikTahmini;
+using BitkiHastalikTahmini.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MongoDB yapılandırmasını servislere ekle
+builder.Services.AddSingleton<MongoDbContext>();
+
+// MVC servisini ekle
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// MongoDB baÄŸlantÄ±sÄ±nÄ± test etme
+// MongoDB bağlantısını test etme
 using (var scope = app.Services.CreateScope())
 {
     try
@@ -13,29 +22,28 @@ using (var scope = app.Services.CreateScope())
         // MongoDbContext servisini al
         var mongoContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
 
-        // BaÄŸlantÄ± kontrolÃ¼ yapmak iÃ§in bir koleksiyon Ã§aÄŸÄ±rÄ±yoruz
+        // Bağlantı kontrolü yapmak için bir koleksiyon çağırıyoruz
         var collection = mongoContext.GetCollection<User>("Users");
-        Console.WriteLine("MongoDB baÄŸlantÄ±sÄ± baÅŸarÄ±lÄ±!");
+        Console.WriteLine("MongoDB bağlantısı başarılı!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"MongoDB baÄŸlantÄ± hatasÄ±: {ex.Message}");
-        // Hata ayÄ±klamak iÃ§in detaylÄ± stack trace yazdÄ±r
+        Console.WriteLine($"MongoDB bağlantı hatası: {ex.Message}");
+        // Hata ayıklamak için detaylı stack trace yazdır
         Console.WriteLine(ex.StackTrace);
     }
 }
 
 if (!app.Environment.IsDevelopment())
-{
+{   
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();  // Bu satÄ±rda gereksiz bir tanÄ±mlama vardÄ±, kaldÄ±rdÄ±m
+    app.UseHsts();  // Bu satırda gereksiz bir `IApplicationBuilder` tanımlaması vardı, kaldırdım
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-app.UseAuthorization();  // Bu satÄ±rda gereksiz bir `IApplicationBuilder` kullanÄ±mÄ± vardÄ±, onu kaldÄ±rdÄ±m
+app.UseAuthorization();  // Authorization işlevini ekledim ancak burada doğru kullanımı sağladım.
 
 app.MapControllerRoute(
     name: "default",
