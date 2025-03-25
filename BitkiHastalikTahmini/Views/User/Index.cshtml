@@ -1,0 +1,25 @@
+﻿@model List<BitkiHastalikTahmini.Models.User>
+
+<h2>Kullanıcı Listesi</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create">Yeni Kullanıcı Ekle</a>

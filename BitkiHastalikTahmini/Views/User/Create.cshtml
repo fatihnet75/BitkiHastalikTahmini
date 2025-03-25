@@ -1,0 +1,34 @@
+﻿
+@model BitkiHastalikTahmini.Models.User
+
+<h2>Yeni Kullanıcı Ekle</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color: red;">
+        @ViewBag.ErrorMessage
+    </div>
+}
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="FirstName">Ad:</label>
+        <input asp-for="FirstName" required />
+    </div>
+    <div>
+        <label asp-for="LastName">Soyad:</label>
+        <input asp-for="LastName" required />
+    </div>
+    <div>
+        <label asp-for="Email">E-posta:</label>
+        <input asp-for="Email" type="email" required />
+    </div>
+    <div>
+        <label asp-for="Password">Şifre:</label>
+        <input asp-for="Password" type="password" required />
+    </div>
+    <div>
+        <button type="submit">Kaydet</button>
+    </div>
+</form>
+<div>
+    <a asp-action="Index">Kullanıcı Listesine Dön</a>
+</div>
