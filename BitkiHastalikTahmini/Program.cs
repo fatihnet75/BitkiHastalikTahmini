@@ -1,11 +1,11 @@
-using BitkiHastalikTahmini;
+ï»¿using BitkiHastalikTahmini;
 using BitkiHastalikTahmini.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MongoDB yapılandırmasını servislere ekle
+// MongoDB yapÄ±landÄ±rmasÄ±nÄ± servislere ekle
 builder.Services.AddSingleton<MongoDbContext>();
 
 // MVC servisini ekle
@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// MongoDB bağlantısını test etme
+// MongoDB baÄŸlantÄ±sÄ±nÄ± test etme
 using (var scope = app.Services.CreateScope())
 {
     try
@@ -21,29 +21,29 @@ using (var scope = app.Services.CreateScope())
         var mongoContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
         var collection = mongoContext.Users;
 
-        // Eğer hiç kullanıcı yoksa, bir kullanıcı ekle
+        // EÄŸer hiÃ§ kullanÄ±cÄ± yoksa, bir kullanÄ±cÄ± ekle
         var userCount = collection.CountDocuments(FilterDefinition<User>.Empty);
 
         if (userCount == 0)
         {
             var defaultUser = new User
             {
-                FirstName = "Örnek",
-                LastName = "Kullanıcı",
+                FirstName = "Ã–rnek",
+                LastName = "KullanÄ±cÄ±",
                 Email = "ornek@mail.com",
                 Password = "12345"
             };
 
             collection.InsertOne(defaultUser);
-            Console.WriteLine("Varsayılan kullanıcı eklendi!");
+            Console.WriteLine("VarsayÄ±lan kullanÄ±cÄ± eklendi!");
         }
 
-        Console.WriteLine($"Toplam {userCount} kullanıcı bulundu.");
-        Console.WriteLine("MongoDB bağlantısı başarılı!");
+        Console.WriteLine($"Toplam {userCount} kullanÄ±cÄ± bulundu.");
+        Console.WriteLine("MongoDB baÄŸlantÄ±sÄ± baÅŸarÄ±lÄ±!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"MongoDB bağlantı hatası: {ex.Message}");
+        Console.WriteLine($"MongoDB baÄŸlantÄ± hatasÄ±: {ex.Message}");
         Console.WriteLine(ex.StackTrace);
     }
 }
@@ -62,5 +62,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=User}/{action=Index}/{id?}");
+
+
 
 app.Run();

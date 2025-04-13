@@ -1,0 +1,156 @@
+﻿@{
+    ViewData["Title"] = "Kullanıcı Girişi - Dr.PlantAI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Kullanıcı Giriş Sayfası Özel Stilleri */
+    .user-page-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 180px); /* Header ve footer yüksekliğini hesaba kat */
+        padding: 20px 0;
+    }
+
+    .user-login-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .user-login-box {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .user-login-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+        .user-login-header i {
+            font-size: 36px;
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        .user-login-header h2 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+        .form-group label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+            .form-group input:focus {
+                border-color: #4CAF50;
+                outline: none;
+            }
+
+    .error-message {
+        color: #f44336;
+        font-size: 14px;
+        margin-bottom: 20px;
+        visibility: hidden;
+    }
+
+    .button-group {
+        margin-top: 20px;
+    }
+
+    .login-submit {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .login-submit:hover {
+            background-color: #45a049;
+        }
+
+    .register-link {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+        .register-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .register-link a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="user-page-container">
+    <div class="user-login-container">
+        <div class="user-login-box">
+            <div class="user-login-header">
+                <i class="fas fa-user"></i>
+                <h2>Kullanıcı Girişi</h2>
+            </div>
+
+            <form method="post" action="/Abone">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> E-posta:</label>
+                    <input type="email" name="email" class="form-control" id="email" required />
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> Şifre:</label>
+                    <input type="password" name="password" class="form-control" id="password" required />
+                </div>
+
+                <div id="userLoginError" class="error-message">
+                    <!-- Hata mesajı burada gösterilecek -->
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="login-submit">Giriş Yap</button>
+                </div>
+
+                <div class="register-link">
+                    <p>Hesabınız yok mu? <a href="/Register">Hemen Kaydolun</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

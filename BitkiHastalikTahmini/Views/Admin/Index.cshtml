@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Admin Paneli - Dr.PlantAI";
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout sayfasını belirt
+}
+
+<div class="container">
+   
+        
+   
+
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Admin Paneli</h1>
+            </div>
+            <div class="header-right">
+                
+                    <button type="submit" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                    </button>
+             
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="admin-container">
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Toplam Kullanıcı</h3>
+                       
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Toplam Analiz</h3>
+                       
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Bugünkü Analiz</h3>
+                       
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-check"></i>
+                        <h3>Aktif Kullanıcı</h3>
+                       
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>İçerik Yönetimi</h2>
+                  
+                        <h3>Footer Metni</h3>
+                        <div class="form-group">
+                            <label>Footer Ana Metin:</label>
+                            <input type="text" name="footerText" id="footerText" value="">
+                        </div>
+
+                        <h3>Hakkında Sayfası İçeriği</h3>
+                        <div class="form-group">
+                            <label>Dr.PlantAI Nedir? Başlığı:</label>
+                            <input type="text" name="aboutTitle" id="aboutTitle" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Dr.PlantAI Nedir? İçeriği:</label>
+                            <textarea name="aboutContent" id="aboutContent" rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Özellik 1 - Başlık:</label>
+                            <input type="text" name="feature1Title" id="feature1Title" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Özellik 1 - İçerik:</label>
+                            <textarea name="feature1Content" id="feature1Content" rows="2"></textarea>
+                        </div>
+
+                        <!-- Özellik 2-4 için benzer input ve textarea alanları... -->
+
+                        <div class="button-group">
+                            <button type="submit" class="save-button">İçerikleri Kaydet</button>
+                        </div>
+                   
+                </div>
+
+                <div class="admin-section">
+                    <h2>Kullanıcı Yönetimi</h2>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ad Soyad</th>
+                                    <th>E-posta</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>Sistem Ayarları</h2>
+                   
+                        <div class="form-group">
+                            <label>Maksimum Deneme Hakkı:</label>
+                            <input type="number" name="maxTrials" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Bakım Modu:</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="maintenanceMode"  "checked" : "")>
+                                <label for="maintenanceMode"></label>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" class="save-button">Ayarları Kaydet</button>
+                        </div>
+                 
+                </div>
+
+                <div class="admin-section">
+                    <h2>Analiz Geçmişi</h2>
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Analiz Tipi</th>
+                                    <th>Tarih</th>
+                                    <th>Sonuç</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+      

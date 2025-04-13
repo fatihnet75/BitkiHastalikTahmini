@@ -1,0 +1,137 @@
+﻿@{
+    ViewData["Title"] = "Admin Girişi - Dr.PlantAI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Admin Giriş Sayfası Özel Stilleri */
+    .admin-page-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 180px); /* Header ve footer yüksekliğini hesaba kat */
+        padding: 20px 0;
+    }
+
+    .admin-login-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .admin-login-box {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .admin-login-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+        .admin-login-header i {
+            font-size: 36px;
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        .admin-login-header h2 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+        .form-group label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+            .form-group input:focus {
+                border-color: #4CAF50;
+                outline: none;
+            }
+
+    .error-message {
+        color: #f44336;
+        font-size: 14px;
+        margin-bottom: 20px;
+        visibility: hidden;
+    }
+
+    .button-group {
+        margin-top: 20px;
+    }
+
+    .login-submit {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .login-submit:hover {
+            background-color: #45a049;
+        }
+</style>
+
+<div class="admin-page-container">
+    <div class="admin-login-container">
+        <div class="admin-login-box">
+            <div class="admin-login-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Admin Girişi</h2>
+            </div>
+
+            <form method="post" action="/Admin">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Kullanıcı Adı:</label>
+                    <input type="text" name="username" class="form-control" id="username" required />
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> Şifre:</label>
+                    <input type="password" name="password" class="form-control" id="password" required />
+                </div>
+
+                <div id="adminLoginError" class="error-message">
+                    <!-- Hata mesajı burada gösterilecek -->
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="login-submit">Giriş Yap</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

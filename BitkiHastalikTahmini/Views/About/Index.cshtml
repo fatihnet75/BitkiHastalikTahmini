@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Hakkında";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="about-container">
+    <section class="about-section">
+        <h2 class="section-title">Dr.PlantAI Nedir?</h2>
+        <p>Dr.PlantAI, yapay zeka teknolojisini kullanarak bitki hastalıklarını tespit eden ve toprak analizleri yapan yenilikçi bir platformdur. Amacımız, çiftçilere ve bitki yetiştiricilerine hızlı, doğru ve ekonomik çözümler sunmaktır.</p>
+    </section>
+
+    <section class="about-section">
+        <h2 class="section-title">Özelliklerimiz</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-camera"></i>
+                <h3>Görüntü Analizi</h3>
+                <p>Yapay zeka destekli görüntü analizi ile bitki hastalıklarını hızlı ve doğru şekilde tespit ediyoruz.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-flask"></i>
+                <h3>Toprak Analizi</h3>
+                <p>Toprak değerlerini analiz ederek en uygun gübre ve bakım önerilerini sunuyoruz.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-clock"></i>
+                <h3>Hızlı Sonuç</h3>
+                <p>Saniyeler içinde analiz sonuçlarını alın ve çözüm önerilerimizden faydalanın.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Uzman Desteği</h3>
+                <p>Tarım uzmanlarımız tarafından hazırlanan öneriler ve çözümler.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2 class="section-title">Nasıl Çalışır?</h2>
+        <div class="how-it-works">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Fotoğraf Yükleyin veya Değerleri Girin</h3>
+                <p>Bitkinizin fotoğrafını yükleyin veya toprak değerlerini girin.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Analiz</h3>
+                <p>Yapay zeka sistemimiz verileri analiz eder.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Sonuç ve Öneriler</h3>
+                <p>Detaylı analiz sonuçlarını ve çözüm önerilerini alın.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2 class="section-title">İletişim</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <p>info@drplantai.com</p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <p>+90 (555) 555 5555</p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <p>Teknoloji Vadisi, İstanbul</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- STYLES -->
+<style>
+    .about-container {
+        padding: 2rem;
+        background-color: #f4f6f8;
+        border-radius: 8px;
+    }
+
+    .about-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #4CAF50;
+        margin-bottom: 1rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+    .how-it-works {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .step {
+        flex: 1;
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .step-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4CAF50;
+        margin-bottom: 1rem;
+    }
+
+    .contact-info {
+        display: flex;
+        gap: 2rem;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+        .contact-item i {
+            color: #4CAF50;
+            font-size: 1.5rem;
+        }
+</style>
