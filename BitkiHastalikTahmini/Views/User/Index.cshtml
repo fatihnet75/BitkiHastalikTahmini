@@ -293,272 +293,152 @@
         </div>
     </div>
 </div>
-@{
-    ViewData["Title"] = "Analiz Sayfası - Premium";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+
 
 <style>
     /* Genel Stil */
     body {
         font-family: 'Roboto', sans-serif;
-        background-color: #f3f4f8;
+        background-color: #f4f7fc;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    .premium-page-container {
-        padding: 20px;
+    .subscription-container {
         max-width: 1200px;
         margin: 0 auto;
+        padding: 30px 20px;
     }
 
-    .premium-header {
+    .subscription-header {
         text-align: center;
-        margin-bottom: 40px;
-        position: relative;
+        margin-bottom: 50px;
     }
 
-        .premium-header h1 {
-            font-size: 32px;
-            color: #333;
+        .subscription-header h1 {
+            font-size: 36px;
+            color: #2c3e50;
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
         }
 
-            .premium-header h1:after {
+            .subscription-header h1:after {
                 content: '';
                 position: absolute;
-                bottom: -10px;
+                bottom: -12px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 80px;
+                width: 100px;
                 height: 4px;
-                background-color: #4CAF50;
+                background: linear-gradient(90deg, #4CAF50, #2E7D32);
                 border-radius: 2px;
             }
 
-        .premium-header p {
+        .subscription-header p {
             font-size: 18px;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-    /* Analiz Kartları */
-    .analysis-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-top: 50px;
-    }
-
-    .analysis-card {
-        background: #fff;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s ease;
-        position: relative;
-    }
-
-        .analysis-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-    .card-header {
-        padding: 25px;
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);
-        color: white;
-        text-align: center;
-    }
-
-        .card-header h3 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-    .card-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-    }
-
-    .card-body {
-        padding: 25px;
-        text-align: center;
-    }
-
-        .card-body p {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-    .feature-list {
-        text-align: left;
-        padding-left: 20px;
-        margin-bottom: 30px;
-    }
-
-        .feature-list li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-left: 25px;
             color: #555;
-        }
-
-            .feature-list li:before {
-                content: '\f00c';
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                position: absolute;
-                left: 0;
-                color: #4CAF50;
-            }
-
-    .premium-tag {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: #FFD700;
-        color: #333;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .lock-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        color: white;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .analysis-card:hover .lock-overlay {
-        opacity: 1;
-    }
-
-    .lock-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-    }
-
-    .subscribe-button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 50px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 20px;
-    }
-
-        .subscribe-button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-    /* Abonelik Bilgisi */
-    .subscription-info {
-        background: linear-gradient(135deg, #333, #222);
-        color: white;
-        border-radius: 20px;
-        padding: 30px;
-        margin-top: 60px;
-        text-align: center;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-
-        .subscription-info h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #4CAF50;
-        }
-
-        .subscription-info p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 30px;
             max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 20px auto 0;
+            line-height: 1.6;
         }
 
-    .subscription-plans {
+    /* Plan Kartları */
+    .plans-container {
         display: flex;
         justify-content: center;
         gap: 30px;
         flex-wrap: wrap;
-        margin-top: 30px;
     }
 
     .plan-card {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 25px;
-        width: 250px;
-        transition: all 0.3s ease;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 350px;
+        transition: all 0.4s ease;
+        position: relative;
     }
 
         .plan-card:hover {
-            transform: scale(1.05);
-            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-    .plan-title {
-        font-size: 22px;
+    .popular-tag {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #FFD700;
+        color: #333;
+        padding: 5px 15px;
+        border-radius: 30px;
         font-weight: 700;
-        margin-bottom: 15px;
-        color: #fff;
+        font-size: 14px;
+        text-transform: uppercase;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+
+    .plan-header {
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        padding: 30px 20px;
+        color: white;
+        text-align: center;
+    }
+
+    .basic-plan .plan-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .premium-plan .plan-header {
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    }
+
+    .pro-plan .plan-header {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    }
+
+    .plan-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
     }
 
     .plan-price {
-        font-size: 36px;
+        font-size: 48px;
         font-weight: 700;
-        margin-bottom: 20px;
-        color: #4CAF50;
+        margin: 20px 0 10px;
     }
 
         .plan-price span {
-            font-size: 16px;
+            font-size: 18px;
             opacity: 0.8;
         }
 
+    .plan-billing {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    .plan-content {
+        padding: 30px;
+    }
+
     .plan-features {
-        text-align: left;
-        margin-bottom: 25px;
-        padding-left: 0;
         list-style-type: none;
+        padding: 0;
+        margin: 0 0 30px;
     }
 
         .plan-features li {
-            margin-bottom: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
             position: relative;
-            padding-left: 25px;
+            padding-left: 30px;
+            color: #555;
         }
 
             .plan-features li:before {
@@ -570,22 +450,341 @@
                 color: #4CAF50;
             }
 
-    .plan-button {
-        background-color: #4CAF50;
+    .basic-plan .plan-features li:before {
+        color: #3498db;
+    }
+
+    .premium-plan .plan-features li:before {
+        color: #4CAF50;
+    }
+
+    .pro-plan .plan-features li:before {
+        color: #9b59b6;
+    }
+
+    .plan-features li.unavailable {
+        color: #aaa;
+        text-decoration: line-through;
+    }
+
+        .plan-features li.unavailable:before {
+            content: '\f00d';
+            color: #e74c3c;
+        }
+
+    .subscribe-btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background: #4CAF50;
         color: white;
         border: none;
-        padding: 10px 20px;
-        border-radius: 50px;
-        font-size: 16px;
+        border-radius: 10px;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        display: inline-block;
-        width: 80%;
+        text-align: center;
+        text-decoration: none;
     }
 
-        .plan-button:hover {
-            background-color: #45a049;
+    .basic-plan .subscribe-btn {
+        background: #3498db;
+    }
+
+    .premium-plan .subscribe-btn {
+        background: #4CAF50;
+    }
+
+    .pro-plan .subscribe-btn {
+        background: #9b59b6;
+    }
+
+    .subscribe-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    /* Özellikler Tablosu */
+    .features-comparison {
+        margin-top: 80px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .features-header {
+        background: #2c3e50;
+        color: white;
+        padding: 20px 30px;
+        text-align: center;
+    }
+
+        .features-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+    .features-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .features-table th, .features-table td {
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .features-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+            .features-table th:first-child {
+                text-align: left;
+            }
+
+        .features-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .features-table i.fa-check {
+            color: #4CAF50;
+            font-size: 18px;
+        }
+
+        .features-table i.fa-times {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        .features-table td:nth-child(2) i.fa-check {
+            color: #3498db;
+        }
+
+        .features-table td:nth-child(3) i.fa-check {
+            color: #4CAF50;
+        }
+
+        .features-table td:nth-child(4) i.fa-check {
+            color: #9b59b6;
+        }
+
+    /* Müşteri Görüşleri */
+    .testimonials {
+        margin-top: 80px;
+        text-align: center;
+    }
+
+        .testimonials h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+            .testimonials h2:after {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 4px;
+                background: linear-gradient(90deg, #4CAF50, #2E7D32);
+                border-radius: 2px;
+            }
+
+    .testimonials-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .testimonial-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        width: 300px;
+        text-align: left;
+    }
+
+    .testimonial-content {
+        position: relative;
+        padding: 0 20px;
+        font-style: italic;
+        color: #555;
+        line-height: 1.6;
+    }
+
+        .testimonial-content:before, .testimonial-content:after {
+            content: '"';
+            font-size: 50px;
+            position: absolute;
+            color: #4CAF50;
+            opacity: 0.3;
+        }
+
+        .testimonial-content:before {
+            top: -20px;
+            left: 0;
+        }
+
+        .testimonial-content:after {
+            bottom: -40px;
+            right: 0;
+        }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+    .author-info h4 {
+        margin: 0;
+        color: #333;
+    }
+
+    .author-info p {
+        margin: 5px 0 0 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    /* FAQ Bölümü */
+    .faq-section {
+        margin-top: 80px;
+    }
+
+        .faq-section h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+            .faq-section h2:after {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 4px;
+                background: linear-gradient(90deg, #4CAF50, #2E7D32);
+                border-radius: 2px;
+            }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .faq-question {
+        padding: 20px;
+        background: #f9f9f9;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .faq-question:after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 20px;
+            color: #4CAF50;
+        }
+
+    .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.active .faq-question:after {
+        content: '\f106';
+    }
+
+    .faq-item.active .faq-answer {
+        padding: 20px;
+        max-height: 300px;
+    }
+
+    /* CTA Bölümü */
+    .cta-section {
+        margin: 80px 0 40px;
+        text-align: center;
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        border-radius: 20px;
+        padding: 50px 30px;
+        color: white;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+        .cta-section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+    .cta-button {
+        display: inline-block;
+        background: white;
+        color: #4CAF50;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
 
@@ -604,114 +803,240 @@
 
     }
 
-    .animate-pulse {
+    .premium-plan {
         animation: pulse 2s infinite;
     }
 </style>
 
-<div class="premium-page-container">
-    <div class="premium-header">
-        <h1>Premium Bitki Analiz Merkezi</h1>
-        <p>Dr.PlantAI'nin gelişmiş analiz araçlarına erişim için premium üyelik gereklidir. Bitkilerinizin sağlığını en üst düzeyde korumak için profesyonel araçlarımızı keşfedin.</p>
+<div class="subscription-container">
+    <div class="subscription-header">
+        <h1>Premium Abonelik Planları</h1>
+        <p>Dr.PlantAI'nin gelişmiş özelliklerine erişim sağlayın ve bitkilerinizin sağlığını profesyonel düzeyde koruyun. İhtiyaçlarınıza en uygun planı seçin.</p>
     </div>
 
-    <div class="analysis-cards">
-        <div class="analysis-card">
-            <div class="premium-tag">Premium</div>
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-seedling"></i></div>
-                <h3>Toprak Hastalık Analizi</h3>
+    <div class="plans-container">
+        <div class="plan-card basic-plan">
+            <div class="plan-header">
+                <div class="plan-name">Temel Plan</div>
+                <div class="plan-price">29.99₺<span>/ay</span></div>
+                <div class="plan-billing">Aylık ödeme</div>
             </div>
-            <div class="card-body">
-                <p>Toprak değerlerinizi girerek bitkinizin sağlığını etkileyen faktörleri analiz edin.</p>
-                <ul class="feature-list">
-                    <li>pH değeri analizi</li>
-                    <li>Nem oranı değerlendirmesi</li>
-                    <li>Gübre ihtiyacı tespiti</li>
-                    <li>Detaylı çözüm önerileri</li>
+            <div class="plan-content">
+                <ul class="plan-features">
+                    <li>Ayda 5 toprak analizi</li>
+                    <li>Ayda 5 görüntü analizi</li>
+                    <li>Temel hastalık veritabanı erişimi</li>
+                    <li>E-posta desteği</li>
+                    <li class="unavailable">Özelleştirilmiş bakım planları</li>
+                    <li class="unavailable">Gelişmiş raporlama</li>
+                    <li class="unavailable">Öncelikli destek</li>
                 </ul>
-            </div>
-            <div class="lock-overlay">
-                <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                <p>Bu özelliğe erişmek için premium üyelik gereklidir</p>
-                <a href="/Subscribe" class="subscribe-button">Abone Ol</a>
+                <a href="/Payment?plan=basic" class="subscribe-btn">Abone Ol</a>
             </div>
         </div>
 
-        <div class="analysis-card">
-            <div class="premium-tag">Premium</div>
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-camera"></i></div>
-                <h3>Görüntü ile Hastalık Tespiti</h3>
-            </div>
-            <div class="card-body">
-                <p>Yapay zeka destekli görüntü analizi ile bitkinizdeki hastalıkları tespit edin.</p>
-                <ul class="feature-list">
-                    <li>Yaprak hastalığı tespiti</li>
-                    <li>Zararlı böcek tespiti</li>
-                    <li>Besin eksikliği analizi</li>
-                    <li>Tedavi yöntemleri önerisi</li>
-                </ul>
-            </div>
-            <div class="lock-overlay">
-                <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                <p>Bu özelliğe erişmek için premium üyelik gereklidir</p>
-                <a href="/Subscribe" class="subscribe-button">Abone Ol</a>
-            </div>
-        </div>
-
-        <div class="analysis-card">
-            <div class="premium-tag">Premium</div>
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-flask"></i></div>
-                <h3>Gelişmiş Bitki Bakımı</h3>
-            </div>
-            <div class="card-body">
-                <p>Bitkileriniz için özelleştirilmiş bakım planları ve profesyonel öneriler alın.</p>
-                <ul class="feature-list">
-                    <li>Özelleştirilmiş sulama programı</li>
-                    <li>Mevsimsel bakım önerileri</li>
-                    <li>Bitki türüne özel bakım</li>
-                    <li>Aylık sağlık raporu</li>
-                </ul>
-            </div>
-            <div class="lock-overlay">
-                <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                <p>Bu özelliğe erişmek için premium üyelik gereklidir</p>
-                <a href="/Subscribe" class="subscribe-button">Abone Ol</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="subscription-info">
-        <h2>Premium Abonelik Avantajları</h2>
-        <p>Dr.PlantAI premium üyeliği ile sınırsız analiz yapın, bitkilerinizin sağlığını profesyonel seviyede takip edin ve özelleştirilmiş bakım tavsiyeleri alın.</p>
-
-        <div class="subscription-plans">
-            <div class="plan-card">
-                <div class="plan-title">Aylık Plan</div>
+        <div class="plan-card premium-plan">
+            <div class="popular-tag">En Popüler</div>
+            <div class="plan-header">
+                <div class="plan-name">Premium Plan</div>
                 <div class="plan-price">49.99₺<span>/ay</span></div>
-                <ul class="plan-features">
-                    <li>Sınırsız toprak analizi</li>
-                    <li>Sınırsız görüntü analizi</li>
-                    <li>Haftalık raporlar</li>
-                    <li>7/24 destek</li>
-                </ul>
-                <a href="/Subscribe" class="plan-button">Şimdi Başla</a>
+                <div class="plan-billing">Aylık ödeme</div>
             </div>
-
-            <div class="plan-card animate-pulse">
-                <div class="plan-title">Yıllık Plan</div>
-                <div class="plan-price">399.99₺<span>/yıl</span></div>
+            <div class="plan-content">
                 <ul class="plan-features">
                     <li>Sınırsız toprak analizi</li>
                     <li>Sınırsız görüntü analizi</li>
-                    <li>Haftalık raporlar</li>
-                    <li>7/24 öncelikli destek</li>
-                    <li>%30 indirim</li>
+                    <li>Gelişmiş hastalık veritabanı erişimi</li>
+                    <li>Öncelikli e-posta desteği</li>
+                    <li>Özelleştirilmiş bakım planları</li>
+                    <li>Haftalık raporlama</li>
+                    <li class="unavailable">7/24 telefon desteği</li>
                 </ul>
-                <a href="/Subscribe" class="plan-button">Şimdi Başla</a>
+                <a href="/Payment?plan=premium" class="subscribe-btn">Abone Ol</a>
             </div>
         </div>
+
+        <div class="plan-card pro-plan">
+            <div class="plan-header">
+                <div class="plan-name">Pro Plan</div>
+                <div class="plan-price">99.99₺<span>/ay</span></div>
+                <div class="plan-billing">Aylık ödeme</div>
+            </div>
+            <div class="plan-content">
+                <ul class="plan-features">
+                    <li>Sınırsız toprak analizi</li>
+                    <li>Sınırsız görüntü analizi</li>
+                    <li>Tam hastalık veritabanı erişimi</li>
+                    <li>7/24 öncelikli destek</li>
+                    <li>Profesyonel bakım planları</li>
+                    <li>Günlük detaylı raporlama</li>
+                    <li>API erişimi</li>
+                </ul>
+                <a href="/Payment?plan=pro" class="subscribe-btn">Abone Ol</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-comparison">
+        <div class="features-header">
+            <h2>Özellik Karşılaştırması</h2>
+        </div>
+        <table class="features-table">
+            <thead>
+                <tr>
+                    <th>Özellik</th>
+                    <th>Temel</th>
+                    <th>Premium</th>
+                    <th>Pro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Toprak Analizi</td>
+                    <td>5/ay</td>
+                    <td>Sınırsız</td>
+                    <td>Sınırsız</td>
+                </tr>
+                <tr>
+                    <td>Görüntü Analizi</td>
+                    <td>5/ay</td>
+                    <td>Sınırsız</td>
+                    <td>Sınırsız</td>
+                </tr>
+                <tr>
+                    <td>Hastalık Veritabanı</td>
+                    <td>Temel</td>
+                    <td>Gelişmiş</td>
+                    <td>Tam</td>
+                </tr>
+                <tr>
+                    <td>Özelleştirilmiş Bakım Planları</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Raporlama</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td>Haftalık</td>
+                    <td>Günlük</td>
+                </tr>
+                <tr>
+                    <td>API Erişimi</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Destek</td>
+                    <td>E-posta</td>
+                    <td>Öncelikli E-posta</td>
+                    <td>7/24 Öncelikli</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="testimonials">
+        <h2>Kullanıcı Görüşleri</h2>
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    Dr.PlantAI Premium sayesinde bahçemdeki domates bitkilerini kurtardım. Yaprak analizi ile erken teşhis koyup, hemen müdahale edebildim.
+                </div>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/50/50" alt="Ahmet Yılmaz">
+                    <div class="author-info">
+                        <h4>Ahmet Yılmaz</h4>
+                        <p>Premium Üye</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    Profesyonel bir çiftçi olarak, Dr.PlantAI Pro tüm ihtiyaçlarımı karşılıyor. API sayesinde kendi sistemimize entegre edip büyük ölçekli analizler yapabiliyoruz.
+                </div>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/50/50" alt="Zeynep Kaya">
+                    <div class="author-info">
+                        <h4>Zeynep Kaya</h4>
+                        <p>Pro Üye</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    Saksı bitkilerim için mükemmel bir uygulama. Premium planın sunduğu özelleştirilmiş bakım planları sayesinde bitkilerim artık çok daha sağlıklı.
+                </div>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/50/50" alt="Murat Demir">
+                    <div class="author-info">
+                        <h4>Murat Demir</h4>
+                        <p>Premium Üye</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2>Sıkça Sorulan Sorular</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Aboneliğimi istediğim zaman iptal edebilir miyim?</div>
+                <div class="faq-answer">
+                    <p>Evet, aboneliğinizi istediğiniz zaman hesap ayarlarınızdan kolayca iptal edebilirsiniz. İptal ettikten sonra, abonelik döneminin sonuna kadar tüm premium özellikleri kullanmaya devam edebilirsiniz.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Farklı bir plana geçiş yapabilir miyim?</div>
+                <div class="faq-answer">
+                    <p>Kesinlikle! İhtiyaçlarınız değiştikçe istediğiniz zaman planlar arasında geçiş yapabilirsiniz. Üst düzey bir plana geçerseniz, fiyat farkı orantılı olarak hesaplanır. Alt düzey bir plana geçerseniz, yeni plan bir sonraki ödeme döneminde devreye girer.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Premium özelliklere mobil cihazlardan da erişebilir miyim?</div>
+                <div class="faq-answer">
+                    <p>Evet, Dr.PlantAI'nin tüm premium özellikleri hem masaüstü hem de mobil cihazlardan tam olarak erişilebilir durumdadır. iOS ve Android uygulamalarımız da mevcuttur.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Yıllık ödeme seçeneği var mı?</div>
+                <div class="faq-answer">
+                    <p>Evet, tüm planlarımız için yıllık ödeme seçeneği sunuyoruz. Yıllık ödemelerde %20 indirim uyguluyoruz. Ödeme sayfasında bu seçeneği görebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>Bitki Bakımında Profesyonel Olun</h2>
+        <p>Dr.PlantAI Premium ile bitkilerinizin sağlığını en üst düzeye çıkarın. Hemen bugün abone olun ve farkı görün!</p>
+        <a href="#plans" class="cta-button">Şimdi Başlayın</a>
     </div>
 </div>
+
+<script>
+    // FAQ Açılır-Kapanır İşlevselliği
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Tüm aktif öğeleri kapat
+                faqItems.forEach(faqItem => {
+                    faqItem.classList.remove('active');
+                });
+
+                // Tıklanan öğeyi aç (eğer zaten açık değilse)
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
