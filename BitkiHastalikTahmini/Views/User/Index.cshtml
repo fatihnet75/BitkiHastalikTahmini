@@ -110,7 +110,7 @@
         animation: showPanel 0.3s forwards;
     }
 
-    
+        0%
 
     {
         opacity: 0;
@@ -122,7 +122,7 @@
         transform: scale(1);
     }
 
-    }
+    
 
     .close-button {
         background-color: transparent;
@@ -226,88 +226,11 @@
             font-size: 16px;
             color: #aaa;
         }
-</style>
 
-<div class="analysis-buttons">
-    <button class="analysis-choice-button" onclick="toggleSection('soil')">
-        <h3>Toprak Hastalık Analizi</h3>
-        <p>pH, nem ve gübre değerlerini girerek analiz yapın</p>
-        <small class="trials-left" id="soilTrials">Kalan deneme: 2</small>
-    </button>
-    <button class="analysis-choice-button" onclick="toggleSection('image')">
-        <h3>Görüntü ile Hastalık Tespiti</h3>
-        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın</p>
-        <small class="trials-left" id="imageTrials">Kalan deneme: 2</small>
-    </button>
-</div>
-
-<!-- Toprak Paneli -->
-<div id="soilPanel" class="analysis-panel soil-panel" style="display: none;">
-    <div class="analysis-content">
-        <button class="close-button" onclick="toggleSection('soil')">×</button>
-        <div class="analysis-form">
-            <h2>Toprak Hastalık Analizi</h2>
-            <form id="soilForm" onsubmit="handleSoilAnalysis(event)">
-                <div class="form-group">
-                    <label for="ph">pH Değeri:</label>
-                    <input type="number" step="0.1" name="ph" placeholder="6.0-8.0 arası bir değer girin" required>
-                </div>
-                <div class="form-group">
-                    <label for="moisture">Nem Oranı (%):</label>
-                    <input type="number" name="moisture" placeholder="0-100 arası bir değer girin" required>
-                </div>
-                <div class="form-group">
-                    <label for="fertilizer">Gübre Miktarı (kg/m²):</label>
-                    <input type="number" step="0.1" name="fertilizer" placeholder="Gübre miktarını girin" required>
-                </div>
-                <button type="submit" class="analyze-button">Analiz Et</button>
-            </form>
-        </div>
-        <div id="soilResult" class="result-container" style="display: none;">
-            <h3>Analiz Sonucu</h3>
-            <p id="soilResultText"></p>
-        </div>
-    </div>
-</div>
-
-<!-- Görüntü Paneli -->
-<div id="imagePanel" class="analysis-panel image-panel" style="display: none;">
-    <div class="analysis-content">
-        <button class="close-button" onclick="toggleSection('image')">×</button>
-        <div class="analysis-form">
-            <h2>Görüntü ile Hastalık Tespiti</h2>
-            <form id="imageForm" onsubmit="handleImageAnalysis(event)">
-                <div class="form-group">
-                    <label for="imageUpload">Bitki Fotoğrafı:</label>
-                    <input type="file" id="imageUpload" accept="image/*" onchange="handleImageChange(event)" required>
-                    <div id="imagePreview" class="image-preview">
-                        <p>Görsel Yüklenmedi</p>
-                    </div>
-                </div>
-                <button type="submit" class="analyze-button">Analiz Et</button>
-            </form>
-        </div>
-        <div id="imageResult" class="result-container" style="display: none;">
-            <h3>Analiz Sonucu</h3>
-            <p id="imageResultText"></p>
-        </div>
-    </div>
-</div>
-
-
-<style>
-    /* Genel Stil */
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f4f7fc;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
+    /* Subscription Container Stilleri */
     .subscription-container {
         max-width: 1200px;
-        margin: 0 auto;
+        margin: 60px auto;
         padding: 30px 20px;
     }
 
@@ -787,7 +710,8 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-
+  
+        0%
 
     {
         transform: scale(1);
@@ -801,12 +725,78 @@
         transform: scale(1);
     }
 
-    }
+    
 
     .premium-plan {
         animation: pulse 2s infinite;
     }
 </style>
+
+<div class="analysis-buttons">
+    <button class="analysis-choice-button" onclick="toggleSection('soil')">
+        <h3>Toprak Hastalık Analizi</h3>
+        <p>pH, nem ve gübre değerlerini girerek analiz yapın</p>
+        <small class="trials-left" id="soilTrials">Kalan deneme: 2</small>
+    </button>
+    <button class="analysis-choice-button" onclick="toggleSection('image')">
+        <h3>Görüntü ile Hastalık Tespiti</h3>
+        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın</p>
+        <small class="trials-left" id="imageTrials">Kalan deneme: 2</small>
+    </button>
+</div>
+
+<!-- Toprak Paneli -->
+<div id="soilPanel" class="analysis-panel soil-panel" style="display: none;">
+    <div class="analysis-content">
+        <button class="close-button" onclick="toggleSection('soil')">×</button>
+        <div class="analysis-form">
+            <h2>Toprak Hastalık Analizi</h2>
+            <form id="soilForm" onsubmit="handleSoilAnalysis(event)">
+                <div class="form-group">
+                    <label for="ph">pH Değeri:</label>
+                    <input type="number" step="0.1" name="ph" placeholder="6.0-8.0 arası bir değer girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="moisture">Nem Oranı (%):</label>
+                    <input type="number" name="moisture" placeholder="0-100 arası bir değer girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="fertilizer">Gübre Miktarı (kg/m²):</label>
+                    <input type="number" step="0.1" name="fertilizer" placeholder="Gübre miktarını girin" required>
+                </div>
+                <button type="submit" class="analyze-button">Analiz Et</button>
+            </form>
+        </div>
+        <div id="soilResult" class="result-container" style="display: none;">
+            <h3>Analiz Sonucu</h3>
+            <p id="soilResultText"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Görüntü Paneli -->
+<div id="imagePanel" class="analysis-panel image-panel" style="display: none;">
+    <div class="analysis-content">
+        <button class="close-button" onclick="toggleSection('image')">×</button>
+        <div class="analysis-form">
+            <h2>Görüntü ile Hastalık Tespiti</h2>
+            <form id="imageForm" onsubmit="handleImageAnalysis(event)">
+                <div class="form-group">
+                    <label for="imageUpload">Bitki Fotoğrafı:</label>
+                    <input type="file" id="imageUpload" accept="image/*" onchange="handleImageChange(event)" required>
+                    <div id="imagePreview" class="image-preview">
+                        <p>Görsel Yüklenmedi</p>
+                    </div>
+                </div>
+                <button type="submit" class="analyze-button">Analiz Et</button>
+            </form>
+        </div>
+        <div id="imageResult" class="result-container" style="display: none;">
+            <h3>Analiz Sonucu</h3>
+            <p id="imageResultText"></p>
+        </div>
+    </div>
+</div>
 
 <div class="subscription-container">
     <div class="subscription-header">
@@ -1017,13 +1007,168 @@
 </div>
 
 <script>
-    // FAQ Açılır-Kapanır İşlevselliği
-    document.addEventListener('DOMContentLoaded', function() {
-        const faqItems = document.querySelectorAll('.faq-item');
+    // Panel açma/kapama fonksiyonu
+    function toggleSection(section) {
+        const panel = document.getElementById(`${section}Panel`);
+        const isOpen = panel.style.display === 'flex';
 
+        // Tüm panelleri kapat
+        document.querySelectorAll('.analysis-panel').forEach(p => {
+            p.style.display = 'none';
+        });
+
+        // Eğer panel kapalıysa aç
+        if (!isOpen) {
+            panel.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Sayfa kaydırmayı engelle
+        } else {
+            document.body.style.overflow = ''; // Sayfa kaydırmayı geri aç
+        }
+    }
+
+    // Toprak analizi form gönderimi
+    function handleSoilAnalysis(event) {
+        event.preventDefault();
+
+        // Form verilerini al
+        const formData = new FormData(event.target);
+        const ph = parseFloat(formData.get('ph'));
+        const moisture = parseInt(formData.get('moisture'));
+        const fertilizer = parseFloat(formData.get('fertilizer'));
+
+        // Demo analiz sonucu oluştur
+        let resultText = "";
+        let isHealthy = true;
+
+        // pH kontrolü
+        if (ph < 6.0 || ph > 8.0) {
+            resultText += `pH değeriniz ${ph} ile optimal aralıkta değil (6.0-8.0). `;
+            isHealthy = false;
+        }
+
+        // Nem kontrolü
+        if (moisture < 30) {
+            resultText += `Nem oranınız %${moisture} ile çok düşük. `;
+            isHealthy = false;
+        } else if (moisture > 70) {
+            resultText += `Nem oranınız %${moisture} ile çok yüksek. `;
+            isHealthy = false;
+        }
+
+        // Gübre kontrolü
+        if (fertilizer < 0.5) {
+            resultText += `Gübre miktarınız ${fertilizer} kg/m² ile yetersiz. `;
+            isHealthy = false;
+        } else if (fertilizer > 2.0) {
+            resultText += `Gübre miktarınız ${fertilizer} kg/m² ile aşırı. `;
+            isHealthy = false;
+        }
+
+        // Sonuç
+        if (isHealthy) {
+            resultText = "Toprak analizi sonuçlarına göre toprağınız sağlıklı görünüyor! Optimal pH, nem ve gübre seviyelerine sahipsiniz.";
+        } else {
+            resultText += "Bu koşullar bitki hastalıklarına yol açabilir. Toprak düzenleyici kullanmayı düşünebilirsiniz.";
+        }
+
+        // Sonucu göster
+        document.getElementById('soilResultText').textContent = resultText;
+        document.getElementById('soilResult').style.display = 'block';
+
+        // Deneme hakkını azalt
+        updateTrials('soil');
+    }
+
+    // Görüntü yükleme işlemi
+    function handleImageChange(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('imagePreview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" alt="Yüklenen görsel">`;
+            }
+
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<p>Görsel Yüklenmedi</p>';
+        }
+    }
+
+    // Görüntü analizi form gönderimi
+    function handleImageAnalysis(event) {
+        event.preventDefault();
+
+        // Rastgele hastalık sonuçları (demo amaçlı)
+        const diseases = [
+            "Yaprak küfü",
+            "Mildiyö",
+            "Küllenme",
+            "Bakteriyel leke",
+            "Virüs enfeksiyonu"
+        ];
+
+        const treatments = [
+            "Mantar ilacı uygulaması önerilir",
+            "Etkilenen yaprakların temizlenmesi gerekir",
+            "Hava sirkülasyonunu artırın",
+            "Bakır bazlı ilaç kullanın",
+            "Bitkiyi izole edin"
+        ];
+
+        const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
+        const randomTreatment = treatments[Math.floor(Math.random() * treatments.length)];
+
+        // Sonuç metni oluştur
+        const resultText = `Analiz sonucu: Bitkinizde "${randomDisease}" tespit edildi. Önerilen tedavi: ${randomTreatment}`;
+
+        // Sonucu göster
+        document.getElementById('imageResultText').textContent = resultText;
+        document.getElementById('imageResult').style.display = 'block';
+
+        // Deneme hakkını azalt
+        updateTrials('image');
+    }
+
+    // Deneme hakkını güncelleme
+    function updateTrials(type) {
+        const element = document.getElementById(`${type}Trials`);
+        const currentText = element.textContent;
+        const remaining = parseInt(currentText.match(/\d+/)[0]);
+
+        if (remaining > 1) {
+            element.textContent = `Kalan deneme: ${remaining - 1}`;
+        } else {
+            element.textContent = "Deneme hakkınız kalmadı";
+            element.style.color = "#ff6b6b";
+
+            // İlgili butonu devre dışı bırak
+            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
+                .style.opacity = "0.6";
+            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
+                .style.cursor = "not-allowed";
+            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
+                .onclick = null;
+        }
+    }
+
+    // Sayfa yüklendiğinde çalışacak kodlar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Paneller dışına tıklandığında kapat
+        document.querySelectorAll('.analysis-panel').forEach(panel => {
+            panel.addEventListener('click', function(e) {
+                if (e.target === panel) {
+                    toggleSection(panel.id.replace('Panel', ''));
+                }
+            });
+        });
+
+        // FAQ açılır kapanır
+        const faqItems = document.querySelectorAll('.faq-item');
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
-
             question.addEventListener('click', () => {
                 const isActive = item.classList.contains('active');
 

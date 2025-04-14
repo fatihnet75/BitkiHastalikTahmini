@@ -1,4 +1,3 @@
-
 // MongoDbContext.cs
 using BitkiHastalikTahmini.Models;
 using Microsoft.Extensions.Configuration;
@@ -13,15 +12,15 @@ namespace BitkiHastalikTahmini
 
         public MongoDbContext(IConfiguration configuration)
         {
-            // Appsettings.json'daki ayarlarý almak için doðru anahtarlarý kullan
+            // Appsettings.json'daki ayarlar? almak için do?ru anahtarlar? kullan
             var connectionString = configuration["MongoDBSettings:ConnectionString"];
             var databaseName = configuration["MongoDBSettings:DatabaseName"];
 
-            // Baðlantý dizesi null kontrolü
+            // Ba?lant? dizesi null kontrolü
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentNullException(nameof(connectionString),
-                    "MongoDB baðlantý dizesi bulunamadý. Appsettings.json dosyasýný kontrol edin.");
+                    "MongoDB ba?lant? dizesi bulunamad?. Appsettings.json dosyas?n? kontrol edin.");
             }
 
             var client = new MongoClient(connectionString);

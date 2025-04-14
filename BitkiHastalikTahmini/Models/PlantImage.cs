@@ -13,6 +13,5 @@ public class PlantImage
     [BsonElement("ImageUrl")]
     public string ImageUrl { get; set; } // Resim URL olarak saklanýyor
 
-    [BsonElement("Description")]
-    public string Description { get; set; } // Kullanýcýnýn girdiði açýklama
+   
 }

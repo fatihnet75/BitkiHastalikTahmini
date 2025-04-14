@@ -1,97 +1,475 @@
 ﻿@{
     ViewData["Title"] = "Admin Paneli - Dr.PlantAI";
-    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout sayfasını belirt
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-   
-        
-   
+<style>
+    :root {
+        --primary-color: #4CAF50;
+        --secondary-color: #2E7D32;
+        --dark-color: #2c3e50;
+        --light-color: #f8f9fa;
+        --danger-color: #e74c3c;
+        --warning-color: #f39c12;
+        --info-color: #3498db;
+    }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .container {
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+    }
+
+    .main-content {
+        flex: 1;
+        max-width: 1200px;
+        width: 100%;
+        transition: all 0.3s;
+        padding: 0 20px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar-toggle {
+        display: none;
+    }
+
+    .header-right .logout-button {
+        background-color: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+        .header-right .logout-button i {
+            margin-right: 5px;
+        }
+
+    .content {
+        padding: 25px 0;
+    }
+
+    .admin-container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+    }
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid var(--primary-color);
+    }
+
+        .stat-card i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+    .admin-section {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #eee;
+    }
+
+        .admin-section:last-child {
+            border-bottom: none;
+        }
+
+        .admin-section h2 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="file"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch label {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .toggle-switch label:before {
+                position: absolute;
+                content: "";
+                height: 22px;
+                width: 22px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        .toggle-switch input:checked + label {
+            background-color: var(--primary-color);
+        }
+
+            .toggle-switch input:checked + label:before {
+                transform: translateX(30px);
+            }
+
+    .button-group {
+        margin-top: 20px;
+    }
+
+    .save-button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+        .save-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+    .btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+    .btn-warning {
+        background-color: var(--warning-color);
+        color: white;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .admin-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .model-selection {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .model-card {
+        flex: 1;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .model-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .model-card h3 {
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .model-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+    /* Modal Stilleri */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 25px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 600px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        color: var(--dark-color);
+    }
+
+    .close-button {
+        font-size: 24px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+    }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+    .modal-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    /* Responsive stiller */
+    {
+        .admin-stats
+
+    {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .model-selection {
+        flex-direction: column;
+    }
+
+    }
+
+  {
+        .admin-stats
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .logout-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    }
+</style>
+
+<div class="container">
     <div class="main-content">
-        <!-- Header -->
         <header class="header">
             <div class="header-left">
-                <button id="sidebar-toggle" class="sidebar-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
                 <h1>Admin Paneli</h1>
             </div>
             <div class="header-right">
-                
-                    <button type="submit" class="logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
-                    </button>
-             
+                <a asp-controller="User" asp-action="Index" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
             </div>
         </header>
 
-        <!-- Main Content -->
         <main class="content">
             <div class="admin-container">
                 <div class="admin-stats">
                     <div class="stat-card">
                         <i class="fas fa-users"></i>
                         <h3>Toplam Kullanıcı</h3>
-                       
+                        <div class="stat-value" id="totalUsers">0</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-chart-line"></i>
                         <h3>Toplam Analiz</h3>
-                       
+                        <div class="stat-value" id="totalAnalysis">0</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-clock"></i>
                         <h3>Bugünkü Analiz</h3>
-                       
+                        <div class="stat-value" id="todayAnalysis">0</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-user-check"></i>
                         <h3>Aktif Kullanıcı</h3>
-                       
+                        <div class="stat-value" id="activeUsers">0</div>
                     </div>
                 </div>
 
                 <div class="admin-section">
-                    <h2>İçerik Yönetimi</h2>
-                  
-                        <h3>Footer Metni</h3>
-                        <div class="form-group">
-                            <label>Footer Ana Metin:</label>
-                            <input type="text" name="footerText" id="footerText" value="">
+                    <h2>Model Yönetimi</h2>
+                    <div class="model-selection">
+                        <div class="model-card" id="model1">
+                            <h3>Bitki Hastalık Modeli</h3>
+                            <p>Bitki yapraklarındaki hastalıkları tespit eden model</p>
+                            <input type="file" id="model1File" accept=".h5,.pt,.pth,.model" style="display: none;">
+                            <button class="btn btn-primary" onclick="document.getElementById('model1File').click()">Model Seç</button>
                         </div>
-
-                        <h3>Hakkında Sayfası İçeriği</h3>
-                        <div class="form-group">
-                            <label>Dr.PlantAI Nedir? Başlığı:</label>
-                            <input type="text" name="aboutTitle" id="aboutTitle" value="">
+                        <div class="model-card" id="model2">
+                            <h3>Toprak Analiz Modeli</h3>
+                            <p>Toprak özelliklerine göre analiz yapan model</p>
+                            <input type="file" id="model2File" accept=".h5,.pt,.pth,.model" style="display: none;">
+                            <button class="btn btn-primary" onclick="document.getElementById('model2File').click()">Model Seç</button>
                         </div>
-                        <div class="form-group">
-                            <label>Dr.PlantAI Nedir? İçeriği:</label>
-                            <textarea name="aboutContent" id="aboutContent" rows="4"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Özellik 1 - Başlık:</label>
-                            <input type="text" name="feature1Title" id="feature1Title" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Özellik 1 - İçerik:</label>
-                            <textarea name="feature1Content" id="feature1Content" rows="2"></textarea>
-                        </div>
-
-                        <!-- Özellik 2-4 için benzer input ve textarea alanları... -->
-
-                        <div class="button-group">
-                            <button type="submit" class="save-button">İçerikleri Kaydet</button>
-                        </div>
-                   
+                    </div>
+                    <div class="button-group">
+                        <button class="save-button" id="saveModels">Modelleri Kaydet</button>
+                    </div>
                 </div>
 
                 <div class="admin-section">
                     <h2>Kullanıcı Yönetimi</h2>
                     <div class="table-container">
-                        <table class="admin-table">
+                        <table class="admin-table" id="usersTable">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -100,35 +478,42 @@
                                     <th>Durum</th>
                                     <th>İşlemler</th>
                                 </tr>
-                            
+                            </thead>
+                            <tbody>
+                                <!-- Users will be loaded here -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="admin-section">
                     <h2>Sistem Ayarları</h2>
-                   
+                    <form id="settingsForm">
                         <div class="form-group">
                             <label>Maksimum Deneme Hakkı:</label>
-                            <input type="number" name="maxTrials" value="">
+                            <input type="number" name="maxTrials" id="maxTrials" value="">
                         </div>
                         <div class="form-group">
                             <label>Bakım Modu:</label>
                             <div class="toggle-switch">
-                                <input type="checkbox" id="maintenanceMode"  "checked" : "")>
+                                <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
                                 <label for="maintenanceMode"></label>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Arka Plan Resmi:</label>
+                            <input type="file" id="backgroundImage" name="backgroundImage" accept="image/*">
                         </div>
                         <div class="button-group">
                             <button type="submit" class="save-button">Ayarları Kaydet</button>
                         </div>
-                 
+                    </form>
                 </div>
 
                 <div class="admin-section">
                     <h2>Analiz Geçmişi</h2>
                     <div class="table-container">
-                        <table class="admin-table">
+                        <table class="admin-table" id="analysisTable">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -139,13 +524,244 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               
-                                
+                                <!-- Analysis history will be loaded here -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </main>
+    </div>
+</div>
 
-      
+<!-- Kullanıcı Düzenleme Modalı -->
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Kullanıcı Düzenle</h3>
+            <span class="close-button">&times;</span>
+        </div>
+        <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+            <div class="form-group">
+                <label for="editUserName">Ad Soyad</label>
+                <input type="text" id="editUserName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="editUserEmail">E-posta</label>
+                <input type="email" id="editUserEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="editUserStatus">Durum</label>
+                <select id="editUserStatus" class="form-control" required>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Pasif">Pasif</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editUserPassword">Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                <input type="password" id="editUserPassword" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="cancelEdit">İptal</button>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const modelCards = document.querySelectorAll('.model-card');
+    const model1File = document.getElementById('model1File');
+    const model2File = document.getElementById('model2File');
+    const saveModelsBtn = document.getElementById('saveModels');
+    const settingsForm = document.getElementById('settingsForm');
+    const editUserModal = document.getElementById('editUserModal');
+    const editUserForm = document.getElementById('editUserForm');
+    const closeButton = document.querySelector('.close-button');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+    let currentEditUserId = null;
+
+    // Model selection
+    modelCards.forEach(card => {
+        card.addEventListener('click', function() {
+            modelCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Save models
+    saveModelsBtn.addEventListener('click', function() {
+        if (model1File.files.length > 0 || model2File.files.length > 0) {
+            const formData = new FormData();
+
+            if (model1File.files.length > 0) {
+                formData.append('model1', model1File.files[0]);
+            }
+
+            if (model2File.files.length > 0) {
+                formData.append('model2', model2File.files[0]);
+            }
+
+            alert('Modeller başarıyla kaydedildi!');
+            model1File.value = '';
+            model2File.value = '';
+        } else {
+            alert('Lütfen en az bir model seçin!');
+        }
+    });
+
+    // Settings form submission
+    settingsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Ayarlar başarıyla kaydedildi!');
+    });
+
+    // Modal açma/kapatma işlevleri
+    function openEditModal(user) {
+        currentEditUserId = user.id;
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserStatus').value = user.status;
+        editUserModal.style.display = 'block';
+    }
+
+    function closeEditModal() {
+        editUserModal.style.display = 'none';
+        currentEditUserId = null;
+    }
+
+    closeButton.addEventListener('click', closeEditModal);
+    cancelEditBtn.addEventListener('click', closeEditModal);
+
+    // Dışarı tıklayarak modalı kapatma
+    window.addEventListener('click', function(event) {
+        if (event.target === editUserModal) {
+            closeEditModal();
+        }
+    });
+
+    // Kullanıcı düzenleme formu gönderimi
+    editUserForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const userId = document.getElementById('editUserId').value;
+        const name = document.getElementById('editUserName').value;
+        const email = document.getElementById('editUserEmail').value;
+        const status = document.getElementById('editUserStatus').value;
+        const password = document.getElementById('editUserPassword').value;
+
+        // Burada AJAX çağrısı yapılabilir
+        // Örnek olarak doğrudan tabloyu güncelliyoruz
+        const userRow = document.querySelector(`#usersTable tr[data-user-id="${userId}"]`);
+        if (userRow) {
+            userRow.cells[1].textContent = name;
+            userRow.cells[2].textContent = email;
+            userRow.cells[3].textContent = status;
+        }
+
+        alert('Kullanıcı bilgileri güncellendi!');
+        closeEditModal();
+    });
+
+    // Kullanıcı silme işlevi
+    function deleteUser(userId) {
+        if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
+            const userRow = document.querySelector(`#usersTable tr[data-user-id="${userId}"]`);
+            if (userRow) {
+                userRow.remove();
+                updateStats();
+                alert('Kullanıcı başarıyla silindi!');
+            }
+        }
+    }
+
+    // İstatistikleri güncelleme
+    function updateStats() {
+        const userCount = document.querySelectorAll('#usersTable tbody tr').length;
+        document.getElementById('totalUsers').textContent = userCount;
+
+        // Aktif kullanıcı sayısını hesapla
+        const activeUsers = Array.from(document.querySelectorAll('#usersTable tbody tr'))
+            .filter(row => row.cells[3].textContent === 'Aktif').length;
+        document.getElementById('activeUsers').textContent = activeUsers;
+    }
+
+    // Load stats and sample data
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('totalUsers').textContent = '124';
+        document.getElementById('totalAnalysis').textContent = '1,245';
+        document.getElementById('todayAnalysis').textContent = '42';
+        document.getElementById('activeUsers').textContent = '89';
+
+        // Load sample users
+        const usersTable = document.querySelector('#usersTable tbody');
+        const sampleUsers = [
+            { id: 1, name: 'Ahmet Yılmaz', email: 'ahmet@example.com', status: 'Aktif' },
+            { id: 2, name: 'Ayşe Kaya', email: 'ayse@example.com', status: 'Aktif' },
+            { id: 3, name: 'Mehmet Demir', email: 'mehmet@example.com', status: 'Pasif' },
+            { id: 4, name: 'Fatma Şahin', email: 'fatma@example.com', status: 'Aktif' }
+        ];
+
+        sampleUsers.forEach(user => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-user-id', user.id);
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.status}</td>
+                <td>
+                    <button class="btn btn-primary edit-btn" data-user-id="${user.id}">Düzenle</button>
+                    <button class="btn btn-danger delete-btn" data-user-id="${user.id}">Sil</button>
+                </td>
+            `;
+            usersTable.appendChild(row);
+        });
+
+        // Düzenle ve Sil butonlarına event listener ekleme
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = parseInt(this.getAttribute('data-user-id'));
+                const userRow = this.closest('tr');
+                const user = {
+                    id: userId,
+                    name: userRow.cells[1].textContent,
+                    email: userRow.cells[2].textContent,
+                    status: userRow.cells[3].textContent
+                };
+                openEditModal(user);
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = parseInt(this.getAttribute('data-user-id'));
+                deleteUser(userId);
+            });
+        });
+
+        // Load sample analysis history
+        const analysisTable = document.querySelector('#analysisTable tbody');
+        const sampleAnalysis = [
+            { id: 1, user: 'Ahmet Yılmaz', type: 'Görüntü Analizi', date: '2023-05-15', result: 'Yaprak Küfü' },
+            { id: 2, user: 'Ayşe Kaya', type: 'Toprak Analizi', date: '2023-05-14', result: 'Optimal' },
+            { id: 3, user: 'Mehmet Demir', type: 'Görüntü Analizi', date: '2023-05-14', result: 'Sağlıklı' },
+            { id: 4, user: 'Fatma Şahin', type: 'Toprak Analizi', date: '2023-05-13', result: 'pH Düşük' }
+        ];
+
+        sampleAnalysis.forEach(analysis => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${analysis.id}</td>
+                <td>${analysis.user}</td>
+                <td>${analysis.type}</td>
+                <td>${analysis.date}</td>
+                <td>${analysis.result}</td>
+            `;
+            analysisTable.appendChild(row);
+        });
+    });
+</script>
