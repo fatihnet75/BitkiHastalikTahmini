@@ -1,54 +1,34 @@
 ﻿using BitkiHastalikTahmini;
-using BitkiHastalikTahmini.Models;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MongoDB yapılandırmasını servislere ekle
+// MongoDB yapılandırması
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton<MongoDbContext>();
 
-// MVC servisini ekle
+// Session yapılandırması
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// MVC yapılandırması
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// MongoDB bağlantısını test etme
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    try
-    {
-        var mongoContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
-        var collection = mongoContext.Users;
-
-        // Eğer hiç kullanıcı yoksa, bir kullanıcı ekle
-        var userCount = collection.CountDocuments(FilterDefinition<User>.Empty);
-
-        if (userCount == 0)
-        {
-            var defaultUser = new User
-            {
-                FirstName = "Örnek",
-                LastName = "Kullanıcı",
-                Email = "ornek@mail.com",
-                Password = "12345"
-            };
-
-            collection.InsertOne(defaultUser);
-            Console.WriteLine("Varsayılan kullanıcı eklendi!");
-        }
-
-        Console.WriteLine($"Toplam {userCount} kullanıcı bulundu.");
-        Console.WriteLine("MongoDB bağlantısı başarılı!");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"MongoDB bağlantı hatası: {ex.Message}");
-        Console.WriteLine(ex.StackTrace);
-    }
+    app.UseDeveloperExceptionPage();
 }
-
-if (!app.Environment.IsDevelopment())
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
@@ -56,13 +36,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 app.UseAuthorization();
+app.UseSession(); // Session middleware
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=User}/{action=Index}/{id?}");
 
-
-
-app.Run();  
+app.Run();

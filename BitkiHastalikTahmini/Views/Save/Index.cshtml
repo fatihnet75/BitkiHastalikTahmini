@@ -24,7 +24,7 @@
     }
 
     .register-header {
-        background: var(--primary-color);
+        background: var(--primary-color, #4CAF50);
         color: white;
         padding: 2rem;
         text-align: center;
@@ -67,7 +67,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--dark-color);
+            color: var(--dark-color, #333);
         }
 
     .form-control {
@@ -79,7 +79,7 @@
     }
 
         .form-control:focus {
-            border-color: var(--primary-color);
+            border-color: var(--primary-color, #4CAF50);
             outline: none;
         }
 
@@ -97,7 +97,7 @@
     }
 
     .btn-register {
-        background-color: var(--primary-color);
+        background-color: var(--primary-color, #4CAF50);
         color: white;
         border: none;
         padding: 0.75rem;
@@ -119,7 +119,7 @@
     }
 
         .login-link a {
-            color: var(--primary-color);
+            color: var(--primary-color, #4CAF50);
             text-decoration: none;
         }
 
@@ -171,28 +171,28 @@
                     @TempData["SuccessMessage"]
                 </div>
             }
-            <form method="post" a asp-controller="Abone_Login" asp-action="Index">
+            <form method="post" asp-controller="Save" asp-action="Index">
                 @Html.AntiForgeryToken()
                 <div class="name-row">
                     <div class="form-group">
-                        <label asp-for="FirstName">Ad</label>
-                        <input asp-for="FirstName" class="form-control" required />
+                        <label for="FirstName">Ad</label>
+                        <input type="text" id="FirstName" name="FirstName" class="form-control" required />
                         <span asp-validation-for="FirstName" class="validation-message"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="LastName">Soyad</label>
-                        <input asp-for="LastName" class="form-control" required />
+                        <label for="LastName">Soyad</label>
+                        <input type="text" id="LastName" name="LastName" class="form-control" required />
                         <span asp-validation-for="LastName" class="validation-message"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Email">E-posta</label>
-                    <input asp-for="Email" class="form-control" type="email" required />
+                    <label for="Email">E-posta</label>
+                    <input type="email" id="Email" name="Email" class="form-control" required />
                     <span asp-validation-for="Email" class="validation-message"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Password">Şifre</label>
-                    <input asp-for="Password" class="form-control" type="password" minlength="6" required />
+                    <label for="Password">Şifre</label>
+                    <input type="password" id="Password" name="Password" class="form-control" minlength="6" required />
                     <span asp-validation-for="Password" class="validation-message"></span>
                     <div class="password-requirements">
                         Şifreniz en az 6 karakter uzunluğunda olmalıdır.
@@ -201,7 +201,7 @@
                 <button type="submit" class="btn-register">Kayıt Ol</button>
             </form>
             <div class="login-link">
-                Zaten hesabınız var mı? <a asp-controller="Abone_Login" asp-action="Index">Giriş Yap</a>
+                Zaten hesabınız var mı? <a href="/Abone_Login">Giriş Yap</a>
             </div>
         </div>
     </div>

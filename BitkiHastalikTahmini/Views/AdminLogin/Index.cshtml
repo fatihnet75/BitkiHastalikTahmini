@@ -2,7 +2,6 @@
     ViewData["Title"] = "Admin Girişi - Dr.PlantAI";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <style>
     /* Admin Giriş Sayfası Özel Stilleri */
     .admin-page-container {
@@ -82,7 +81,6 @@
         color: #f44336;
         font-size: 14px;
         margin-bottom: 20px;
-        visibility: hidden;
     }
 
     .button-group {
@@ -105,7 +103,6 @@
             background-color: #45a049;
         }
 </style>
-
 <div class="admin-page-container">
     <div class="admin-login-container">
         <div class="admin-login-box">
@@ -113,8 +110,7 @@
                 <i class="fas fa-user-shield"></i>
                 <h2>Admin Girişi</h2>
             </div>
-
-            <form method="post" action="/Admin">
+            <form method="post" action="@Url.Action("Index", "AdminLogin")">
                 <div class="form-group">
                     <label for="username"><i class="fas fa-user"></i> Kullanıcı Adı:</label>
                     <input type="text" name="username" class="form-control" id="username" required />
@@ -123,11 +119,12 @@
                     <label for="password"><i class="fas fa-key"></i> Şifre:</label>
                     <input type="password" name="password" class="form-control" id="password" required />
                 </div>
-
-                <div id="adminLoginError" class="error-message">
-                    <!-- Hata mesajı burada gösterilecek -->
-                </div>
-
+                @if (ViewData["LoginError"] != null)
+                {
+                    <div class="error-message">
+                        @ViewData["LoginError"]
+                    </div>
+                }
                 <div class="button-group">
                     <button type="submit" class="login-submit">Giriş Yap</button>
                 </div>

@@ -82,7 +82,6 @@
         color: #f44336;
         font-size: 14px;
         margin-bottom: 20px;
-        visibility: hidden;
     }
 
     .button-group {
@@ -129,7 +128,8 @@
                 <h2>Kullanıcı Girişi</h2>
             </div>
 
-            <form method="post" action="/Abone">
+            <form method="post" action="/Abone_Login/Index">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> E-posta:</label>
                     <input type="email" name="email" class="form-control" id="email" required />
@@ -139,9 +139,12 @@
                     <input type="password" name="password" class="form-control" id="password" required />
                 </div>
 
-                <div id="userLoginError" class="error-message">
-                    <!-- Hata mesajı burada gösterilecek -->
-                </div>
+                @if (ViewData["LoginError"] != null)
+                {
+                    <div class="error-message">
+                        @ViewData["LoginError"]
+                    </div>
+                }
 
                 <div class="button-group">
                     <button type="submit" class="login-submit">Giriş Yap</button>
