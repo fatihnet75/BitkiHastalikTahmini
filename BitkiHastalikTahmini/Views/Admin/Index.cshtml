@@ -541,7 +541,18 @@
                         </div>
                         <div class="form-group">
                             <label>Arka Plan Resmi:</label>
-                            <input type="file" id="backgroundImage" name="backgroundImage" accept="image/*">
+                            <div id="backgroundGallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                                <!-- Resimler buraya yüklenecek -->
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <button type="button" id="refreshBackgrounds" class="btn btn-secondary">
+                                    <i class="fas fa-sync-alt"></i> Resimleri Yenile
+                                </button>
+                                <button type="button" id="uploadNewBackground" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Yeni Resim Yükle
+                                </button>
+                                <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
+                            </div>
                         </div>
                         <div class="button-group">
                             <button type="submit" class="save-button">Ayarları Kaydet</button>
@@ -817,4 +828,149 @@
             });
         }
     }
+    async function loadBackgroundImages() {
+           try {
+               const response = await fetch('/Admin/GetBackgroundImages');
+               const data = await response.json();
+
+               if (data.success) {
+                   const gallery = document.getElementById('backgroundGallery');
+                   gallery.innerHTML = '';
+
+                   data.images.forEach(imagePath => {
+                       const imgContainer = document.createElement('div');
+                       imgContainer.className = 'background-thumbnail';
+                       imgContainer.style.cursor = 'pointer';
+                       imgContainer.style.border = '2px solid #ddd';
+                       imgContainer.style.borderRadius = '5px';
+                       imgContainer.style.overflow = 'hidden';
+                       imgContainer.style.position = 'relative';
+
+                       const img = document.createElement('img');
+                       img.src = imagePath;
+                       img.style.width = '100%';
+                       img.style.height = '100px';
+                       img.style.objectFit = 'cover';
+
+                       const overlay = document.createElement('div');
+                       overlay.className = 'background-overlay';
+                       overlay.style.position = 'absolute';
+                       overlay.style.top = '0';
+                       overlay.style.left = '0';
+                       overlay.style.right = '0';
+                       overlay.style.bottom = '0';
+                       overlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                       overlay.style.display = 'none';
+
+                       const checkIcon = document.createElement('i');
+                       checkIcon.className = 'fas fa-check';
+                       checkIcon.style.position = 'absolute';
+                       checkIcon.style.top = '50%';
+                       checkIcon.style.left = '50%';
+                       checkIcon.style.transform = 'translate(-50%, -50%)';
+                       checkIcon.style.color = 'white';
+                       checkIcon.style.fontSize = '24px';
+                       checkIcon.style.display = 'none';
+
+                       imgContainer.appendChild(img);
+                       imgContainer.appendChild(overlay);
+                       imgContainer.appendChild(checkIcon);
+
+                       // Seçili resmi kontrol et
+                       if (document.body.style.backgroundImage.includes(`"${imagePath}"`)) {
+                           overlay.style.display = 'block';
+                           checkIcon.style.display = 'block';
+                           imgContainer.style.borderColor = 'var(--primary-color)';
+                       }
+
+                       imgContainer.addEventListener('click', async () => {
+                           // Seçimi güncelle
+                           document.querySelectorAll('.background-thumbnail').forEach(el => {
+                               el.querySelector('.background-overlay').style.display = 'none';
+                               el.querySelector('.fa-check').style.display = 'none';
+                               el.style.borderColor = '#ddd';
+                           });
+
+                           overlay.style.display = 'block';
+                           checkIcon.style.display = 'block';
+                           imgContainer.style.borderColor = 'var(--primary-color)';
+
+                           // Sunucuya seçimi kaydet
+                           const response = await fetch('/Admin/SetBackgroundImage', {
+                               method: 'POST',
+                               headers: {
+                                   'Content-Type': 'application/json',
+                               },
+                               body: JSON.stringify(imagePath)
+                           });
+
+                           const result = await response.json();
+                           if (result.success) {
+                               document.body.style.backgroundImage = `url('${imagePath}')`;
+                           } else {
+                               alert('Hata: ' + result.message);
+                           }
+                       });
+
+                       gallery.appendChild(imgContainer);
+                   });
+               } else {
+                   console.error('Resimler yüklenemedi:', data.message);
+               }
+           } catch (error) {
+               console.error('Hata:', error);
+           }
+       }
+
+       // Sayfa yüklendiğinde resimleri yükle
+       document.addEventListener('DOMContentLoaded', () => {
+           loadBackgroundImages();
+
+           // Yenile butonu
+           document.getElementById('refreshBackgrounds').addEventListener('click', loadBackgroundImages);
+
+           // Yükleme butonu
+           document.getElementById('uploadNewBackground').addEventListener('click', () => {
+               document.getElementById('backgroundUpload').click();
+           });
+
+           // Dosya yükleme işlemi
+           document.getElementById('backgroundUpload').addEventListener('change', async (e) => {
+               const file = e.target.files[0];
+               if (file) {
+                   const formData = new FormData();
+                   formData.append('file', file);
+
+                   try {
+                       const response = await fetch('/Admin/UploadBackgroundImage', {
+                           method: 'POST',
+                           body: formData
+                       });
+
+                       const result = await response.json();
+                       if (result.success) {
+                           alert('Resim başarıyla yüklendi!');
+                           loadBackgroundImages();
+                       } else {
+                           alert('Hata: ' + result.message);
+                       }
+                   } catch (error) {
+                       console.error('Hata:', error);
+                       alert('Bir hata oluştu: ' + error.message);
+                   }
+
+                   e.target.value = ''; // Input'u sıfırla
+               }
+           });
+       });
 </script>
+
+<style>
+    .background-thumbnail:hover {
+        border-color: var(--primary-color) !important;
+    }
+
+        .background-thumbnail:hover .background-overlay {
+            display: block !important;
+        }
+</style>

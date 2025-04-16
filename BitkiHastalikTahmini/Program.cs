@@ -10,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton<MongoDbContext>();
 
+// HttpContextAccessor yapılandırması (View'larda veya servislerde HttpContext erişimi için)
+builder.Services.AddHttpContextAccessor();
+
 // Session yapılandırması
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -38,9 +41,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthorization();
-app.UseSession(); // Session middleware
 
+app.UseAuthorization();
+
+app.UseSession(); // Session middleware burada aktif edilmeli
+
+// Default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=User}/{action=Index}/{id?}");
