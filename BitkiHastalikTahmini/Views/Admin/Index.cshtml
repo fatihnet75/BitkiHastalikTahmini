@@ -21,82 +21,12 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    body {
-        background-color: #f5f5f5;
-        color: #333;
-        overflow-x: hidden; /* Yatay kaydırmayı engelle */
-    }
-
-    /* Container'ı ortalamak için */
-    .container {
-        display: flex;
-        min-height: 100vh;
-        justify-content: center;
-        align-items: flex-start; /* Sayfayı yukarıdan başlat */
-        padding-top: 20px; /* Üstten biraz boşluk */
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden; /* Yatay kaydırmayı engelle */
-    }
-
-    .main-content {
-        flex: 1;
-        max-width: 1200px; /* Maximum genişlik */
-        width: 100%;
-        margin: 0 auto; /* Ortala */
-        transition: all 0.3s;
-        padding: 0 15px; /* Yan boşlukları azaltalım */
-        overflow-x: hidden; /* Yatay kaydırmayı engelle */
-    }
-
-    /* Header kısmını düzenle - butonu sağ köşeye al */
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 25px;
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: relative; /* Pozisyon referansı */
-    }
-
-    .header-left {
-        /* Solda başlığı tut */
-    }
-
-    .header-right {
-        /* Sağda butonu tut */
-    }
-
-        /* Butonu küçült */
-        .header-right .logout-button {
-            background-color: var(--danger-color);
-            color: white;
-            border: none;
-            padding: 6px 12px; /* Küçük padding */
-            border-radius: 5px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            font-size: 14px; /* Küçük font */
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-            .header-right .logout-button i {
-                margin-right: 5px;
-                font-size: 14px;
-            }
-
-    .content {
-        padding: 25px 0;
-    }
-
     .admin-container {
-        background-color: white;
+        background-color: inherit;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         padding: 25px;
+        margin: 20px;
     }
 
     .admin-stats {
@@ -107,7 +37,7 @@
     }
 
     .stat-card {
-        background-color: white;
+        background-color: inherit;
         border-radius: 8px;
         padding: 20px;
         text-align: center;
@@ -200,7 +130,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: inherit;
             transition: .4s;
             border-radius: 34px;
         }
@@ -212,7 +142,7 @@
                 width: 22px;
                 left: 4px;
                 bottom: 4px;
-                background-color: white;
+                background-color: inherit;
                 transition: .4s;
                 border-radius: 50%;
             }
@@ -289,16 +219,16 @@
 
         .admin-table th {
             background-color: var(--primary-color);
-            color: white;
+            color:inherit;
             font-weight: 600;
         }
 
         .admin-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: inherit;
         }
 
         .admin-table tr:hover {
-            background-color: #f1f1f1;
+            background-color: inherit;
         }
 
     .model-selection {
@@ -344,7 +274,7 @@
     }
 
     .modal-content {
-        background-color: white;
+        background-color: inherit;
         margin: 5% auto;
         padding: 25px;
         border-radius: 8px;
@@ -385,205 +315,192 @@
         gap: 10px;
     }
 
+    /* Arka plan resim galerisi */
+    .background-thumbnail {
+        cursor: pointer;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s;
+    }
+
+        .background-thumbnail:hover {
+            border-color: var(--primary-color);
+        }
+
+        .background-thumbnail.selected {
+            border-color: var(--primary-color);
+        }
+
+    .background-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.3);
+        display: none;
+    }
+
+    .background-thumbnail.selected .background-overlay {
+        display: block;
+    }
+
     /* Responsive stiller */
-   
-        .admin-stats
+    @@media (max-width: 768px) {
+        .admin-stats {
+            grid-template-columns: 1fr;
+        }
 
-    {
-        grid-template-columns: 1fr 1fr;
+        .model-selection {
+            flex-direction: column;
+        }
     }
-
-    .model-selection {
-        flex-direction: column;
-    }
-
-    
-
-   
-        .admin-stats
-
-    {
-        grid-template-columns: 1fr;
-    }
-
-    .header {
-        flex-direction: row; /* Row olarak tutalım ki yanyana kalsın */
-        align-items: center;
-    }
-
-    .header-right {
-        margin-top: 0;
-        width: auto; /* Full width değil, auto */
-    }
-
-    .logout-button {
-        width: auto; /* Full width değil, auto */
-        justify-content: center;
-    }
-
-    
 </style>
 
-<div class="container">
-    <div class="main-content">
-        <header class="header">
-            <div class="header-left">
-                <h1>Admin Paneli</h1>
+<div class="admin-container">
+    <div class="admin-stats">
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h3>Toplam Kullanıcı</h3>
+            <div class="stat-value" id="totalUsers">@ViewBag.TotalUsers</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Toplam Analiz</h3>
+            <div class="stat-value" id="totalAnalysis">@ViewBag.TotalAnalysis</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-clock"></i>
+            <h3>Bugünkü Analiz</h3>
+            <div class="stat-value" id="todayAnalysis">@ViewBag.TodayAnalysis</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-user-check"></i>
+            <h3>Aktif Kullanıcı</h3>
+            <div class="stat-value" id="activeUsers">@ViewBag.ActiveUsers</div>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Model Yönetimi</h2>
+        <div class="model-selection">
+            <div class="model-card" id="model1">
+                <h3>Bitki Hastalık Modeli</h3>
+                <p>Bitki yapraklarındaki hastalıkları tespit eden model</p>
+                <input type="file" id="model1File" accept=".h5,.pt,.pth,.model" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('model1File').click()">Model Seç</button>
             </div>
-            <div class="header-right">
-                <a asp-controller="User" asp-action="Index" class="logout-button">
-                    <i class="fas fa-sign-out-alt"></i> Çıkış
-                </a>
+            <div class="model-card" id="model2">
+                <h3>Toprak Analiz Modeli</h3>
+                <p>Toprak özelliklerine göre analiz yapan model</p>
+                <input type="file" id="model2File" accept=".h5,.pt,.pth,.model" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('model2File').click()">Model Seç</button>
             </div>
-        </header>
+        </div>
+        <div class="button-group">
+            <button class="save-button" id="saveModels">Modelleri Kaydet</button>
+        </div>
+    </div>
 
-        <main class="content">
-            <div class="admin-container">
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <i class="fas fa-users"></i>
-                        <h3>Toplam Kullanıcı</h3>
-                        <div class="stat-value" id="totalUsers">@ViewBag.TotalUsers</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>Toplam Analiz</h3>
-                        <div class="stat-value" id="totalAnalysis">@ViewBag.TotalAnalysis</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-clock"></i>
-                        <h3>Bugünkü Analiz</h3>
-                        <div class="stat-value" id="todayAnalysis">@ViewBag.TodayAnalysis</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-user-check"></i>
-                        <h3>Aktif Kullanıcı</h3>
-                        <div class="stat-value" id="activeUsers">@ViewBag.ActiveUsers</div>
-                    </div>
-                </div>
+    <div class="admin-section">
+        <h2>Kullanıcı Yönetimi</h2>
+        @Html.AntiForgeryToken()
+        <div class="table-container">
+            <table class="admin-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ad Soyad</th>
+                        <th>E-posta</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Users != null && ViewBag.Users.Count > 0)
+                    {
+                        foreach (var user in ViewBag.Users)
+                        {
+                            <tr data-user-id="@user.Id">
+                                <td>@user.UserId</td>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>Aktif</td>
+                                <td>
+                                    <button class="btn btn-primary edit-btn" data-user-id="@user.Id">Düzenle</button>
+                                    <button class="btn btn-danger delete-btn" data-user-id="@user.Id">Sil</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">Hiç kullanıcı bulunamadı.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                <div class="admin-section">
-                    <h2>Model Yönetimi</h2>
-                    <div class="model-selection">
-                        <div class="model-card" id="model1">
-                            <h3>Bitki Hastalık Modeli</h3>
-                            <p>Bitki yapraklarındaki hastalıkları tespit eden model</p>
-                            <input type="file" id="model1File" accept=".h5,.pt,.pth,.model" style="display: none;">
-                            <button class="btn btn-primary" onclick="document.getElementById('model1File').click()">Model Seç</button>
-                        </div>
-                        <div class="model-card" id="model2">
-                            <h3>Toprak Analiz Modeli</h3>
-                            <p>Toprak özelliklerine göre analiz yapan model</p>
-                            <input type="file" id="model2File" accept=".h5,.pt,.pth,.model" style="display: none;">
-                            <button class="btn btn-primary" onclick="document.getElementById('model2File').click()">Model Seç</button>
-                        </div>
-                    </div>
-                    <div class="button-group">
-                        <button class="save-button" id="saveModels">Modelleri Kaydet</button>
-                    </div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Kullanıcı Yönetimi</h2>
-                    @Html.AntiForgeryToken()
-                    <div class="table-container">
-                        <table class="admin-table" id="usersTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Ad Soyad</th>
-                                    <th>E-posta</th>
-                                    <th>Durum</th>
-                                    <th>İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (ViewBag.Users != null && ViewBag.Users.Count > 0)
-                                {
-                                    foreach (var user in ViewBag.Users)
-                                    {
-                                        <tr data-user-id="@user.Id">
-                                            <td>@user.UserId</td>
-                                            <td>@user.FirstName @user.LastName</td>
-                                            <td>@user.Email</td>
-                                            <td>Aktif</td> @* You might want to add a Status field to your User model *@
-                                            <td>
-                                                <button class="btn btn-primary edit-btn" data-user-id="@user.Id">Düzenle</button>
-                                                <button class="btn btn-danger delete-btn" data-user-id="@user.Id">Sil</button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="5" class="text-center">Hiç kullanıcı bulunamadı.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Sistem Ayarları</h2>
-                    <form id="settingsForm">
-                        <div class="form-group">
-                            <label>Maksimum Deneme Hakkı:</label>
-                            <input type="number" name="maxTrials" id="maxTrials" value="3">
-                        </div>
-                        <div class="form-group">
-                            <label>Bakım Modu:</label>
-                            <div class="toggle-switch">
-                                <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
-                                <label for="maintenanceMode"></label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Arka Plan Resmi:</label>
-                            <div id="backgroundGallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
-                                <!-- Resimler buraya yüklenecek -->
-                            </div>
-                            <div style="margin-top: 15px;">
-                                <button type="button" id="refreshBackgrounds" class="btn btn-secondary">
-                                    <i class="fas fa-sync-alt"></i> Resimleri Yenile
-                                </button>
-                                <button type="button" id="uploadNewBackground" class="btn btn-primary">
-                                    <i class="fas fa-upload"></i> Yeni Resim Yükle
-                                </button>
-                                <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
-                            </div>
-                        </div>
-                        <div class="button-group">
-                            <button type="submit" class="save-button">Ayarları Kaydet</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Analiz Geçmişi</h2>
-                    <div class="table-container">
-                        <table class="admin-table" id="analysisTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Kullanıcı</th>
-                                    <th>Analiz Tipi</th>
-                                    <th>Tarih</th>
-                                    <th>Sonuç</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Analysis history will be loaded here -->
-                                <tr>
-                                    <td colspan="5" class="text-center">Henüz analiz geçmişi bulunmamaktadır.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="admin-section">
+        <h2>Sistem Ayarları</h2>
+        <form id="settingsForm">
+            <div class="form-group">
+                <label>Maksimum Deneme Hakkı:</label>
+                <input type="number" name="maxTrials" id="maxTrials" value="3">
+            </div>
+            <div class="form-group">
+                <label>Bakım Modu:</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
+                    <label for="maintenanceMode"></label>
                 </div>
             </div>
-        </main>
+            <div class="form-group">
+                <label>Arka Plan Resmi:</label>
+                <div id="backgroundGallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <!-- Resimler buraya yüklenecek -->
+                </div>
+                <div style="margin-top: 15px;">
+                    <button type="button" id="refreshBackgrounds" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Resimleri Yenile
+                    </button>
+                    <button type="button" id="uploadNewBackground" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Yeni Resim Yükle
+                    </button>
+                    <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="save-button">Ayarları Kaydet</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="admin-section">
+        <h2>Analiz Geçmişi</h2>
+        <div class="table-container">
+            <table class="admin-table" id="analysisTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kullanıcı</th>
+                        <th>Analiz Tipi</th>
+                        <th>Tarih</th>
+                        <th>Sonuç</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="text-center">Henüz analiz geçmişi bulunmamaktadır.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -625,7 +542,6 @@
 
 <script>
     // DOM Elements
-    // DOM Elementleri
     const modelCards = document.querySelectorAll('.model-card');
     const model1File = document.getElementById('model1File');
     const model2File = document.getElementById('model2File');
@@ -665,32 +581,22 @@
         }
     });
 
-    // Ayarlar formu gönderimi
-    settingsForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Ayarlar başarıyla kaydedildi!');
-    });
-
-    // Modal açma/kapatma işlevleri
+    // Modal işlevleri
     function openEditModal(userId) {
-        // Kullanıcı satırını bul
         const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
         if (!userRow) return;
 
-        // Satırdan kullanıcı verilerini al
         const fullName = userRow.cells[1].textContent.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0];
         const lastName = nameParts.slice(1).join(' ');
         const email = userRow.cells[2].textContent.trim();
 
-        // Formu doldur
         document.getElementById('editUserId').value = userId;
         document.getElementById('editUserName').value = fullName;
         document.getElementById('editUserEmail').value = email;
         document.getElementById('editUserPassword').value = '';
 
-        // Modalı göster
         editUserModal.style.display = 'block';
     }
 
@@ -701,14 +607,13 @@
     closeButton.addEventListener('click', closeEditModal);
     cancelEditBtn.addEventListener('click', closeEditModal);
 
-    // Dışarı tıklayarak modalı kapatma
     window.addEventListener('click', function(event) {
         if (event.target === editUserModal) {
             closeEditModal();
         }
     });
 
-    // Kullanıcı düzenleme formu gönderimi
+    // Kullanıcı düzenleme formu
     editUserForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -720,10 +625,8 @@
         const email = document.getElementById('editUserEmail').value;
         const password = document.getElementById('editUserPassword').value;
 
-        // CSRF token
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-        // AJAX çağrısı ile kullanıcıyı güncelle
         fetch('/Admin/EditUser', {
             method: 'POST',
             headers: {
@@ -738,15 +641,9 @@
                 password: password
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Tabloda kullanıcıyı güncelle
                 const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
                 if (userRow) {
                     userRow.cells[1].textContent = `${firstName} ${lastName}`;
@@ -764,32 +661,11 @@
         });
     });
 
-    // Kullanıcı silme işlevi için butona tıklama olayı ekle
-    document.addEventListener('DOMContentLoaded', function() {
-        // Edit butonları için event dinleyiciler
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user-id');
-                openEditModal(userId);
-            });
-        });
-
-        // Delete butonları için event dinleyiciler
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user-id');
-                deleteUser(userId);
-            });
-        });
-    });
-
-    // Kullanıcı silme işlevi
+    // Kullanıcı silme
     function deleteUser(userId) {
         if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-            // CSRF token
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-            // AJAX çağrısı ile kullanıcıyı sil
             fetch('/Admin/DeleteUser', {
                 method: 'POST',
                 headers: {
@@ -800,19 +676,12 @@
                     id: userId
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Kullanıcıyı tablodan kaldır
                     const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
                     if (userRow) {
                         userRow.remove();
-                        // İstatistikleri güncelle
                         const userCount = document.querySelectorAll('#usersTable tbody tr').length;
                         document.getElementById('totalUsers').textContent = userCount;
                         document.getElementById('activeUsers').textContent = userCount;
@@ -828,149 +697,141 @@
             });
         }
     }
+
+    // Arka plan resim yönetimi
     async function loadBackgroundImages() {
-           try {
-               const response = await fetch('/Admin/GetBackgroundImages');
-               const data = await response.json();
+        try {
+            const response = await fetch('/Admin/GetBackgroundImages');
+            const data = await response.json();
 
-               if (data.success) {
-                   const gallery = document.getElementById('backgroundGallery');
-                   gallery.innerHTML = '';
+            if (data.success) {
+                const gallery = document.getElementById('backgroundGallery');
+                gallery.innerHTML = '';
 
-                   data.images.forEach(imagePath => {
-                       const imgContainer = document.createElement('div');
-                       imgContainer.className = 'background-thumbnail';
-                       imgContainer.style.cursor = 'pointer';
-                       imgContainer.style.border = '2px solid #ddd';
-                       imgContainer.style.borderRadius = '5px';
-                       imgContainer.style.overflow = 'hidden';
-                       imgContainer.style.position = 'relative';
+                data.images.forEach(imagePath => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'background-thumbnail';
+                    imgContainer.style.cursor = 'pointer';
+                    imgContainer.style.border = '2px solid #ddd';
+                    imgContainer.style.borderRadius = '5px';
+                    imgContainer.style.overflow = 'hidden';
+                    imgContainer.style.position = 'relative';
 
-                       const img = document.createElement('img');
-                       img.src = imagePath;
-                       img.style.width = '100%';
-                       img.style.height = '100px';
-                       img.style.objectFit = 'cover';
+                    const img = document.createElement('img');
+                    img.src = imagePath;
+                    img.style.width = '100%';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
 
-                       const overlay = document.createElement('div');
-                       overlay.className = 'background-overlay';
-                       overlay.style.position = 'absolute';
-                       overlay.style.top = '0';
-                       overlay.style.left = '0';
-                       overlay.style.right = '0';
-                       overlay.style.bottom = '0';
-                       overlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
-                       overlay.style.display = 'none';
+                    const overlay = document.createElement('div');
+                    overlay.className = 'background-overlay';
+                    overlay.style.display = 'none';
 
-                       const checkIcon = document.createElement('i');
-                       checkIcon.className = 'fas fa-check';
-                       checkIcon.style.position = 'absolute';
-                       checkIcon.style.top = '50%';
-                       checkIcon.style.left = '50%';
-                       checkIcon.style.transform = 'translate(-50%, -50%)';
-                       checkIcon.style.color = 'white';
-                       checkIcon.style.fontSize = '24px';
-                       checkIcon.style.display = 'none';
+                    const checkIcon = document.createElement('i');
+                    checkIcon.className = 'fas fa-check';
+                    checkIcon.style.position = 'absolute';
+                    checkIcon.style.top = '50%';
+                    checkIcon.style.left = '50%';
+                    checkIcon.style.transform = 'translate(-50%, -50%)';
+                    checkIcon.style.color = 'white';
+                    checkIcon.style.fontSize = '24px';
+                    checkIcon.style.display = 'none';
 
-                       imgContainer.appendChild(img);
-                       imgContainer.appendChild(overlay);
-                       imgContainer.appendChild(checkIcon);
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(overlay);
+                    imgContainer.appendChild(checkIcon);
 
-                       // Seçili resmi kontrol et
-                       if (document.body.style.backgroundImage.includes(`"${imagePath}"`)) {
-                           overlay.style.display = 'block';
-                           checkIcon.style.display = 'block';
-                           imgContainer.style.borderColor = 'var(--primary-color)';
-                       }
+                    if (document.body.style.backgroundImage.includes(`"${imagePath}"`)) {
+                        overlay.style.display = 'block';
+                        checkIcon.style.display = 'block';
+                        imgContainer.style.borderColor = 'var(--primary-color)';
+                    }
 
-                       imgContainer.addEventListener('click', async () => {
-                           // Seçimi güncelle
-                           document.querySelectorAll('.background-thumbnail').forEach(el => {
-                               el.querySelector('.background-overlay').style.display = 'none';
-                               el.querySelector('.fa-check').style.display = 'none';
-                               el.style.borderColor = '#ddd';
-                           });
+                    imgContainer.addEventListener('click', async () => {
+                        document.querySelectorAll('.background-thumbnail').forEach(el => {
+                            el.querySelector('.background-overlay').style.display = 'none';
+                            el.querySelector('.fa-check').style.display = 'none';
+                            el.style.borderColor = '#ddd';
+                        });
 
-                           overlay.style.display = 'block';
-                           checkIcon.style.display = 'block';
-                           imgContainer.style.borderColor = 'var(--primary-color)';
+                        overlay.style.display = 'block';
+                        checkIcon.style.display = 'block';
+                        imgContainer.style.borderColor = 'var(--primary-color)';
 
-                           // Sunucuya seçimi kaydet
-                           const response = await fetch('/Admin/SetBackgroundImage', {
-                               method: 'POST',
-                               headers: {
-                                   'Content-Type': 'application/json',
-                               },
-                               body: JSON.stringify(imagePath)
-                           });
+                        const response = await fetch('/Admin/SetBackgroundImage', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(imagePath)
+                        });
 
-                           const result = await response.json();
-                           if (result.success) {
-                               document.body.style.backgroundImage = `url('${imagePath}')`;
-                           } else {
-                               alert('Hata: ' + result.message);
-                           }
-                       });
+                        const result = await response.json();
+                        if (!result.success) {
+                            alert('Hata: ' + result.message);
+                        }
+                    });
 
-                       gallery.appendChild(imgContainer);
-                   });
-               } else {
-                   console.error('Resimler yüklenemedi:', data.message);
-               }
-           } catch (error) {
-               console.error('Hata:', error);
-           }
-       }
-
-       // Sayfa yüklendiğinde resimleri yükle
-       document.addEventListener('DOMContentLoaded', () => {
-           loadBackgroundImages();
-
-           // Yenile butonu
-           document.getElementById('refreshBackgrounds').addEventListener('click', loadBackgroundImages);
-
-           // Yükleme butonu
-           document.getElementById('uploadNewBackground').addEventListener('click', () => {
-               document.getElementById('backgroundUpload').click();
-           });
-
-           // Dosya yükleme işlemi
-           document.getElementById('backgroundUpload').addEventListener('change', async (e) => {
-               const file = e.target.files[0];
-               if (file) {
-                   const formData = new FormData();
-                   formData.append('file', file);
-
-                   try {
-                       const response = await fetch('/Admin/UploadBackgroundImage', {
-                           method: 'POST',
-                           body: formData
-                       });
-
-                       const result = await response.json();
-                       if (result.success) {
-                           alert('Resim başarıyla yüklendi!');
-                           loadBackgroundImages();
-                       } else {
-                           alert('Hata: ' + result.message);
-                       }
-                   } catch (error) {
-                       console.error('Hata:', error);
-                       alert('Bir hata oluştu: ' + error.message);
-                   }
-
-                   e.target.value = ''; // Input'u sıfırla
-               }
-           });
-       });
-</script>
-
-<style>
-    .background-thumbnail:hover {
-        border-color: var(--primary-color) !important;
+                    gallery.appendChild(imgContainer);
+                });
+            } else {
+                console.error('Resimler yüklenemedi:', data.message);
+            }
+        } catch (error) {
+            console.error('Hata:', error);
+        }
     }
 
-        .background-thumbnail:hover .background-overlay {
-            display: block !important;
-        }
-</style>
+    // Sayfa yüklendiğinde
+    document.addEventListener('DOMContentLoaded', () => {
+        // Edit ve Delete butonları
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                openEditModal(this.getAttribute('data-user-id'));
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                deleteUser(this.getAttribute('data-user-id'));
+            });
+        });
+
+        // Arka plan resimleri
+        loadBackgroundImages();
+
+        document.getElementById('refreshBackgrounds').addEventListener('click', loadBackgroundImages);
+
+        document.getElementById('uploadNewBackground').addEventListener('click', () => {
+            document.getElementById('backgroundUpload').click();
+        });
+
+        document.getElementById('backgroundUpload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch('/Admin/UploadBackgroundImage', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Resim başarıyla yüklendi!');
+                        loadBackgroundImages();
+                    } else {
+                        alert('Hata: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Hata:', error);
+                    alert('Bir hata oluştu: ' + error.message);
+                }
+
+                e.target.value = '';
+            }
+        });
+    });
+</script>
