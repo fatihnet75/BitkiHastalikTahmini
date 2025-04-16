@@ -24,22 +24,32 @@
     body {
         background-color: #f5f5f5;
         color: #333;
+        overflow-x: hidden; /* Yatay kaydırmayı engelle */
     }
 
+    /* Container'ı ortalamak için */
     .container {
         display: flex;
         min-height: 100vh;
         justify-content: center;
+        align-items: flex-start; /* Sayfayı yukarıdan başlat */
+        padding-top: 20px; /* Üstten biraz boşluk */
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden; /* Yatay kaydırmayı engelle */
     }
 
     .main-content {
         flex: 1;
-        max-width: 1200px;
+        max-width: 1200px; /* Maximum genişlik */
         width: 100%;
+        margin: 0 auto; /* Ortala */
         transition: all 0.3s;
-        padding: 0 20px;
+        padding: 0 15px; /* Yan boşlukları azaltalım */
+        overflow-x: hidden; /* Yatay kaydırmayı engelle */
     }
 
+    /* Header kısmını düzenle - butonu sağ köşeye al */
     .header {
         display: flex;
         justify-content: space-between;
@@ -47,31 +57,36 @@
         padding: 15px 25px;
         background-color: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: relative; /* Pozisyon referansı */
     }
 
     .header-left {
-        display: flex;
-        align-items: center;
+        /* Solda başlığı tut */
     }
 
-    .sidebar-toggle {
-        display: none;
+    .header-right {
+        /* Sağda butonu tut */
     }
 
-    .header-right .logout-button {
-        background-color: var(--danger-color);
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-    }
-
-        .header-right .logout-button i {
-            margin-right: 5px;
+        /* Butonu küçült */
+        .header-right .logout-button {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 6px 12px; /* Küçük padding */
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px; /* Küçük font */
+            text-decoration: none;
+            white-space: nowrap;
         }
+
+            .header-right .logout-button i {
+                margin-right: 5px;
+                font-size: 14px;
+            }
 
     .content {
         padding: 25px 0;
@@ -255,6 +270,8 @@
 
     .table-container {
         overflow-x: auto;
+        max-width: 100%;
+        margin-bottom: 20px;
     }
 
     .admin-table {
@@ -369,7 +386,7 @@
     }
 
     /* Responsive stiller */
-    {
+   
         .admin-stats
 
     {
@@ -380,9 +397,9 @@
         flex-direction: column;
     }
 
-    }
+    
 
-  {
+   
         .admin-stats
 
     {
@@ -390,21 +407,21 @@
     }
 
     .header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row; /* Row olarak tutalım ki yanyana kalsın */
+        align-items: center;
     }
 
     .header-right {
-        margin-top: 15px;
-        width: 100%;
+        margin-top: 0;
+        width: auto; /* Full width değil, auto */
     }
 
     .logout-button {
-        width: 100%;
+        width: auto; /* Full width değil, auto */
         justify-content: center;
     }
 
-    }
+    
 </style>
 
 <div class="container">
@@ -415,7 +432,7 @@
             </div>
             <div class="header-right">
                 <a asp-controller="User" asp-action="Index" class="logout-button">
-                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
                 </a>
             </div>
         </header>
@@ -426,22 +443,22 @@
                     <div class="stat-card">
                         <i class="fas fa-users"></i>
                         <h3>Toplam Kullanıcı</h3>
-                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-value" id="totalUsers">@ViewBag.TotalUsers</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-chart-line"></i>
                         <h3>Toplam Analiz</h3>
-                        <div class="stat-value" id="totalAnalysis">0</div>
+                        <div class="stat-value" id="totalAnalysis">@ViewBag.TotalAnalysis</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-clock"></i>
                         <h3>Bugünkü Analiz</h3>
-                        <div class="stat-value" id="todayAnalysis">0</div>
+                        <div class="stat-value" id="todayAnalysis">@ViewBag.TodayAnalysis</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-user-check"></i>
                         <h3>Aktif Kullanıcı</h3>
-                        <div class="stat-value" id="activeUsers">0</div>
+                        <div class="stat-value" id="activeUsers">@ViewBag.ActiveUsers</div>
                     </div>
                 </div>
 
@@ -468,6 +485,7 @@
 
                 <div class="admin-section">
                     <h2>Kullanıcı Yönetimi</h2>
+                    @Html.AntiForgeryToken()
                     <div class="table-container">
                         <table class="admin-table" id="usersTable">
                             <thead>
@@ -480,7 +498,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Users will be loaded here -->
+                                @if (ViewBag.Users != null && ViewBag.Users.Count > 0)
+                                {
+                                    foreach (var user in ViewBag.Users)
+                                    {
+                                        <tr data-user-id="@user.Id">
+                                            <td>@user.UserId</td>
+                                            <td>@user.FirstName @user.LastName</td>
+                                            <td>@user.Email</td>
+                                            <td>Aktif</td> @* You might want to add a Status field to your User model *@
+                                            <td>
+                                                <button class="btn btn-primary edit-btn" data-user-id="@user.Id">Düzenle</button>
+                                                <button class="btn btn-danger delete-btn" data-user-id="@user.Id">Sil</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center">Hiç kullanıcı bulunamadı.</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -491,7 +530,7 @@
                     <form id="settingsForm">
                         <div class="form-group">
                             <label>Maksimum Deneme Hakkı:</label>
-                            <input type="number" name="maxTrials" id="maxTrials" value="">
+                            <input type="number" name="maxTrials" id="maxTrials" value="3">
                         </div>
                         <div class="form-group">
                             <label>Bakım Modu:</label>
@@ -525,6 +564,9 @@
                             </thead>
                             <tbody>
                                 <!-- Analysis history will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="text-center">Henüz analiz geçmişi bulunmamaktadır.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -572,6 +614,7 @@
 
 <script>
     // DOM Elements
+    // DOM Elementleri
     const modelCards = document.querySelectorAll('.model-card');
     const model1File = document.getElementById('model1File');
     const model2File = document.getElementById('model2File');
@@ -581,9 +624,8 @@
     const editUserForm = document.getElementById('editUserForm');
     const closeButton = document.querySelector('.close-button');
     const cancelEditBtn = document.getElementById('cancelEdit');
-    let currentEditUserId = null;
 
-    // Model selection
+    // Model seçimi
     modelCards.forEach(card => {
         card.addEventListener('click', function() {
             modelCards.forEach(c => c.classList.remove('selected'));
@@ -591,7 +633,7 @@
         });
     });
 
-    // Save models
+    // Modelleri kaydetme
     saveModelsBtn.addEventListener('click', function() {
         if (model1File.files.length > 0 || model2File.files.length > 0) {
             const formData = new FormData();
@@ -612,25 +654,37 @@
         }
     });
 
-    // Settings form submission
+    // Ayarlar formu gönderimi
     settingsForm.addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Ayarlar başarıyla kaydedildi!');
     });
 
     // Modal açma/kapatma işlevleri
-    function openEditModal(user) {
-        currentEditUserId = user.id;
-        document.getElementById('editUserId').value = user.id;
-        document.getElementById('editUserName').value = user.name;
-        document.getElementById('editUserEmail').value = user.email;
-        document.getElementById('editUserStatus').value = user.status;
+    function openEditModal(userId) {
+        // Kullanıcı satırını bul
+        const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+        if (!userRow) return;
+
+        // Satırdan kullanıcı verilerini al
+        const fullName = userRow.cells[1].textContent.trim();
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ');
+        const email = userRow.cells[2].textContent.trim();
+
+        // Formu doldur
+        document.getElementById('editUserId').value = userId;
+        document.getElementById('editUserName').value = fullName;
+        document.getElementById('editUserEmail').value = email;
+        document.getElementById('editUserPassword').value = '';
+
+        // Modalı göster
         editUserModal.style.display = 'block';
     }
 
     function closeEditModal() {
         editUserModal.style.display = 'none';
-        currentEditUserId = null;
     }
 
     closeButton.addEventListener('click', closeEditModal);
@@ -648,120 +702,119 @@
         e.preventDefault();
 
         const userId = document.getElementById('editUserId').value;
-        const name = document.getElementById('editUserName').value;
+        const fullName = document.getElementById('editUserName').value;
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ');
         const email = document.getElementById('editUserEmail').value;
-        const status = document.getElementById('editUserStatus').value;
         const password = document.getElementById('editUserPassword').value;
 
-        // Burada AJAX çağrısı yapılabilir
-        // Örnek olarak doğrudan tabloyu güncelliyoruz
-        const userRow = document.querySelector(`#usersTable tr[data-user-id="${userId}"]`);
-        if (userRow) {
-            userRow.cells[1].textContent = name;
-            userRow.cells[2].textContent = email;
-            userRow.cells[3].textContent = status;
-        }
+        // CSRF token
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-        alert('Kullanıcı bilgileri güncellendi!');
-        closeEditModal();
+        // AJAX çağrısı ile kullanıcıyı güncelle
+        fetch('/Admin/EditUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({
+                id: userId,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Tabloda kullanıcıyı güncelle
+                const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+                if (userRow) {
+                    userRow.cells[1].textContent = `${firstName} ${lastName}`;
+                    userRow.cells[2].textContent = email;
+                }
+                alert('Kullanıcı bilgileri güncellendi!');
+                closeEditModal();
+            } else {
+                alert('Hata: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Bir hata oluştu: ' + error.message);
+        });
+    });
+
+    // Kullanıcı silme işlevi için butona tıklama olayı ekle
+    document.addEventListener('DOMContentLoaded', function() {
+        // Edit butonları için event dinleyiciler
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                openEditModal(userId);
+            });
+        });
+
+        // Delete butonları için event dinleyiciler
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                deleteUser(userId);
+            });
+        });
     });
 
     // Kullanıcı silme işlevi
     function deleteUser(userId) {
         if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-            const userRow = document.querySelector(`#usersTable tr[data-user-id="${userId}"]`);
-            if (userRow) {
-                userRow.remove();
-                updateStats();
-                alert('Kullanıcı başarıyla silindi!');
-            }
+            // CSRF token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            // AJAX çağrısı ile kullanıcıyı sil
+            fetch('/Admin/DeleteUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    id: userId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Kullanıcıyı tablodan kaldır
+                    const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+                    if (userRow) {
+                        userRow.remove();
+                        // İstatistikleri güncelle
+                        const userCount = document.querySelectorAll('#usersTable tbody tr').length;
+                        document.getElementById('totalUsers').textContent = userCount;
+                        document.getElementById('activeUsers').textContent = userCount;
+                    }
+                    alert('Kullanıcı başarıyla silindi!');
+                } else {
+                    alert('Hata: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Bir hata oluştu: ' + error.message);
+            });
         }
     }
-
-    // İstatistikleri güncelleme
-    function updateStats() {
-        const userCount = document.querySelectorAll('#usersTable tbody tr').length;
-        document.getElementById('totalUsers').textContent = userCount;
-
-        // Aktif kullanıcı sayısını hesapla
-        const activeUsers = Array.from(document.querySelectorAll('#usersTable tbody tr'))
-            .filter(row => row.cells[3].textContent === 'Aktif').length;
-        document.getElementById('activeUsers').textContent = activeUsers;
-    }
-
-    // Load stats and sample data
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('totalUsers').textContent = '124';
-        document.getElementById('totalAnalysis').textContent = '1,245';
-        document.getElementById('todayAnalysis').textContent = '42';
-        document.getElementById('activeUsers').textContent = '89';
-
-        // Load sample users
-        const usersTable = document.querySelector('#usersTable tbody');
-        const sampleUsers = [
-            { id: 1, name: 'Ahmet Yılmaz', email: 'ahmet@example.com', status: 'Aktif' },
-            { id: 2, name: 'Ayşe Kaya', email: 'ayse@example.com', status: 'Aktif' },
-            { id: 3, name: 'Mehmet Demir', email: 'mehmet@example.com', status: 'Pasif' },
-            { id: 4, name: 'Fatma Şahin', email: 'fatma@example.com', status: 'Aktif' }
-        ];
-
-        sampleUsers.forEach(user => {
-            const row = document.createElement('tr');
-            row.setAttribute('data-user-id', user.id);
-            row.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.status}</td>
-                <td>
-                    <button class="btn btn-primary edit-btn" data-user-id="${user.id}">Düzenle</button>
-                    <button class="btn btn-danger delete-btn" data-user-id="${user.id}">Sil</button>
-                </td>
-            `;
-            usersTable.appendChild(row);
-        });
-
-        // Düzenle ve Sil butonlarına event listener ekleme
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = parseInt(this.getAttribute('data-user-id'));
-                const userRow = this.closest('tr');
-                const user = {
-                    id: userId,
-                    name: userRow.cells[1].textContent,
-                    email: userRow.cells[2].textContent,
-                    status: userRow.cells[3].textContent
-                };
-                openEditModal(user);
-            });
-        });
-
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = parseInt(this.getAttribute('data-user-id'));
-                deleteUser(userId);
-            });
-        });
-
-        // Load sample analysis history
-        const analysisTable = document.querySelector('#analysisTable tbody');
-        const sampleAnalysis = [
-            { id: 1, user: 'Ahmet Yılmaz', type: 'Görüntü Analizi', date: '2023-05-15', result: 'Yaprak Küfü' },
-            { id: 2, user: 'Ayşe Kaya', type: 'Toprak Analizi', date: '2023-05-14', result: 'Optimal' },
-            { id: 3, user: 'Mehmet Demir', type: 'Görüntü Analizi', date: '2023-05-14', result: 'Sağlıklı' },
-            { id: 4, user: 'Fatma Şahin', type: 'Toprak Analizi', date: '2023-05-13', result: 'pH Düşük' }
-        ];
-
-        sampleAnalysis.forEach(analysis => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${analysis.id}</td>
-                <td>${analysis.user}</td>
-                <td>${analysis.type}</td>
-                <td>${analysis.date}</td>
-                <td>${analysis.result}</td>
-            `;
-            analysisTable.appendChild(row);
-        });
-    });
 </script>
