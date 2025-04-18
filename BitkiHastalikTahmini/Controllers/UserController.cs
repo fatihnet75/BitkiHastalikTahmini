@@ -1,4 +1,4 @@
-// UserController.cs
+ï»¿// UserController.cs
 using BitkiHastalikTahmini.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -15,22 +15,22 @@ namespace BitkiHastalikTahmini.Controllers
             _context = context;
         }
 
-        // Kullanıcı listesini görüntüle
+        // KullanÃ½cÃ½ listesini gÃ¶rÃ¼ntÃ¼le
         public IActionResult Index()
         {
             var users = _context.Users.Find(_ => true).ToList();
-            return View(users); // Index.cshtml dosyasını açacak
+            return View(users); // Index.cshtml dosyasÃ½nÃ½ aÃ§acak
         }
 
 
 
-        // Yeni kullanıcı ekleme sayfasını göster
+        // Yeni kullanÃ½cÃ½ ekleme sayfasÃ½nÃ½ gÃ¶ster
         public IActionResult Create()
         {
             return View();
         }
 
-        // Yeni kullanıcı kaydetme işlemi
+        // Yeni kullanÃ½cÃ½ kaydetme iÃ¾lemi
         [HttpPost]
         public IActionResult Create(User user)
         {
@@ -41,7 +41,7 @@ namespace BitkiHastalikTahmini.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Kullanıcı kaydedilirken hata: {ex.Message}";
+                ViewBag.ErrorMessage = $"KullanÃ½cÃ½ kaydedilirken hata: {ex.Message}";
                 return View(user);
             }
         }
