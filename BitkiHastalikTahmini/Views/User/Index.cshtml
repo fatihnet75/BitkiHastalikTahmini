@@ -1,1183 +1,872 @@
-﻿﻿@{
+﻿@model IEnumerable<BitkiHastalikTahmini.Models.User>
+@{
     ViewData["Title"] = "Anasayfa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    /* Genel Stil */
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: inherit;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+    /* Modern Responsive Design */
+    :root {
+        --primary-color: #4CAF50;
+        --primary-hover: #45a049;
+        --secondary-color: #2196F3;
+        --text-color: #333;
+        --light-text: #f1f1f1;
+        --background-light: #f9f9f9;
+        --border-radius: 16px;
+        --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
     }
 
-    .analysis-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        margin-top: 80px;
-        flex-wrap: wrap;
-    }
-
-    .analysis-choice-button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 25px 35px;
-        border-radius: 20px;
-        width: 280px;
+    .hero-section {
         text-align: center;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        cursor: pointer;
-        transition: all 0.4s ease;
+        padding: 40px 20px;
+        margin-bottom: 20px;
+    }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+    .analysis-cards {
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        align-items: center;
+        gap: 30px;
+        margin: 40px auto;
+        flex-wrap: wrap;
+        max-width: 1200px;
+    }
+
+    .analysis-card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        width: 340px;
+        padding: 25px;
+        transition: var(--transition);
         position: relative;
         overflow: hidden;
     }
 
-        .analysis-choice-button h3 {
-            margin-bottom: 15px;
-            font-size: 20px;
-            font-weight: 700;
-            text-transform: uppercase;
+        .analysis-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
         }
 
-        .analysis-choice-button p {
-            margin-bottom: 12px;
-            font-size: 14px;
-            font-weight: 400;
-            opacity: 0.9;
+    .card-icon {
+        font-size: 40px;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    .analysis-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--text-color);
+    }
+
+    .analysis-card p {
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.5;
+    }
+
+    .trial-badge {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .analysis-button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        font-weight: 500;
+    }
+
+        .analysis-button:hover {
+            background-color: var(--primary-hover);
         }
 
-        .analysis-choice-button small {
-            font-size: 13px;
-            color: #f1f1f1;
+        .analysis-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
 
-        .analysis-choice-button::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            transition: all 0.4s ease;
-            z-index: 1;
-        }
-
-        .analysis-choice-button:hover {
-            background-color: #45a049;
-            transform: translateY(-5px);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
-        }
-
-            .analysis-choice-button:hover::after {
-                background: rgba(0, 0, 0, 0.2);
-            }
-
-        .analysis-choice-button h3, .analysis-choice-button p, .analysis-choice-button small {
-            z-index: 2;
-        }
-
-    /* Panel ve form stilleri */
-    .analysis-panel {
+    /* Modal styling */
+    .analysis-modal {
         display: none;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
+        animation: fadeIn 0.3s;
     }
 
-    .analysis-content {
-        background-color: inherit;
-        padding: 40px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 700px;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        transform: scale(0.9);
-        animation: showPanel 0.3s forwards;
-    }
+  {
+        from
 
-    0% {
+    {
         opacity: 0;
-        transform: scale(0.9);
     }
 
-    100% {
+    to {
         opacity: 1;
-        transform: scale(1);
     }
 
-
-
-    .close-button {
-        background-color: transparent;
-        border: none;
-        font-size: 32px;
-        color: #333;
-        cursor: pointer;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        transition: all 0.3s ease;
     }
 
-        .close-button:hover {
-            color: #f44336;
-            transform: scale(1.2);
-        }
+ {
+        from
 
-    .analysis-form {
-        margin-top: 30px;
+    {
+        transform: translateY(50px);
+        opacity: 0;
     }
 
-    .form-group {
-        margin-bottom: 20px;
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 
-        .form-group label {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            transition: border-color 0.3s ease;
-        }
-
-            .form-group input:focus {
-                border-color: #4CAF50;
-                outline: none;
-            }
-
-    .analyze-button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 30px;
-        border-radius: 12px;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s ease;
     }
 
-        .analyze-button:hover {
-            background-color: #45a049;
-        }
-
-    .result-container {
-        margin-top: 20px;
-        display: none;
-        font-size: 18px;
-        color: #333;
-    }
-
-        .result-container h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #4CAF50;
-            margin-bottom: 15px;
-        }
-
-        .result-container p {
-            font-size: 16px;
-            color: #555;
-        }
-
-    .image-preview {
-        margin-top: 15px;
-        width: 100%;
-        height: 200px;
-        border: 2px dashed #ddd;
-        background-color: #f7f7f7;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 12px;
-    }
-
-        .image-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .image-preview p {
-            font-size: 16px;
-            color: #aaa;
-        }
-
-    /* Subscription Container Stilleri */
-    .subscription-container {
-        max-width: 1200px;
-        margin: 60px auto;
-        padding: 30px 20px;
-    }
-
-    .subscription-header {
-        text-align: center;
-        margin-bottom: 50px;
-    }
-
-        .subscription-header h1 {
-            font-size: 36px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-            .subscription-header h1:after {
-                content: '';
-                position: absolute;
-                bottom: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100px;
-                height: 4px;
-                background: linear-gradient(90deg, #4CAF50, #2E7D32);
-                border-radius: 2px;
-            }
-
-        .subscription-header p {
-            font-size: 18px;
-            color: #555;
-            max-width: 800px;
-            margin: 20px auto 0;
-            line-height: 1.6;
-        }
-
-    /* Plan Kartları */
-    .plans-container {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        flex-wrap: wrap;
-    }
-
-    .plan-card {
-        background: inherit;
-        border-radius: 20px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        width: 350px;
-        transition: all 0.4s ease;
+    .modal-content {
+        background-color: white;
+        border-radius: var(--border-radius);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--box-shadow);
         position: relative;
+        animation: slideUp 0.4s;
     }
 
-        .plan-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-    .popular-tag {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #FFD700;
-        color: #333;
-        padding: 5px 15px;
-        border-radius: 30px;
-        font-weight: 700;
-        font-size: 14px;
-        text-transform: uppercase;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        z-index: 10;
-    }
-
-    .plan-header {
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);
-        padding: 30px 20px;
-        color: white;
-        text-align: center;
-    }
-
-    .basic-plan .plan-header {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-    }
-
-    .premium-plan .plan-header {
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);
-    }
-
-    .pro-plan .plan-header {
-        background: linear-gradient(135deg, #9b59b6, #8e44ad);
-    }
-
-    .plan-name {
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .plan-price {
-        font-size: 48px;
-        font-weight: 700;
-        margin: 20px 0 10px;
-    }
-
-        .plan-price span {
-            font-size: 18px;
-            opacity: 0.8;
-        }
-
-    .plan-billing {
-        font-size: 14px;
-        opacity: 0.8;
-    }
-
-    .plan-content {
-        padding: 30px;
-    }
-
-    .plan-features {
-        list-style-type: none;
-        padding: 0;
-        margin: 0 0 30px;
-    }
-
-        .plan-features li {
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-            position: relative;
-            padding-left: 30px;
-            color: #555;
-        }
-
-            .plan-features li:before {
-                content: '\f00c';
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                position: absolute;
-                left: 0;
-                color: #4CAF50;
-            }
-
-    .basic-plan .plan-features li:before {
-        color: #3498db;
-    }
-
-    .premium-plan .plan-features li:before {
-        color: #4CAF50;
-    }
-
-    .pro-plan .plan-features li:before {
-        color: #9b59b6;
-    }
-
-    .plan-features li.unavailable {
-        color: #aaa;
-        text-decoration: line-through;
-    }
-
-        .plan-features li.unavailable:before {
-            content: '\f00d';
-            color: #e74c3c;
-        }
-
-    .subscribe-btn {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .basic-plan .subscribe-btn {
-        background: #3498db;
-    }
-
-    .premium-plan .subscribe-btn {
-        background: #4CAF50;
-    }
-
-    .pro-plan .subscribe-btn {
-        background: #9b59b6;
-    }
-
-    .subscribe-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-    }
-
-    /* Özellikler Tablosu */
-    .features-comparison {
-        margin-top: 80px;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .features-header {
-        background: #2c3e50;
-        color: white;
-        padding: 20px 30px;
-        text-align: center;
-    }
-
-        .features-header h2 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-    .features-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-        .features-table th, .features-table td {
-            padding: 15px 20px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-
-        .features-table th {
-            background: #f5f5f5;
-            font-weight: 600;
-            color: #333;
-        }
-
-            .features-table th:first-child {
-                text-align: left;
-            }
-
-        .features-table td:first-child {
-            text-align: left;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .features-table i.fa-check {
-            color: #4CAF50;
-            font-size: 18px;
-        }
-
-        .features-table i.fa-times {
-            color: #e74c3c;
-            font-size: 18px;
-        }
-
-        .features-table td:nth-child(2) i.fa-check {
-            color: #3498db;
-        }
-
-        .features-table td:nth-child(3) i.fa-check {
-            color: #4CAF50;
-        }
-
-        .features-table td:nth-child(4) i.fa-check {
-            color: #9b59b6;
-        }
-
-    /* Müşteri Görüşleri */
-    .testimonials {
-        margin-top: 80px;
-        text-align: center;
-    }
-
-        .testimonials h2 {
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-        }
-
-            .testimonials h2:after {
-                content: '';
-                position: absolute;
-                bottom: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 80px;
-                height: 4px;
-                background: linear-gradient(90deg, #4CAF50, #2E7D32);
-                border-radius: 2px;
-            }
-
-    .testimonials-container {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    .testimonial-card {
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        padding: 25px;
-        width: 300px;
-        text-align: left;
-    }
-
-    .testimonial-content {
-        position: relative;
-        padding: 0 20px;
-        font-style: italic;
-        color: #555;
-        line-height: 1.6;
-    }
-
-        .testimonial-content:before, .testimonial-content:after {
-            content: '"';
-            font-size: 50px;
-            position: absolute;
-            color: #4CAF50;
-            opacity: 0.3;
-        }
-
-        .testimonial-content:before {
-            top: -20px;
-            left: 0;
-        }
-
-        .testimonial-content:after {
-            bottom: -40px;
-            right: 0;
-        }
-
-    .testimonial-author {
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-        .testimonial-author img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-        }
-
-    .author-info h4 {
-        margin: 0;
-        color: #333;
-    }
-
-    .author-info p {
-        margin: 5px 0 0 0;
-        color: #777;
-        font-size: 14px;
-    }
-
-    /* FAQ Bölümü */
-    .faq-section {
-        margin-top: 80px;
-    }
-
-        .faq-section h2 {
-            font-size: 28px;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-            .faq-section h2:after {
-                content: '';
-                position: absolute;
-                bottom: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 80px;
-                height: 4px;
-                background: linear-gradient(90deg, #4CAF50, #2E7D32);
-                border-radius: 2px;
-            }
-
-    .faq-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .faq-item {
-        background: #fff;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .faq-question {
-        padding: 20px;
-        background: #f9f9f9;
-        font-weight: 600;
-        color: #333;
-        cursor: pointer;
-        position: relative;
+    .modal-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #eee;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-        .faq-question:after {
-            content: '\f107';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            font-size: 20px;
-            color: #4CAF50;
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.7rem;
         }
 
-    .faq-answer {
-        padding: 0 20px;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+    .close-button {
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+        transition: var(--transition);
     }
 
-    .faq-item.active .faq-question:after {
-        content: '\f106';
+        .close-button:hover {
+            color: #f44336;
+            transform: scale(1.1);
+        }
+
+    .modal-body {
+        padding: 25px;
     }
 
-    .faq-item.active .faq-answer {
-        padding: 20px;
-        max-height: 300px;
+    /* Form styling */
+    .form-group {
+        margin-bottom: 20px;
     }
 
-    /* CTA Bölümü */
-    .cta-section {
-        margin: 80px 0 40px;
-        text-align: center;
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);
-        border-radius: 20px;
-        padding: 50px 30px;
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+    .form-text {
+        font-size: 0.8rem;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    .btn-submit {
+        background-color: var(--primary-color);
         color: white;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: var(--transition);
+        font-weight: 500;
+        margin-top: 10px;
     }
 
-        .cta-section h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
         }
 
-        .cta-section p {
-            font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            opacity: 0.9;
-        }
-
-    .cta-button {
-        display: inline-block;
-        background: white;
-        color: #4CAF50;
-        padding: 15px 40px;
-        border-radius: 50px;
-        font-size: 18px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /* Loading indicator */
+    .loading-indicator {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
     }
 
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-
-    0% {
-        transform: scale(1);
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-left: 4px solid var(--primary-color);
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
     }
 
-    50% {
-        transform: scale(1.05);
+   {
+        0%
+
+    {
+        transform: rotate(0deg);
     }
 
     100% {
-        transform: scale(1);
+        transform: rotate(360deg);
     }
 
-
-
-    .premium-plan {
-        animation: pulse 2s infinite;
     }
+
+    /* Results styling */
+    .results-container {
+        max-width: 900px;
+        margin: 40px auto;
+        animation: fadeIn 0.5s;
+    }
+
+    .result-card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+    }
+
+    .result-header {
+        padding: 20px;
+        color: white;
+    }
+
+    .success-header {
+        background-color: var(--primary-color);
+    }
+
+    .error-header {
+        background-color: #f44336;
+    }
+
+    .result-body {
+        padding: 25px;
+    }
+
+    .result-alert {
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .success-alert {
+        background-color: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .error-alert {
+        background-color: rgba(244, 67, 54, 0.1);
+        border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .info-section {
+        background-color: rgba(33, 150, 243, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .info-badge {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .warning-badge {
+        background-color: #ff9800;
+        color: white;
+    }
+
+    /* Image upload styling */
+    .image-upload {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .image-upload:hover {
+            border-color: var(--primary-color);
+        }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 300px;
+        margin: 15px auto;
+        display: none;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+    /* Responsive adjustments */
+  {
+        .hero-section h1
+
+    {
+        font-size: 2rem;
+    }
+
+    .analysis-card {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+
+    }
+
+    /* Deneme hakları sıfırlama butonu */
+    .reset-trials {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 300px;
+    }
+
+    .reset-button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .reset-button:hover {
+            background-color: #1976D2;
+        }
 </style>
 
-<div class="analysis-buttons">
-    <button class="analysis-choice-button" onclick="toggleSection('soil')">
-        <h3>Toprak Hastalık Analizi</h3>
-        <p>pH, nem ve gübre değerlerini girerek analiz yapın</p>
-        <small class="trials-left" id="soilTrials">Kalan deneme: 2</small>
-    </button>
-    <button class="analysis-choice-button" onclick="toggleSection('image')">
-        <h3>Görüntü ile Hastalık Tespiti</h3>
-        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın</p>
-        <small class="trials-left" id="imageTrials">Kalan deneme: 2</small>
-    </button>
+<div class="hero-section">
+    <h1>Bitki Hastalık Tahmini</h1>
+    <p>Toprak değerlerinizi analiz ederek size uygun bitki önerisi alın veya görüntü yükleyerek bitki hastalığı tespiti yapın.</p>
 </div>
 
-<!-- Toprak Paneli -->
-<div id="soilPanel" class="analysis-panel soil-panel" style="display: none;">
-    <div class="analysis-content">
-        <button class="close-button" onclick="toggleSection('soil')">×</button>
-        <div class="analysis-form">
+<div class="analysis-cards">
+    <div class="analysis-card">
+        <div class="card-icon">🌱</div>
+        <h3>Toprak Hastalık Analizi</h3>
+        <p>Azot, fosfor, potasyum ve pH değerlerini girerek toprağınıza uygun bitki önerisi alın.</p>
+        <div class="trial-badge">
+            <span id="soilTrialsLeft">2</span> analiz hakkınız kaldı
+        </div>
+        <button class="analysis-button" id="soilButton" onclick="toggleModal('soil')">Analiz Başlat</button>
+    </div>
+
+    <div class="analysis-card">
+        <div class="card-icon">📷</div>
+        <h3>Görüntü ile Hastalık Tespiti</h3>
+        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın ve tedavi önerileri alın.</p>
+        <div class="trial-badge">
+            <span id="imageTrialsLeft">2</span> analiz hakkınız kaldı
+        </div>
+        <button class="analysis-button" id="imageButton" onclick="toggleModal('image')">Analiz Başlat</button>
+    </div>
+</div>
+
+<!-- Hakları sıfırla butonu -->
+<div class="reset-trials">
+    <button class="reset-button" onclick="resetTrials()">Deneme Haklarını Sıfırla</button>
+</div>
+
+<!-- Toprak Analizi Modal -->
+<div id="soilModal" class="analysis-modal">
+    <div class="modal-content">
+        <div class="modal-header">
             <h2>Toprak Hastalık Analizi</h2>
-            <form id="soilForm" onsubmit="handleSoilAnalysis(event)">
+            <button class="close-button" onclick="toggleModal('soil')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form asp-action="AnalyzeSoil" asp-controller="User" method="post" id="soilForm">
+                <div class="form-group">
+                    <label for="azot">Azot Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="azot" id="azot" class="form-control" placeholder="Azot değerini girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="fosfor">Fosfor Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="fosfor" id="fosfor" class="form-control" placeholder="Fosfor değerini girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="potasyum">Potasyum Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="potasyum" id="potasyum" class="form-control" placeholder="Potasyum değerini girin" required>
+                </div>
                 <div class="form-group">
                     <label for="ph">pH Değeri:</label>
-                    <input type="number" step="0.1" name="ph" placeholder="6.0-8.0 arası bir değer girin" required>
+                    <input type="number" step="0.1" min="0" max="14" name="ph" id="ph" class="form-control" placeholder="6.0-8.0 arası bir değer girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="moisture">Nem Oranı (%):</label>
-                    <input type="number" name="moisture" placeholder="0-100 arası bir değer girin" required>
+                    <label for="il">İl Seçin:</label>
+                    <select name="il" id="il" class="form-control" required>
+                        <option value="">İl Seçiniz</option>
+                        @foreach (var city in ViewBag.Cities)
+                        {
+                            <option value="@city">@city</option>
+                        }
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="fertilizer">Gübre Miktarı (kg/m²):</label>
-                    <input type="number" step="0.1" name="fertilizer" placeholder="Gübre miktarını girin" required>
+                    <label for="ay">Ay Seçin:</label>
+                    <select name="ay" id="ay" class="form-control" required>
+                        <option value="">Ay Seçiniz</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@ViewBag.Months[i - 1]</option>
+                        }
+                    </select>
                 </div>
-                <button type="submit" class="analyze-button">Analiz Et</button>
+                <div class="form-group">
+                    <label for="apiUrl">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="apiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
+                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                </div>
+
+                <div class="loading-indicator" id="soil-loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Analiz yapılıyor, lütfen bekleyin...</p>
+                </div>
+
+                <button type="submit" class="btn-submit" id="soil-submit-btn">Analiz Et</button>
+
+                <!-- Hidden field to track trial usage -->
+                <input type="hidden" name="trialCount" id="soilTrialCount" value="0">
             </form>
-        </div>
-        <div id="soilResult" class="result-container" style="display: none;">
-            <h3>Analiz Sonucu</h3>
-            <p id="soilResultText"></p>
         </div>
     </div>
 </div>
 
-<!-- Görüntü Paneli -->
-<div id="imagePanel" class="analysis-panel image-panel" style="display: none;">
-    <div class="analysis-content">
-        <button class="close-button" onclick="toggleSection('image')">×</button>
-        <div class="analysis-form">
+<!-- Görüntü Analizi Modal -->
+<div id="imageModal" class="analysis-modal">
+    <div class="modal-content">
+        <div class="modal-header">
             <h2>Görüntü ile Hastalık Tespiti</h2>
-            <form id="imageForm" onsubmit="handleImageAnalysis(event)">
+            <button class="close-button" onclick="toggleModal('image')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form asp-action="AnalyzeImage" asp-controller="User" method="post" id="imageForm" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="imageUpload">Bitki Fotoğrafı:</label>
-                    <input type="file" id="imageUpload" accept="image/*" onchange="handleImageChange(event)" required>
-                    <div id="imagePreview" class="image-preview">
-                        <p>Görsel Yüklenmedi</p>
+                    <label for="plantImage">Bitki Görüntüsü:</label>
+                    <div class="image-upload" id="image-upload-area" onclick="triggerFileInput()">
+                        <p id="upload-text">Görüntü yüklemek için tıklayın veya sürükleyin</p>
+                        <input type="file" name="plantImage" id="plantImage" class="form-control" style="display: none;" accept="image/*" required>
+                        <div class="image-preview" id="image-preview">
+                            <img id="preview-img" src="#" alt="Bitki görüntüsü önizlemesi">
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="analyze-button">Analiz Et</button>
+
+                <div class="form-group">
+                    <label for="imageApiUrl">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="imageApiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
+                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                </div>
+
+                <div class="loading-indicator" id="image-loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Analiz yapılıyor, lütfen bekleyin...</p>
+                </div>
+
+                <button type="submit" class="btn-submit" id="image-submit-btn">Analiz Et</button>
+
+                <!-- Hidden field to track trial usage -->
+                <input type="hidden" name="trialCount" id="imageTrialCount" value="0">
             </form>
-        </div>
-        <div id="imageResult" class="result-container" style="display: none;">
-            <h3>Analiz Sonucu</h3>
-            <p id="imageResultText"></p>
         </div>
     </div>
 </div>
 
-<div class="subscription-container">
-    <div class="subscription-header">
-        <h1>Premium Abonelik Planları</h1>
-        <p>Dr.PlantAI'nin gelişmiş özelliklerine erişim sağlayın ve bitkilerinizin sağlığını profesyonel düzeyde koruyun. İhtiyaçlarınıza en uygun planı seçin.</p>
-    </div>
-
-    <div class="plans-container">
-        <div class="plan-card basic-plan">
-            <div class="plan-header">
-                <div class="plan-name">Temel Plan</div>
-                <div class="plan-price">29.99₺<span>/ay</span></div>
-                <div class="plan-billing">Aylık ödeme</div>
+<!-- Analiz Sonuçları -->
+<div class="results-container" id="results-container">
+    @if (ViewBag.ShowResults == true)
+    {
+        <div class="result-card">
+            <div class="result-header @(ViewBag.ResultCrop == "Hata" ? "error-header" : "success-header")">
+                <h2 style="text-align: center; margin: 0;">@(ViewBag.AnalysisType == "image" ? "Görüntü Analizi Sonucu" : "Toprak Analizi Sonucu")</h2>
             </div>
-            <div class="plan-content">
-                <ul class="plan-features">
-                    <li>Ayda 5 toprak analizi</li>
-                    <li>Ayda 5 görüntü analizi</li>
-                    <li>Temel hastalık veritabanı erişimi</li>
-                    <li>E-posta desteği</li>
-                    <li class="unavailable">Özelleştirilmiş bakım planları</li>
-                    <li class="unavailable">Gelişmiş raporlama</li>
-                    <li class="unavailable">Öncelikli destek</li>
-                </ul>
-                <a href="/Payment?plan=basic" class="subscribe-btn">Abone Ol</a>
-            </div>
-        </div>
-
-        <div class="plan-card premium-plan">
-            <div class="popular-tag">En Popüler</div>
-            <div class="plan-header">
-                <div class="plan-name">Premium Plan</div>
-                <div class="plan-price">49.99₺<span>/ay</span></div>
-                <div class="plan-billing">Aylık ödeme</div>
-            </div>
-            <div class="plan-content">
-                <ul class="plan-features">
-                    <li>Sınırsız toprak analizi</li>
-                    <li>Sınırsız görüntü analizi</li>
-                    <li>Gelişmiş hastalık veritabanı erişimi</li>
-                    <li>Öncelikli e-posta desteği</li>
-                    <li>Özelleştirilmiş bakım planları</li>
-                    <li>Haftalık raporlama</li>
-                    <li class="unavailable">7/24 telefon desteği</li>
-                </ul>
-                <a href="/Payment?plan=premium" class="subscribe-btn">Abone Ol</a>
-            </div>
-        </div>
-
-        <div class="plan-card pro-plan">
-            <div class="plan-header">
-                <div class="plan-name">Pro Plan</div>
-                <div class="plan-price">99.99₺<span>/ay</span></div>
-                <div class="plan-billing">Aylık ödeme</div>
-            </div>
-            <div class="plan-content">
-                <ul class="plan-features">
-                    <li>Sınırsız toprak analizi</li>
-                    <li>Sınırsız görüntü analizi</li>
-                    <li>Tam hastalık veritabanı erişimi</li>
-                    <li>7/24 öncelikli destek</li>
-                    <li>Profesyonel bakım planları</li>
-                    <li>Günlük detaylı raporlama</li>
-                    <li>API erişimi</li>
-                </ul>
-                <a href="/Payment?plan=pro" class="subscribe-btn">Abone Ol</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="features-comparison">
-        <div class="features-header">
-            <h2>Özellik Karşılaştırması</h2>
-        </div>
-        <table class="features-table">
-            <thead>
-                <tr>
-                    <th>Özellik</th>
-                    <th>Temel</th>
-                    <th>Premium</th>
-                    <th>Pro</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Toprak Analizi</td>
-                    <td>5/ay</td>
-                    <td>Sınırsız</td>
-                    <td>Sınırsız</td>
-                </tr>
-                <tr>
-                    <td>Görüntü Analizi</td>
-                    <td>5/ay</td>
-                    <td>Sınırsız</td>
-                    <td>Sınırsız</td>
-                </tr>
-                <tr>
-                    <td>Hastalık Veritabanı</td>
-                    <td>Temel</td>
-                    <td>Gelişmiş</td>
-                    <td>Tam</td>
-                </tr>
-                <tr>
-                    <td>Özelleştirilmiş Bakım Planları</td>
-                    <td><i class="fas fa-times"></i></td>
-                    <td><i class="fas fa-check"></i></td>
-                    <td><i class="fas fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td>Raporlama</td>
-                    <td><i class="fas fa-times"></i></td>
-                    <td>Haftalık</td>
-                    <td>Günlük</td>
-                </tr>
-                <tr>
-                    <td>API Erişimi</td>
-                    <td><i class="fas fa-times"></i></td>
-                    <td><i class="fas fa-times"></i></td>
-                    <td><i class="fas fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td>Destek</td>
-                    <td>E-posta</td>
-                    <td>Öncelikli E-posta</td>
-                    <td>7/24 Öncelikli</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="testimonials">
-        <h2>Kullanıcı Görüşleri</h2>
-        <div class="testimonials-container">
-            <div class="testimonial-card">
-                <div class="testimonial-content">
-                    Dr.PlantAI Premium sayesinde bahçemdeki domates bitkilerini kurtardım. Yaprak analizi ile erken teşhis koyup, hemen müdahale edebildim.
+            <div class="result-body">
+                <div class="result-alert @(ViewBag.ResultCrop == "Hata" ? "error-alert" : "success-alert")">
+                    <h4 style="text-align: center; margin-top: 0;">@(ViewBag.AnalysisType == "image" ? "Tespit Edilen Hastalık" : "Tavsiye Edilen Bitki/Ürün")</h4>
+                    <h3 style="text-align: center; margin-bottom: 20px;"><strong>@ViewBag.ResultCrop</strong></h3>
+                    <hr style="border-top: 1px solid rgba(0,0,0,0.1); margin: 15px 0;">
+                    <p style="margin-bottom: 0;">@ViewBag.Explanation</p>
                 </div>
-                <div class="testimonial-author">
-                    <img src="/api/placeholder/50/50" alt="Ahmet Yılmaz">
-                    <div class="author-info">
-                        <h4>Ahmet Yılmaz</h4>
-                        <p>Premium Üye</p>
+
+                <div style="display: flex; flex-wrap: wrap; margin-top: 20px; gap: 20px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <div class="info-section">
+                            <h5 style="margin-top: 0;">Analiz Güven Oranı</h5>
+                            @if (ViewBag.Confidence != null)
+                            {
+                                <span class="badge info-badge">%@(Math.Round((double)ViewBag.Confidence * 100, 2))</span>
+                            }
+                            else
+                            {
+                                <span class="badge warning-badge">Veri Yok</span>
+                            }
+                        </div>
                     </div>
+
+                    @if (ViewBag.AnalysisType == "image" && ViewBag.ImageData != null)
+                    {
+                        <div style="flex: 1; min-width: 250px;">
+                            <div class="info-section">
+                                <h5 style="margin-top: 0;">Analiz Edilen Görüntü</h5>
+                                <img src="data:image/jpeg;base64,@ViewBag.ImageData" alt="Analiz edilen bitki görüntüsü" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="analysis-button" onclick="toggleModal('@(ViewBag.AnalysisType == "image" ? "image" : "soil")')" style="max-width: 200px;">Yeni Analiz Yap</button>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <div class="testimonial-content">
-                    Profesyonel bir çiftçi olarak, Dr.PlantAI Pro tüm ihtiyaçlarımı karşılıyor. API sayesinde kendi sistemimize entegre edip büyük ölçekli analizler yapabiliyoruz.
-                </div>
-                <div class="testimonial-author">
-                    <img src="/api/placeholder/50/50" alt="Zeynep Kaya">
-                    <div class="author-info">
-                        <h4>Zeynep Kaya</h4>
-                        <p>Pro Üye</p>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-content">
-                    Saksı bitkilerim için mükemmel bir uygulama. Premium planın sunduğu özelleştirilmiş bakım planları sayesinde bitkilerim artık çok daha sağlıklı.
-                </div>
-                <div class="testimonial-author">
-                    <img src="/api/placeholder/50/50" alt="Murat Demir">
-                    <div class="author-info">
-                        <h4>Murat Demir</h4>
-                        <p>Premium Üye</p>
-                    </div>
+
+            <div style="background-color: #f9f9f9; padding: 15px; text-align: center; border-top: 1px solid #eee;">
+                <div style="color: #777; font-size: 0.9rem;">
+                    Bu analiz Dr.PlantAI yapay zeka sistemi tarafından gerçekleştirilmiştir.
+                    Daha detaylı bilgi için uzman bir ziraat mühendisi ile iletişime geçebilirsiniz.
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="faq-section">
-        <h2>Sıkça Sorulan Sorular</h2>
-        <div class="faq-container">
-            <div class="faq-item">
-                <div class="faq-question">Aboneliğimi istediğim zaman iptal edebilir miyim?</div>
-                <div class="faq-answer">
-                    <p>Evet, aboneliğinizi istediğiniz zaman hesap ayarlarınızdan kolayca iptal edebilirsiniz. İptal ettikten sonra, abonelik döneminin sonuna kadar tüm premium özellikleri kullanmaya devam edebilirsiniz.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Farklı bir plana geçiş yapabilir miyim?</div>
-                <div class="faq-answer">
-                    <p>Kesinlikle! İhtiyaçlarınız değiştikçe istediğiniz zaman planlar arasında geçiş yapabilirsiniz. Üst düzey bir plana geçerseniz, fiyat farkı orantılı olarak hesaplanır. Alt düzey bir plana geçerseniz, yeni plan bir sonraki ödeme döneminde devreye girer.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Premium özelliklere mobil cihazlardan da erişebilir miyim?</div>
-                <div class="faq-answer">
-                    <p>Evet, Dr.PlantAI'nin tüm premium özellikleri hem masaüstü hem de mobil cihazlardan tam olarak erişilebilir durumdadır. iOS ve Android uygulamalarımız da mevcuttur.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Yıllık ödeme seçeneği var mı?</div>
-                <div class="faq-answer">
-                    <p>Evet, tüm planlarımız için yıllık ödeme seçeneği sunuyoruz. Yıllık ödemelerde %20 indirim uyguluyoruz. Ödeme sayfasında bu seçeneği görebilirsiniz.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="cta-section">
-        <h2>Bitki Bakımında Profesyonel Olun</h2>
-        <p>Dr.PlantAI Premium ile bitkilerinizin sağlığını en üst düzeye çıkarın. Hemen bugün abone olun ve farkı görün!</p>
-        <a href="#plans" class="cta-button">Şimdi Başlayın</a>
-    </div>
+    }
 </div>
 
 <script>
-    // Panel açma/kapama fonksiyonu
-    function toggleSection(section) {
-        const panel = document.getElementById(`${section}Panel`);
-        const isOpen = panel.style.display === 'flex';
+    // Kullanıcının deneme haklarını local storage'da saklayacağız
+    document.addEventListener('DOMContentLoaded', function() {
+        // Local storage'dan deneme haklarını kontrol et
+        let soilTrials = localStorage.getItem('soilTrials');
+        let imageTrials = localStorage.getItem('imageTrials');
 
-        // Tüm panelleri kapat
-        document.querySelectorAll('.analysis-panel').forEach(p => {
-            p.style.display = 'none';
-        });
+        // Eğer daha önce kullanılmamışsa, 2 hak tanımla
+        if (soilTrials === null) {
+            soilTrials = 2;
+            localStorage.setItem('soilTrials', soilTrials);
+        }
 
-        // Eğer panel kapalıysa aç
-        if (!isOpen) {
-            panel.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Sayfa kaydırmayı engelle
+        if (imageTrials === null) {
+            imageTrials = 2;
+            localStorage.setItem('imageTrials', imageTrials);
+        }
+
+        // Kalan hakları göster
+        updateTrialDisplay();
+
+        // Deneme hakkı kalmadıysa butonları devre dışı bırak
+        checkTrialAvailability();
+
+        // Toprak form gönderimini yönet
+        const soilForm = document.getElementById('soilForm');
+        if (soilForm) {
+            soilForm.addEventListener('submit', function(e) {
+                // Eğer deneme hakkı kalmadıysa formu gönderme
+                if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                    e.preventDefault();
+                    alert('Deneme hakkınız kalmadı!');
+                    return false;
+                }
+
+                // Loading göstergesini aktifleştir
+                document.getElementById('soil-loading-indicator').style.display = 'block';
+                document.getElementById('soil-submit-btn').disabled = true;
+
+                // Deneme hakkını azalt
+                let remainingTrials = parseInt(localStorage.getItem('soilTrials')) - 1;
+                localStorage.setItem('soilTrials', remainingTrials);
+
+                // Deneme sayısını form ile gönder
+                document.getElementById('soilTrialCount').value = 2 - remainingTrials;
+
+                // Form normal şekilde gönderilecek
+                return true;
+            });
+        }
+
+        // Görüntü form gönderimini yönet
+        const imageForm = document.getElementById('imageForm');
+        if (imageForm) {
+            imageForm.addEventListener('submit', function(e) {
+                // Eğer deneme hakkı kalmadıysa formu gönderme
+                if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                    e.preventDefault();
+                    alert('Deneme hakkınız kalmadı!');
+                    return false;
+                }
+
+                // Dosya seçilmediyse form gönderimini engelle
+                const fileInput = document.getElementById('plantImage');
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Lütfen bir görüntü seçin!');
+                    return false;
+                }
+
+                // Loading göstergesini aktifleştir
+                document.getElementById('image-loading-indicator').style.display = 'block';
+                document.getElementById('image-submit-btn').disabled = true;
+
+                // Deneme hakkını azalt
+                let remainingTrials = parseInt(localStorage.getItem('imageTrials')) - 1;
+                localStorage.setItem('imageTrials', remainingTrials);
+
+                // Deneme sayısını form ile gönder
+                document.getElementById('imageTrialCount').value = 2 - remainingTrials;
+
+                // Form normal şekilde gönderilecek
+                return true;
+            });
+        }
+
+        // Görüntü yükleme önizlemesi
+        const fileInput = document.getElementById('plantImage');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                previewImage(this);
+            });
+        }
+
+        // Görüntü için sürükle-bırak desteği
+        const dropArea = document.getElementById('image-upload-area');
+        if (dropArea) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.style.borderColor = '#4CAF50';
+                dropArea.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+            }
+
+            function unhighlight() {
+                dropArea.style.borderColor = '#ddd';
+                dropArea.style.backgroundColor = '';
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length) {
+                    const fileInput = document.getElementById('plantImage');
+                    fileInput.files = files;
+                    previewImage(fileInput);
+                }
+            }
+        }
+
+        // Analiz sonuçları varsa otomatik olarak sayfayı kaydır
+    @if (ViewBag.ShowResults == true)
+    {
+        <text>
+                    setTimeout(() => {
+                        const resultElement = document.getElementById('results-container');
+                        if (resultElement) {
+                            resultElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 500);
+
+                    // Eğer analiz sonucu başarılıysa hakları güncelle
+                    updateTrialDisplay();
+                    checkTrialAvailability();
+        </text>
+    }
+    });
+
+    // Modal açma/kapama fonksiyonu
+        function toggleModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+
+        if (modal.style.display === 'flex') {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
         } else {
-            document.body.style.overflow = ''; // Sayfa kaydırmayı geri aç
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
     }
 
-    // Toprak analizi form gönderimi
-    function handleSoilAnalysis(event) {
-        event.preventDefault();
-
-        // Form verilerini al
-        const formData = new FormData(event.target);
-        const ph = parseFloat(formData.get('ph'));
-        const moisture = parseInt(formData.get('moisture'));
-        const fertilizer = parseFloat(formData.get('fertilizer'));
-
-        // Demo analiz sonucu oluştur
-        let resultText = "";
-        let isHealthy = true;
-
-        // pH kontrolü
-        if (ph < 6.0 || ph > 8.0) {
-            resultText += `pH değeriniz ${ph} ile optimal aralıkta değil (6.0-8.0). `;
-            isHealthy = false;
-        }
-
-        // Nem kontrolü
-        if (moisture < 30) {
-            resultText += `Nem oranınız %${moisture} ile çok düşük. `;
-            isHealthy = false;
-        } else if (moisture > 70) {
-            resultText += `Nem oranınız %${moisture} ile çok yüksek. `;
-            isHealthy = false;
-        }
-
-        // Gübre kontrolü
-        if (fertilizer < 0.5) {
-            resultText += `Gübre miktarınız ${fertilizer} kg/m² ile yetersiz. `;
-            isHealthy = false;
-        } else if (fertilizer > 2.0) {
-            resultText += `Gübre miktarınız ${fertilizer} kg/m² ile aşırı. `;
-            isHealthy = false;
-        }
-
-        // Sonuç
-        if (isHealthy) {
-            resultText = "Toprak analizi sonuçlarına göre toprağınız sağlıklı görünüyor! Optimal pH, nem ve gübre seviyelerine sahipsiniz.";
-        } else {
-            resultText += "Bu koşullar bitki hastalıklarına yol açabilir. Toprak düzenleyici kullanmayı düşünebilirsiniz.";
-        }
-
-        // Sonucu göster
-        document.getElementById('soilResultText').textContent = resultText;
-        document.getElementById('soilResult').style.display = 'block';
-
-        // Deneme hakkını azalt
-        updateTrials('soil');
+    // Dosya seçme diyaloğunu tetikle
+    function triggerFileInput() {
+        document.getElementById('plantImage').click();
     }
 
-    // Görüntü yükleme işlemi
-    function handleImageChange(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById('imagePreview');
+    // Görüntü önizleme fonksiyonu
+    function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const uploadText = document.getElementById('upload-text');
 
-        if (file) {
+        if (input.files && input.files[0]) {
             const reader = new FileReader();
 
             reader.onload = function(e) {
-                preview.innerHTML = `<img src="${e.target.result}" alt="Yüklenen görsel">`;
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+                uploadText.textContent = 'Görüntüyü değiştirmek için tıklayın';
             }
 
-            reader.readAsDataURL(file);
-        } else {
-            preview.innerHTML = '<p>Görsel Yüklenmedi</p>';
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // Görüntü analizi form gönderimi
-    function handleImageAnalysis(event) {
-        event.preventDefault();
-
-        // Rastgele hastalık sonuçları (demo amaçlı)
-        const diseases = [
-            "Yaprak küfü",
-            "Mildiyö",
-            "Küllenme",
-            "Bakteriyel leke",
-            "Virüs enfeksiyonu"
-        ];
-
-        const treatments = [
-            "Mantar ilacı uygulaması önerilir",
-            "Etkilenen yaprakların temizlenmesi gerekir",
-            "Hava sirkülasyonunu artırın",
-            "Bakır bazlı ilaç kullanın",
-            "Bitkiyi izole edin"
-        ];
-
-        const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
-        const randomTreatment = treatments[Math.floor(Math.random() * treatments.length)];
-
-        // Sonuç metni oluştur
-        const resultText = `Analiz sonucu: Bitkinizde "${randomDisease}" tespit edildi. Önerilen tedavi: ${randomTreatment}`;
-
-        // Sonucu göster
-        document.getElementById('imageResultText').textContent = resultText;
-        document.getElementById('imageResult').style.display = 'block';
-
-        // Deneme hakkını azalt
-        updateTrials('image');
-    }
-
-    // Deneme hakkını güncelleme
-    function updateTrials(type) {
-        const element = document.getElementById(`${type}Trials`);
-        const currentText = element.textContent;
-        const remaining = parseInt(currentText.match(/\d+/)[0]);
-
-        if (remaining > 1) {
-            element.textContent = `Kalan deneme: ${remaining - 1}`;
-        } else {
-            element.textContent = "Deneme hakkınız kalmadı";
-            element.style.color = "#ff6b6b";
-
-            // İlgili butonu devre dışı bırak
-            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
-                .style.opacity = "0.6";
-            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
-                .style.cursor = "not-allowed";
-            document.querySelector(`.analysis-choice-button[onclick="toggleSection('${type}')"]`)
-                .onclick = null;
+    // Modal dışına tıklandığında kapatma
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('analysis-modal')) {
+            e.target.style.display = 'none';
+             document.body.style.overflow = '';
         }
-    }
-
-    // Sayfa yüklendiğinde çalışacak kodlar
-    document.addEventListener('DOMContentLoaded', function() {
-        // Paneller dışına tıklandığında kapat
-        document.querySelectorAll('.analysis-panel').forEach(panel => {
-            panel.addEventListener('click', function(e) {
-                if (e.target === panel) {
-                    toggleSection(panel.id.replace('Panel', ''));
-                }
-            });
-        });
-
-        // FAQ açılır kapanır
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            question.addEventListener('click', () => {
-                const isActive = item.classList.contains('active');
-
-                // Tüm aktif öğeleri kapat
-                faqItems.forEach(faqItem => {
-                    faqItem.classList.remove('active');
-                });
-
-                // Tıklanan öğeyi aç (eğer zaten açık değilse)
-                if (!isActive) {
-                    item.classList.add('active');
-                }
-            });
-        });
     });
+
+    // Deneme haklarını güncelleme fonksiyonu
+    function updateTrialDisplay() {
+        const soilTrialsElement = document.getElementById('soilTrialsLeft');
+        const imageTrialsElement = document.getElementById('imageTrialsLeft');
+
+        if (soilTrialsElement) {
+            soilTrialsElement.textContent = localStorage.getItem('soilTrials') || 0;
+        }
+        if (imageTrialsElement) {
+            imageTrialsElement.textContent = localStorage.getItem('imageTrials') || 0;
+        }
+    }
+
+    // Deneme hakkı kontrolü
+    function checkTrialAvailability() {
+        const soilButton = document.getElementById('soilButton');
+        const imageButton = document.getElementById('imageButton');
+
+        // Toprak analizi butonunu kontrol et
+        if (soilButton) {
+            if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                soilButton.disabled = true;
+                soilButton.textContent = 'Deneme Hakkınız Bitti';
+            } else {
+                soilButton.disabled = false;
+                soilButton.textContent = 'Analiz Başlat';
+            }
+        }
+
+        // Görüntü analizi butonunu kontrol et
+        if (imageButton) {
+            if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                imageButton.disabled = true;
+                imageButton.textContent = 'Deneme Hakkınız Bitti';
+            } else {
+                imageButton.disabled = false;
+                imageButton.textContent = 'Analiz Başlat';
+            }
+        }
+    }
+
+    // Deneme haklarını sıfırlama fonksiyonu
+    function resetTrials() {
+        localStorage.setItem('soilTrials', 2);
+        localStorage.setItem('imageTrials', 2);
+        updateTrialDisplay();
+        checkTrialAvailability();
+        alert('Deneme haklarınız sıfırlandı!');
+    }
 </script>

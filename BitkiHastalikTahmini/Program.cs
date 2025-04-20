@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton<MongoDbContext>();
 
+builder.Services.AddHttpClient();
 // HttpContextAccessor yapılandırması (View'larda veya servislerde HttpContext erişimi için)
 builder.Services.AddHttpContextAccessor();
 
@@ -41,7 +42,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.UseSession(); // Session middleware burada aktif edilmeli

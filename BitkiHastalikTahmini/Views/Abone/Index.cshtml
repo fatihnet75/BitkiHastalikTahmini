@@ -1,4 +1,5 @@
-﻿﻿@{
+﻿@model IEnumerable<BitkiHastalikTahmini.Models.User>
+@{
     ViewData["Title"] = "Anasayfa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -153,6 +154,13 @@
         cursor: pointer;
     }
 
+        .card-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #cccccc;
+            color: #666666;
+        }
+
     .blue .card-button {
         background-color: var(--primary-blue);
         color: var(--white);
@@ -163,7 +171,7 @@
         color: var(--white);
     }
 
-    .card-button:hover {
+    .card-button:hover:not(:disabled) {
         opacity: 0.9;
         transform: translateY(-2px);
     }
@@ -176,7 +184,7 @@
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.6);
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         z-index: 1000;
@@ -189,6 +197,7 @@
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
+            display: flex;
         }
 
     .modal-container {
@@ -275,6 +284,12 @@
             background-color: var(--white);
         }
 
+    .form-text {
+        font-size: 0.85rem;
+        color: var(--light-text);
+        margin-top: 0.5rem;
+    }
+
     .submit-btn {
         background-color: var(--primary-blue);
         color: var(--white);
@@ -293,11 +308,6 @@
             opacity: 0.9;
             transform: translateY(-2px);
         }
-
-    .green-modal .submit-btn,
-    .green-modal .modal-title {
-        color: var(--primary-green);
-    }
 
     .green-modal .submit-btn {
         background-color: var(--primary-green);
@@ -360,55 +370,176 @@
         box-shadow: var(--shadow-sm);
     }
 
-    /* Sonuç Alanı */
-    .result-area {
+    /* Loading Indicator */
+    .loading-indicator {
         display: none;
-        margin-top: 2rem;
-        padding: 1.5rem;
-        border-radius: 8px;
-        background-color: var(--light-bg);
-        border-left: 4px solid var(--primary-blue);
+        text-align: center;
+        margin: 20px 0;
     }
 
-    .green-modal .result-area {
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-left-color: var(--primary-blue);
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+    }
+
+    .green-modal .spinner {
         border-left-color: var(--primary-green);
     }
 
-    .result-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--primary-blue);
+ {
+        0%
+
+    {
+        transform: rotate(0deg);
     }
 
-    .green-modal .result-title {
-        color: var(--primary-green);
+    100% {
+        transform: rotate(360deg);
     }
 
-    .result-content {
-        color: var(--dark-text);
+    }
+
+    /* Results Container */
+    .results-container {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .result-card {
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        animation: fadeIn 0.5s ease;
+        margin-bottom: 30px;
+    }
+
+    .result-header {
+        padding: 20px;
+        color: white;
+        background: linear-gradient(135deg, var(--primary-blue), #4895ef);
+    }
+
+        .result-header.green {
+            background: linear-gradient(135deg, var(--primary-green), #56cfe1);
+        }
+
+    .result-body {
+        padding: 25px;
+    }
+
+    .result-alert {
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        background-color: rgba(67, 97, 238, 0.1);
+        border: 1px solid rgba(67, 97, 238, 0.3);
+    }
+
+        .result-alert.green {
+            background-color: rgba(76, 201, 240, 0.1);
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .info-badge {
+        background-color: var(--primary-blue);
+        color: white;
+    }
+
+    .green-badge {
+        background-color: var(--primary-green);
+        color: white;
+    }
+
+    /* Reset button */
+    .reset-trials {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 300px;
+    }
+
+    .reset-button {
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-red));
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+    /* Animations */
+    {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+  {
+        from
+
+    {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
     }
 
     /* Responsive */
-    @@media (max-width: 768px) {
-        .section-title {
-            font-size: 2rem;
-        }
+     {
+        .section-title
 
-        .analysis-buttons {
-            grid-template-columns: 1fr;
-        }
+    {
+        font-size: 2rem;
+    }
 
-        .modal-container {
-            width: 95%;
-        }
+    .analysis-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-container {
+        width: 95%;
+    }
+
     }
 </style>
 
 <div class="analysis-container">
     <div class="section-header">
-        <h1 class="section-title">Bitki Sağlık Analizi</h1>
-        <p class="section-subtitle">Bitkilerinizin sağlık durumunu analiz etmek için aşağıdaki yöntemlerden birini seçin</p>
+        <h1 class="section-title">Bitki Hastalık Tahmini</h1>
+        <p class="section-subtitle">Toprak değerlerinizi analiz ederek size uygun bitki önerisi alın veya görüntü yükleyerek bitki hastalığı tespiti yapın.</p>
     </div>
 
     <div class="analysis-buttons">
@@ -417,13 +548,10 @@
                 <div class="card-icon">
                     <i class="fas fa-seedling"></i>
                 </div>
-                <h3 class="card-title">Toprak Analizi</h3>
-                <p class="card-description">Toprak değerlerinizi girerek bitkilerinizin ihtiyaç duyduğu besinleri belirleyin</p>
-                <span class="card-badge" id="soilTrials">Kalan deneme: 2</span>
-                <button class="card-button" onclick="openModal('soil')">
-                    Analiz Yap
-                    <i class="fas fa-arrow-right ml-2"></i>
-                </button>
+                <h3 class="card-title">Toprak Hastalık Analizi</h3>
+                <p class="card-description">Azot, fosfor, potasyum ve pH değerlerini girerek toprağınıza uygun bitki önerisi alın.</p>
+                <span class="card-badge" id="soilTrialsLeft">Kalan deneme: 2</span>
+                <button class="card-button" id="soilButton" onclick="openModal('soil')">Analiz Başlat</button>
             </div>
         </div>
 
@@ -432,181 +560,577 @@
                 <div class="card-icon">
                     <i class="fas fa-camera"></i>
                 </div>
-                <h3 class="card-title">Görüntü Analizi</h3>
-                <p class="card-description">Bitki fotoğrafı yükleyerek hastalık teşhisi yapın</p>
-                <span class="card-badge" id="imageTrials">Kalan deneme: 2</span>
-                <button class="card-button" onclick="openModal('image')">
-                    Analiz Yap
-                    <i class="fas fa-arrow-right ml-2"></i>
-                </button>
+                <h3 class="card-title">Görüntü ile Hastalık Tespiti</h3>
+                <p class="card-description">Bitki fotoğrafı yükleyerek hastalık analizi yapın ve tedavi önerileri alın.</p>
+                <span class="card-badge" id="imageTrialsLeft">Kalan deneme: 2</span>
+                <button class="card-button" id="imageButton" onclick="openModal('image')">Analiz Başlat</button>
             </div>
         </div>
     </div>
+
+    <!-- Analiz Sonuçları -->
+    <div class="results-container" id="results-container">
+        <!-- Sonuçlar burada görüntülenecek -->
+    </div>
+
+    <!-- Hakları sıfırla butonu -->
+    <div class="reset-trials">
+        <button class="reset-button" onclick="resetTrials()">Deneme Haklarını Sıfırla</button>
+    </div>
 </div>
 
-<!-- Toprak Analiz Modal -->
+<!-- Toprak Analizi Modal -->
 <div id="soilModal" class="modal-overlay">
     <div class="modal-container">
         <div class="modal-header">
-            <h3 class="modal-title">Toprak Analizi</h3>
+            <h3 class="modal-title">Toprak Hastalık Analizi</h3>
             <button class="modal-close" onclick="closeModal('soil')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="soilForm" onsubmit="analyzeSoil(event)">
+            <form id="soilForm">
                 <div class="form-group">
-                    <label for="phValue" class="form-label">pH Değeri</label>
-                    <input type="number" step="0.1" id="phValue" class="form-control" placeholder="6.0 - 8.0 aralığında girin" required>
+                    <label for="azot" class="form-label">Azot Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="azot" id="azot" class="form-control" placeholder="Azot değerini girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="moisture" class="form-label">Nem Oranı (%)</label>
-                    <input type="number" id="moisture" class="form-control" placeholder="0 - 100 aralığında girin" required>
+                    <label for="fosfor" class="form-label">Fosfor Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="fosfor" id="fosfor" class="form-control" placeholder="Fosfor değerini girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="fertilizer" class="form-label">Gübre Miktarı (kg/m²)</label>
-                    <input type="number" step="0.1" id="fertilizer" class="form-control" placeholder="Gübre miktarını girin" required>
+                    <label for="potasyum" class="form-label">Potasyum Değeri (ppm):</label>
+                    <input type="number" step="0.1" min="0" name="potasyum" id="potasyum" class="form-control" placeholder="Potasyum değerini girin" required>
                 </div>
-                <button type="submit" class="submit-btn">Analiz Et</button>
+                <div class="form-group">
+                    <label for="ph" class="form-label">pH Değeri:</label>
+                    <input type="number" step="0.1" min="0" max="14" name="ph" id="ph" class="form-control" placeholder="6.0-8.0 arası bir değer girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="il" class="form-label">İl Seçin:</label>
+                    <select name="il" id="il" class="form-control" required>
+                        <option value="">İl Seçiniz</option>
+                        @foreach (var city in ViewBag.Cities)
+                        {
+                            <option value="@city">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ay" class="form-label">Ay Seçin:</label>
+                    <select name="ay" id="ay" class="form-control" required>
+                        <option value="">Ay Seçiniz</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@ViewBag.Months[i - 1]</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="apiUrl" class="form-label">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="apiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
+                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                </div>
+
+                <div class="loading-indicator" id="soil-loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Analiz yapılıyor, lütfen bekleyin...</p>
+                </div>
+
+                <button type="submit" class="submit-btn" id="soil-submit-btn">Analiz Et</button>
+
+                <!-- Hidden field to track trial usage -->
+                <input type="hidden" name="trialCount" id="soilTrialCount" value="0">
             </form>
-            <div id="soilResult" class="result-area">
-                <h4 class="result-title">Analiz Sonucu</h4>
-                <div class="result-content" id="soilResultText"></div>
-            </div>
         </div>
     </div>
 </div>
 
-<!-- Görüntü Analiz Modal -->
+<!-- Görüntü Analizi Modal -->
 <div id="imageModal" class="modal-overlay green-modal">
     <div class="modal-container">
         <div class="modal-header">
-            <h3 class="modal-title">Görüntü Analizi</h3>
+            <h3 class="modal-title">Görüntü ile Hastalık Tespiti</h3>
             <button class="modal-close" onclick="closeModal('image')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="imageForm" onsubmit="analyzeImage(event)">
+            <form id="imageForm" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="form-label">Bitki Fotoğrafı</label>
-                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageUpload').click()">
+                    <label class="form-label">Bitki Görüntüsü:</label>
+                    <div class="upload-area" id="uploadArea" onclick="triggerFileInput()">
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <p class="upload-text">Resminizi sürükleyip bırakın veya tıklayarak seçin</p>
-                        <p class="upload-hint">JPEG, PNG formatları (max 5MB)</p>
+                        <p class="upload-text" id="upload-text">Görüntü yüklemek için tıklayın veya sürükleyin</p>
+                        <p class="upload-hint">JPEG, PNG formatları desteklenir</p>
                     </div>
-                    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
-                    <div class="preview-container" id="previewContainer">
-                        <img id="imagePreview" class="image-preview" src="" alt="Yüklenen Görsel">
+                    <input type="file" name="plantImage" id="plantImage" class="form-control" style="display: none;" accept="image/*" required>
+                    <div class="preview-container" id="image-preview">
+                        <img id="preview-img" src="#" alt="Bitki görüntüsü önizlemesi" class="image-preview">
                     </div>
                 </div>
-                <button type="submit" class="submit-btn">Analiz Et</button>
+
+                <div class="form-group">
+                    <label for="imageApiUrl" class="form-label">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="imageApiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
+                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                </div>
+
+                <div class="loading-indicator" id="image-loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Analiz yapılıyor, lütfen bekleyin...</p>
+                </div>
+
+                <button type="submit" class="submit-btn" id="image-submit-btn">Analiz Et</button>
+
+                <!-- Hidden field to track trial usage -->
+                <input type="hidden" name="trialCount" id="imageTrialCount" value="0">
             </form>
-            <div id="imageResult" class="result-area">
-                <h4 class="result-title">Analiz Sonucu</h4>
-                <div class="result-content" id="imageResultText"></div>
-            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Modal fonksiyonları
-    function openModal(type) {
-        document.getElementById(`${type}Modal`).classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+    // Sayfa yüklendiğinde çalışacak fonksiyonlar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Local storage'dan deneme haklarını kontrol et
+        let soilTrials = localStorage.getItem('soilTrials');
+        let imageTrials = localStorage.getItem('imageTrials');
 
-    function closeModal(type) {
-        document.getElementById(`${type}Modal`).classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    // Görsel yükleme işlemi
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('imagePreview');
-                const container = document.getElementById('previewContainer');
-                const uploadArea = document.getElementById('uploadArea');
-
-                preview.src = e.target.result;
-                container.style.display = 'block';
-                uploadArea.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+        // Eğer daha önce kullanılmamışsa, 2 hak tanımla
+        if (soilTrials === null) {
+            soilTrials = 2;
+            localStorage.setItem('soilTrials', soilTrials);
         }
-    }
 
-    // Analiz fonksiyonları
-    function analyzeSoil(e) {
-        e.preventDefault();
-        const resultArea = document.getElementById('soilResult');
-        const resultText = document.getElementById('soilResultText');
-
-        // Burada gerçek analiz işlemleri yapılacak
-        // Şimdilik örnek bir sonuç gösteriyoruz
-        resultText.innerHTML = `
-            <p><strong>pH Değeri:</strong> ${document.getElementById('phValue').value}</p>
-            <p><strong>Nem Oranı:</strong> ${document.getElementById('moisture').value}%</p>
-            <p><strong>Gübre Miktarı:</strong> ${document.getElementById('fertilizer').value} kg/m²</p>
-            <p class="mt-3">Toprak analiziniz başarıyla tamamlandı. Bitkiniz için önerilen besin takviyeleri:</p>
-            <ul>
-                <li>Azot bazlı gübre (15-20g/m²)</li>
-                <li>Haftalık sulama programı</li>
-                <li>pH dengeleyici uygulama</li>
-            </ul>
-        `;
-
-        resultArea.style.display = 'block';
-
-        // Kalan deneme sayısını güncelle
-        updateTrials('soil');
-    }
-
-    function analyzeImage(e) {
-        e.preventDefault();
-        const resultArea = document.getElementById('imageResult');
-        const resultText = document.getElementById('imageResultText');
-
-        // Burada gerçek görüntü analizi yapılacak
-        // Şimdilik örnek bir sonuç gösteriyoruz
-        resultText.innerHTML = `
-            <p>Yüklediğiniz bitki görseli başarıyla analiz edildi.</p>
-            <p class="mt-2"><strong>Tespit Edilen Durum:</strong> Yaprak leke hastalığı (Cercospora)</p>
-            <p><strong>Önerilen Tedavi:</strong></p>
-            <ul>
-                <li>Bakır içerikli fungisit uygulaması</li>
-                <li>Etkilenen yaprakların temizlenmesi</li>
-                <li>Sulama sıklığının azaltılması</li>
-            </ul>
-        `;
-
-        resultArea.style.display = 'block';
-
-        // Kalan deneme sayısını güncelle
-        updateTrials('image');
-    }
-
-    function updateTrials(type) {
-        const badge = document.getElementById(`${type}Trials`);
-        const current = parseInt(badge.textContent.match(/\d+/)[0]);
-        if (current > 1) {
-            badge.textContent = `Kalan deneme: ${current - 1}`;
-        } else {
-            badge.textContent = 'Deneme hakkınız kalmadı';
-            badge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-            badge.style.color = '#ef4444';
+        if (imageTrials === null) {
+            imageTrials = 2;
+            localStorage.setItem('imageTrials', imageTrials);
         }
-    }
 
-    // Modal dışına tıklayarak kapatma
-    window.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal-overlay')) {
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.classList.remove('active');
+        // Kalan hakları göster
+        updateTrialDisplay();
+
+        // Deneme hakkı kalmadıysa butonları devre dışı bırak
+        checkTrialAvailability();
+
+        // Toprak form gönderimini yönet
+        const soilForm = document.getElementById('soilForm');
+        if (soilForm) {
+            soilForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Eğer deneme hakkı kalmadıysa formu gönderme
+                if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                    alert('Deneme hakkınız kalmadı!');
+                    return false;
+                }
+
+                // Loading göstergesini aktifleştir
+                document.getElementById('soil-loading-indicator').style.display = 'block';
+                document.getElementById('soil-submit-btn').disabled = true;
+
+                // Form verilerini al
+                const formData = new FormData(soilForm);
+
+                // AJAX isteği yerine burada sonuçları göster
+                setTimeout(() => {
+                    // Deneme hakkını azalt
+                    let remainingTrials = parseInt(localStorage.getItem('soilTrials')) - 1;
+                    localStorage.setItem('soilTrials', remainingTrials);
+                    updateTrialDisplay();
+                    checkTrialAvailability();
+
+                    // Modal'ı kapat
+                    closeModal('soil');
+
+                    // Loading göstergesini gizle
+                    document.getElementById('soil-loading-indicator').style.display = 'none';
+                    document.getElementById('soil-submit-btn').disabled = false;
+
+                    // Sonuçları göster
+                    showSoilResults(formData);
+                }, 1500);
             });
-            document.body.style.overflow = 'auto';
+        }
+
+        // Görüntü form gönderimini yönet
+        const imageForm = document.getElementById('imageForm');
+        if (imageForm) {
+            imageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Eğer deneme hakkı kalmadıysa formu gönderme
+                if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                    alert('Deneme hakkınız kalmadı!');
+                    return false;
+                }
+
+                // Dosya seçildi mi kontrol et
+                const fileInput = document.getElementById('plantImage');
+                if (fileInput.files.length === 0) {
+                    alert('Lütfen bir bitki görüntüsü yükleyin!');
+                    return false;
+                }
+
+                // Loading göstergesini aktifleştir
+                document.getElementById('image-loading-indicator').style.display = 'block';
+                document.getElementById('image-submit-btn').disabled = true;
+
+                // Form verilerini al
+                const formData = new FormData(imageForm);
+                const file = fileInput.files[0];
+
+                // Dosyayı oku ve Base64'e dönüştür
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageBase64 = e.target.result;
+
+                    // AJAX isteği yerine burada sonuçları göster
+                    setTimeout(() => {
+                        // Deneme hakkını azalt
+                        let remainingTrials = parseInt(localStorage.getItem('imageTrials')) - 1;
+                        localStorage.setItem('imageTrials', remainingTrials);
+                        updateTrialDisplay();
+                        checkTrialAvailability();
+
+                        // Modal'ı kapat
+                        closeModal('image');
+
+                        // Loading göstergesini gizle
+                        document.getElementById('image-loading-indicator').style.display = 'none';
+                        document.getElementById('image-submit-btn').disabled = false;
+
+                        // Sonuçları göster
+                        showImageResults(formData, imageBase64);
+                    }, 1500);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Dosya yükleme alanı için olayları dinle
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('plantImage');
+
+        if (uploadArea && fileInput) {
+            // Dosya sürükle bırak işlemleri
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--primary-green)';
+                uploadArea.style.backgroundColor = 'rgba(76, 201, 240, 0.1)';
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+                uploadArea.style.backgroundColor = 'var(--light-bg)';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+                uploadArea.style.backgroundColor = 'var(--light-bg)';
+
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    previewImage();
+                }
+            });
+
+            // Dosya seçme olayını dinle
+            fileInput.addEventListener('change', previewImage);
+        }
+
+           // Sayfa ilk yüklendiğinde mevcut sonuçlar varsa göster
+        if (localStorage.getItem('soilResult')) {
+            const soilResult = JSON.parse(localStorage.getItem('soilResult'));
+            displaySoilResults(soilResult);
+        }
+
+        if (localStorage.getItem('imageResult')) {
+            const imageResult = JSON.parse(localStorage.getItem('imageResult'));
+            displayImageResults(imageResult);
         }
     });
+
+    // Modal'ı açma fonksiyonu
+    function openModal(type) {
+        if (type === 'soil') {
+            document.getElementById('soilModal').classList.add('active');
+        } else if (type === 'image') {
+            document.getElementById('imageModal').classList.add('active');
+        }
+    }
+
+    // Modal'ı kapatma fonksiyonu
+    function closeModal(type) {
+        if (type === 'soil') {
+            document.getElementById('soilModal').classList.remove('active');
+        } else if (type === 'image') {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+    }
+
+    // Görüntü önizleme fonksiyonu
+    function previewImage() {
+        const fileInput = document.getElementById('plantImage');
+        const previewContainer = document.getElementById('image-preview');
+        const previewImage = document.getElementById('preview-img');
+        const uploadText = document.getElementById('upload-text');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+                uploadText.textContent = 'Resmi değiştirmek için tıklayın';
+            }
+
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    // Dosya seçme fonksiyonu
+    function triggerFileInput() {
+        document.getElementById('plantImage').click();
+    }
+
+    // Deneme hakkı kontrolü
+    function checkTrialAvailability() {
+        const soilTrials = parseInt(localStorage.getItem('soilTrials'));
+        const imageTrials = parseInt(localStorage.getItem('imageTrials'));
+
+        // Toprak analizi butonu
+        const soilButton = document.getElementById('soilButton');
+        if (soilButton) {
+            soilButton.disabled = soilTrials <= 0;
+        }
+
+        // Görüntü analizi butonu
+        const imageButton = document.getElementById('imageButton');
+        if (imageButton) {
+            imageButton.disabled = imageTrials <= 0;
+        }
+    }
+
+    // Deneme hakkı görüntüleme
+    function updateTrialDisplay() {
+        const soilTrials = localStorage.getItem('soilTrials');
+        const imageTrials = localStorage.getItem('imageTrials');
+
+        document.getElementById('soilTrialsLeft').textContent = `Kalan deneme: ${soilTrials}`;
+        document.getElementById('imageTrialsLeft').textContent = `Kalan deneme: ${imageTrials}`;
+    }
+
+    // Deneme haklarını sıfırlama
+    function resetTrials() {
+        localStorage.setItem('soilTrials', 2);
+        localStorage.setItem('imageTrials', 2);
+        updateTrialDisplay();
+        checkTrialAvailability();
+        alert('Deneme haklarınız sıfırlandı!');
+    }
+
+    // Sonuçları gösterme fonksiyonu - Toprak Analizi
+    function showSoilResults(formData) {
+        // Form verilerini al
+        const azot = formData.get('azot');
+        const fosfor = formData.get('fosfor');
+        const potasyum = formData.get('potasyum');
+        const ph = formData.get('ph');
+        const il = formData.get('il');
+        const ay = formData.get('ay');
+
+        // Ay adını bul
+        const months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+        const ayAdi = months[parseInt(ay) - 1];
+
+        // Bitki önerisi - örnek veri
+        const bitkiOnerisi = getBitkiOnerisi(azot, fosfor, potasyum, ph, il, ay);
+
+        // Sonuç nesnesini oluştur
+        const result = {
+            azot,
+            fosfor,
+            potasyum,
+            ph,
+            il,
+            ay: ayAdi,
+            bitkiOnerisi
+        };
+
+        // Local storage'a kaydet
+        localStorage.setItem('soilResult', JSON.stringify(result));
+
+        // Sonucu göster
+        displaySoilResults(result);
+    }
+
+    // Sonuçları görüntüleme fonksiyonu - Toprak Analizi
+    function displaySoilResults(result) {
+        const resultsContainer = document.getElementById('results-container');
+
+        // HTML oluştur
+        const html = `
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>Toprak Analiz Sonuçları</h3>
+                </div>
+                <div class="result-body">
+                    <div class="result-alert">
+                        <h4>Toprak Değerleri</h4>
+                        <p><strong>Azot:</strong> ${result.azot} ppm</p>
+                        <p><strong>Fosfor:</strong> ${result.fosfor} ppm</p>
+                        <p><strong>Potasyum:</strong> ${result.potasyum} ppm</p>
+                        <p><strong>pH:</strong> ${result.ph}</p>
+                        <p><strong>İl:</strong> ${result.il}</p>
+                        <p><strong>Ay:</strong> ${result.ay}</p>
+                    </div>
+
+                    <h4><span class="badge info-badge">Önerilen Bitki</span></h4>
+                    <p>${result.bitkiOnerisi.adi}</p>
+
+                    <h4>Bitki Özellikleri</h4>
+                    <p>${result.bitkiOnerisi.aciklama}</p>
+
+                    <h4>Ekme ve Bakım Önerileri</h4>
+                    <p>${result.bitkiOnerisi.onerileri}</p>
+                </div>
+            </div>
+        `;
+
+        // Mevcut sonuçları silme
+        const existingResults = resultsContainer.querySelectorAll('.result-card');
+        existingResults.forEach(result => {
+            if (result.querySelector('.result-header').textContent.includes('Toprak Analiz Sonuçları')) {
+                result.remove();
+            }
+        });
+
+        // Sonuçları ekle
+        resultsContainer.insertAdjacentHTML('afterbegin', html);
+    }
+
+    // Görüntü analiz sonuçlarını gösterme
+    function showImageResults(formData, imageBase64) {
+        // Hastalık tespiti - örnek veri
+        const hastalikTespiti = getHastalikTespiti();
+
+        // Sonuç nesnesini oluştur
+        const result = {
+            imageBase64,
+            hastalikTespiti
+        };
+
+        // Local storage'a kaydet
+        localStorage.setItem('imageResult', JSON.stringify(result));
+
+        // Sonucu göster
+        displayImageResults(result);
+    }
+
+    // Görüntü sonuçlarını görüntüleme
+    function displayImageResults(result) {
+        const resultsContainer = document.getElementById('results-container');
+
+        // HTML oluştur
+        const html = `
+            <div class="result-card">
+                <div class="result-header green">
+                    <h3>Görüntü Analiz Sonuçları</h3>
+                </div>
+                <div class="result-body">
+                    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                        <img src="${result.imageBase64}" alt="Analiz edilmiş bitki" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                    </div>
+
+                    <div class="result-alert green">
+                        <h4><span class="badge green-badge">Tespit Edilen Hastalık</span></h4>
+                        <p><strong>${result.hastalikTespiti.hastalik}</strong></p>
+                        <p>Güven Oranı: %${result.hastalikTespiti.guvenOrani}</p>
+                    </div>
+
+                    <h4>Hastalık Bilgileri</h4>
+                    <p>${result.hastalikTespiti.bilgi}</p>
+
+                    <h4>Tedavi Önerileri</h4>
+                    <p>${result.hastalikTespiti.tedavi}</p>
+
+                    <h4>Önleme Yöntemleri</h4>
+                    <p>${result.hastalikTespiti.onleme}</p>
+                </div>
+            </div>
+        `;
+
+        // Mevcut sonuçları silme
+        const existingResults = resultsContainer.querySelectorAll('.result-card');
+        existingResults.forEach(result => {
+            if (result.querySelector('.result-header').textContent.includes('Görüntü Analiz Sonuçları')) {
+                result.remove();
+            }
+        });
+
+        // Sonuçları ekle
+        resultsContainer.insertAdjacentHTML('afterbegin', html);
+    }
+
+    // Örnek bitki önerisi getirme (normalde API'den gelecek)
+    function getBitkiOnerisi(azot, fosfor, potasyum, ph, il, ay) {
+        // Örnek veri - gerçek uygulamada API'den gelecek
+        const bitkiler = [
+            {
+                adi: "Domates",
+                aciklama: "Domates, ılıman iklim koşullarında yetişen, besin değeri yüksek bir sebzedir. Azot, fosfor ve potasyum değerleri dengeli topraklarda iyi gelişir.",
+                onerileri: "Tohumları önce fideliklerde çimlendirin, sonra açık araziye dikin. Düzenli sulama ve güneş ışığı gerektirir. Hastalıklara karşı düzenli kontrol önemlidir."
+            },
+            {
+                adi: "Buğday",
+                aciklama: "Buğday, tahıl grubu bir bitki olup, Türkiye'nin her bölgesinde yetişebilmektedir. Potasyum bakımından zengin toprakları sever.",
+                onerileri: "Ekim zamanına dikkat edin. Sulama ve gübreleme programını düzenli uygulayın. Yabancı ot kontrolü önemlidir."
+            },
+            {
+                adi: "Çilek",
+                aciklama: "Çilek, asitli toprakları seven, bol güneş alan yerlerde iyi gelişen meyveli bir bitkidir. Fosfor değeri yüksek topraklarda verimli olur.",
+                onerileri: "Nemli ve iyi drene edilmiş toprakları tercih edin. Düzenli sulama yapın. Mantari hastalıklara karşı tedbirli olun."
+            }
+        ];
+
+        // Örnek bir seçim algoritması
+        let index = (parseInt(azot) + parseInt(fosfor) + parseInt(potasyum)) % bitkiler.length;
+        return bitkiler[index];
+    }
+
+    // Örnek hastalık tespiti getirme (normalde API'den gelecek)
+    function getHastalikTespiti() {
+        // Örnek veri - gerçek uygulamada API'den gelecek
+        const hastaliklar = [
+            {
+                hastalik: "Yaprak Küfü (Powdery Mildew)",
+                guvenOrani: 87,
+                bilgi: "Yaprak küfü, bitkilerin yapraklarında beyaz, unsu bir görünüm oluşturan yaygın bir fungal hastalıktır. Yüksek nem ve ılıman sıcaklıklarda gelişir.",
+                tedavi: "Etkilenen yaprakları hemen uzaklaştırın. Kükürt bazlı fungisitler veya doğal tedaviler (karbonat çözeltisi) kullanılabilir. Bitkinin hava sirkülasyonunu artırın.",
+                onleme: "Bitkiler arasında yeterli boşluk bırakın. Sabah sulama yaparak yaprakların gün içinde kurumasını sağlayın. Dayanıklı bitki türleri seçin."
+            },
+            {
+                hastalik: "Bakteriyel Leke (Bacterial Spot)",
+                guvenOrani: 92,
+                bilgi: "Bakteriyel leke, yapraklarda küçük, sulu, koyu lekeler oluşturan ciddi bir bakteriyel hastalıktır. Yüksek nem ve yağışlı havalarda hızla yayılır.",
+                tedavi: "Bakır bazlı fungisitler kullanılabilir, ancak hastalık ilerlediyse etkilenen bitkileri uzaklaştırmak gerekebilir. İyi havalandırma sağlayın.",
+                onleme: "Dayanıklı türler seçin. Dönüşümlü ekim yapın. Temiz alet kullanın. Aşırı sulamadan kaçının."
+            },
+            {
+                hastalik: "Erken Yanıklık (Early Blight)",
+                guvenOrani: 78,
+                bilgi: "Erken yanıklık, önce alt yapraklarda görülen, koyu kahverengi konsantrik halkalar oluşturan bir fungal hastalıktır. Sıcak ve nemli havalarda yaygındır.",
+                tedavi: "Etkilenen yaprakları uzaklaştırın. Fungisit uygulaması yapın. Bitkiyi güçlendirmek için dengeli gübreleme yapın.",
+                onleme: "Bitki rotasyonu uygulayın. Damla sulama sistemi kullanın. Hasattan sonra bitki artıklarını temizleyin."
+            }
+        ];
+
+        // Rastgele bir hastalık seçimi
+        const randomIndex = Math.floor(Math.random() * hastaliklar.length);
+        return hastaliklar[randomIndex];
+    }
 </script>
