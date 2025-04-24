@@ -1,183 +1,213 @@
-﻿        
+﻿@model BitkiHastalikTahmini.Models.User
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <style>
-        .register-page {
-            min-height: 100vh;
-            background: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+<style>
+    .register-page {
+        min-height: 100vh;
+        background: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .register-card {
+        background: inherit;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 500px;
+        overflow: hidden;
+    }
+
+    .register-header {
+        background: var(--primary-color, #4CAF50);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+    }
+
+        .register-header h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
-        .register-card {
-            background: inherit;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
+        .register-header p {
+            opacity: 0.8;
+            margin-bottom: 0;
         }
 
-        .register-header {
-            background: var(--primary-color, #4CAF50);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
+    .plant-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+    }
 
-            .register-header h2 {
-                margin-bottom: 0.5rem;
-                font-weight: 600;
-            }
+    .register-body {
+        padding: 2rem;
+    }
 
-            .register-header p {
-                opacity: 0.8;
-                margin-bottom: 0;
-            }
+    .name-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
 
-        .plant-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 36px;
-            height: 36px;
-        }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-        .register-body {
-            padding: 2rem;
-        }
-
-        .name-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-            .form-group label {
-                display: block;
-                margin-bottom: 0.5rem;
-                font-weight: 500;
-                color: var(--dark-color, #333);
-            }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            transition: border-color 0.2s;
-        }
-
-            .form-control:focus {
-                border-color: var(--primary-color, #4CAF50);
-                outline: none;
-            }
-
-        .validation-message {
-            color: #d9534f;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
+        .form-group label {
             display: block;
-        }
-
-        .password-requirements {
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-            color: #6c757d;
-        }
-
-        .btn-register {
-            background-color: var(--primary-color, #4CAF50);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            width: 100%;
-            border-radius: 6px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            color: var(--dark-color, #333);
         }
 
-            .btn-register:hover {
-                background-color: #3f9c35;
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        transition: border-color 0.2s;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-color, #4CAF50);
+            outline: none;
+        }
+
+    .validation-message {
+        color: #d9534f;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .password-requirements {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        color: #6c757d;
+    }
+
+    .btn-register {
+        background-color: var(--primary-color, #4CAF50);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        width: 100%;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+        .btn-register:hover {
+            background-color: #3f9c35;
+        }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #6c757d;
+    }
+
+        .login-link a {
+            color: var(--primary-color, #4CAF50);
+            text-decoration: none;
+        }
+
+            .login-link a:hover {
+                text-decoration: underline;
             }
 
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #6c757d;
-        }
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 6px;
+    }
 
-            .login-link a {
-                color: var(--primary-color, #4CAF50);
-                text-decoration: none;
-            }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 
-                .login-link a:hover {
-                    text-decoration: underline;
-                }
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
 
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 6px;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
-
-    <div class="register-page">
-        <div class="register-card">
-            <div class="register-header">
-                <h2>Kayıt Ol</h2>
-                <p>Bitki hastalık tespit sistemine hoş geldiniz</p>
-                <svg class="plant-icon" viewBox="0 0 24 24" fill="white">
-                    <path d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" />
-                </svg>
-            </div>
-            <div class="register-body">
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="alert alert-danger">
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <div>@error.ErrorMessage</div>
-                        }
-                    </div>
-                }
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-success">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
-           
-                <div class="login-link">
-                    Zaten hesabınız var mı? <a href="/Abone_Login">Giriş Yap</a>
+<div class="register-page">
+    <div class="register-card">
+        <div class="register-header">
+            <h2>Kayıt Ol</h2>
+            <p>Bitki hastalık tespit sistemine hoş geldiniz</p>
+            <svg class="plant-icon" viewBox="0 0 24 24" fill="white">
+                <path d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" />
+            </svg>
+        </div>
+        <div class="register-body">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
                 </div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            <form method="post" asp-controller="Save" asp-action="Index">
+                @Html.AntiForgeryToken()
+                <div class="name-row">
+                    <div class="form-group">
+                        <label for="FirstName">Ad</label>
+                        <input type="text" id="FirstName" name="FirstName" class="form-control" required />
+                        <span asp-validation-for="FirstName" class="validation-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Soyad</label>
+                        <input type="text" id="LastName" name="LastName" class="form-control" required />
+                        <span asp-validation-for="LastName" class="validation-message"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Email">E-posta</label>
+                    <input type="email" id="Email" name="Email" class="form-control" required />
+                    <span asp-validation-for="Email" class="validation-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Şifre</label>
+                    <input type="password" id="Password" name="Password" class="form-control" minlength="6" required />
+                    <span asp-validation-for="Password" class="validation-message"></span>
+                    <div class="password-requirements">
+                        Şifreniz en az 6 karakter uzunluğunda olmalıdır.
+                    </div>
+                </div>
+                <button type="submit" class="btn-register">Kayıt Ol</button>
+            </form>
+            <div class="login-link">
+                Zaten hesabınız var mı? <a href="/Abone_Login">Giriş Yap</a>
             </div>
         </div>
     </div>
-
-
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}
