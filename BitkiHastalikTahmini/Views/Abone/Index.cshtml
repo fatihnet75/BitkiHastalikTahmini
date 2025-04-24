@@ -1,494 +1,133 @@
 ﻿@model IEnumerable<BitkiHastalikTahmini.Models.User>
 @{
-    ViewData["Title"] = "Anasayfa";
+    ViewData["Title"] = "abone";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    /* Genel Stil */
+    /* Modern Responsive Design */
     :root {
-        --primary-blue: #4361ee;
-        --primary-green: #4cc9f0;
-        --primary-purple: #7209b7;
-        --primary-red: #f72585;
-        --light-bg: #f8f9fa;
-        --dark-text: #2b2d42;
-        --light-text: #8d99ae;
-        --white: #ffffff;
-        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --primary-color: #4CAF50;
+        --primary-hover: #45a049;
+        --secondary-color: #2196F3;
+        --text-color: #333;
+        --light-text: #f1f1f1;
+        --background-light: #f9f9f9;
+        --border-radius: 16px;
+        --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
     }
 
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: var(--light-bg);
-        color: var(--dark-text);
-        line-height: 1.6;
-    }
-
-    /* Ana Butonlar */
-    .analysis-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
-    .section-header {
+    .hero-section {
         text-align: center;
-        margin-bottom: 3rem;
+        padding: 40px 20px;
+        margin-bottom: 20px;
     }
 
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        background: linear-gradient(90deg, var(--primary-blue), var(--primary-green));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        .hero-section h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
 
-    .section-subtitle {
-        font-size: 1.1rem;
-        color: var(--light-text);
-        max-width: 600px;
-        margin: 0 auto;
-    }
+        .hero-section p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
 
-    .analysis-buttons {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin: 3rem 0;
+    .analysis-cards {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 40px auto;
+        flex-wrap: wrap;
+        max-width: 1200px;
     }
 
     .analysis-card {
-        background: var(--white);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        width: 340px;
+        padding: 25px;
         transition: var(--transition);
         position: relative;
-        z-index: 1;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        overflow: hidden;
     }
 
         .analysis-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
         }
-
-        .analysis-card.blue {
-            border-top: 4px solid var(--primary-blue);
-        }
-
-        .analysis-card.green {
-            border-top: 4px solid var(--primary-green);
-        }
-
-    .card-content {
-        padding: 2rem;
-        position: relative;
-    }
 
     .card-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        color: var(--white);
+        font-size: 40px;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    .analysis-card h3 {
         font-size: 1.5rem;
-        box-shadow: var(--shadow-md);
+        margin-bottom: 15px;
+        color: var(--text-color);
     }
 
-    .blue .card-icon {
-        background: linear-gradient(135deg, var(--primary-blue), #4895ef);
+    .analysis-card p {
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.5;
     }
 
-    .green .card-icon {
-        background: linear-gradient(135deg, var(--primary-green), #56cfe1);
+    .trial-badge {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 20px;
     }
 
-    .card-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-
-    .card-description {
-        color: var(--light-text);
-        margin-bottom: 1.5rem;
-    }
-
-    .card-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.35rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        background-color: rgba(67, 97, 238, 0.1);
-        color: var(--primary-blue);
-    }
-
-    .green .card-badge {
-        background-color: rgba(76, 201, 240, 0.1);
-        color: var(--primary-green);
-    }
-
-    .card-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.75rem;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: var(--transition);
-        margin-top: 1rem;
+    .analysis-button {
+        background-color: var(--primary-color);
+        color: white;
         border: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 1rem;
         cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        font-weight: 500;
     }
 
-        .card-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background-color: #cccccc;
-            color: #666666;
+        .analysis-button:hover {
+            background-color: var(--primary-hover);
         }
 
-    .blue .card-button {
-        background-color: var(--primary-blue);
-        color: var(--white);
-    }
+        .analysis-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
 
-    .green .card-button {
-        background-color: var(--primary-green);
-        color: var(--white);
-    }
-
-    .card-button:hover:not(:disabled) {
-        opacity: 0.9;
-        transform: translateY(-2px);
-    }
-
-    /* Modal Stilleri */
-    .modal-overlay {
+    /* Modal styling */
+    .analysis-modal {
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.6);
-        display: none;
-        align-items: center;
-        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
         z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: var(--transition);
-        backdrop-filter: blur(8px);
-    }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            display: flex;
-        }
-
-    .modal-container {
-        background-color: var(--white);
-        border-radius: 16px;
-        width: 90%;
-        max-width: 600px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: var(--shadow-lg);
-        transform: translateY(20px);
-        transition: var(--transition);
-        position: relative;
-    }
-
-    .modal-overlay.active .modal-container {
-        transform: translateY(0);
-    }
-
-    .modal-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .modal-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-    }
-
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: var(--light-text);
-        transition: var(--transition);
-        padding: 0.25rem;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.3s;
     }
 
-        .modal-close:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--dark-text);
-        }
-
-    .modal-body {
-        padding: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: var(--dark-text);
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: var(--transition);
-        background-color: var(--light-bg);
-    }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-            background-color: var(--white);
-        }
-
-    .form-text {
-        font-size: 0.85rem;
-        color: var(--light-text);
-        margin-top: 0.5rem;
-    }
-
-    .submit-btn {
-        background-color: var(--primary-blue);
-        color: var(--white);
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: var(--transition);
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-
-        .submit-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-    .green-modal .submit-btn {
-        background-color: var(--primary-green);
-    }
-
-    .green-modal .form-control:focus {
-        border-color: var(--primary-green);
-        box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
-    }
-
-    /* Görsel Yükleme Alanı */
-    .upload-area {
-        border: 2px dashed rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
-        cursor: pointer;
-        transition: var(--transition);
-        margin-bottom: 1.5rem;
-        background-color: var(--light-bg);
-        position: relative;
-        overflow: hidden;
-    }
-
-        .upload-area:hover {
-            border-color: var(--primary-blue);
-        }
-
-    .green-modal .upload-area:hover {
-        border-color: var(--primary-green);
-    }
-
-    .upload-icon {
-        font-size: 2.5rem;
-        color: var(--light-text);
-        margin-bottom: 1rem;
-    }
-
-    .upload-text {
-        color: var(--light-text);
-        margin-bottom: 0.5rem;
-    }
-
-    .upload-hint {
-        font-size: 0.85rem;
-        color: var(--light-text);
-    }
-
-    .preview-container {
-        display: none;
-        margin-top: 1.5rem;
-    }
-
-    .image-preview {
-        max-width: 100%;
-        max-height: 300px;
-        border-radius: 8px;
-        margin: 0 auto;
-        display: block;
-        box-shadow: var(--shadow-sm);
-    }
-
-    /* Loading Indicator */
-    .loading-indicator {
-        display: none;
-        text-align: center;
-        margin: 20px 0;
-    }
-
-    .spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-radius: 50%;
-        border-left-color: var(--primary-blue);
-        width: 30px;
-        height: 30px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 10px;
-    }
-
-    .green-modal .spinner {
-        border-left-color: var(--primary-green);
-    }
-
- {
-        0%
-
-    {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-
-    }
-
-    /* Results Container */
-    .results-container {
-        max-width: 900px;
-        margin: 40px auto;
-    }
-
-    .result-card {
-        background-color: white;
-        border-radius: 16px;
-        box-shadow: var(--shadow-md);
-        overflow: hidden;
-        animation: fadeIn 0.5s ease;
-        margin-bottom: 30px;
-    }
-
-    .result-header {
-        padding: 20px;
-        color: white;
-        background: linear-gradient(135deg, var(--primary-blue), #4895ef);
-    }
-
-        .result-header.green {
-            background: linear-gradient(135deg, var(--primary-green), #56cfe1);
-        }
-
-    .result-body {
-        padding: 25px;
-    }
-
-    .result-alert {
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 25px;
-        background-color: rgba(67, 97, 238, 0.1);
-        border: 1px solid rgba(67, 97, 238, 0.3);
-    }
-
-        .result-alert.green {
-            background-color: rgba(76, 201, 240, 0.1);
-            border: 1px solid rgba(76, 201, 240, 0.3);
-        }
-
-    .badge {
-        display: inline-block;
-        padding: 5px 12px;
-        border-radius: 30px;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    .info-badge {
-        background-color: var(--primary-blue);
-        color: white;
-    }
-
-    .green-badge {
-        background-color: var(--primary-green);
-        color: white;
-    }
-
-    /* Reset button */
-    .reset-trials {
-        text-align: center;
-        margin: 20px auto;
-        max-width: 300px;
-    }
-
-    .reset-button {
-        background: linear-gradient(135deg, var(--primary-purple), var(--primary-red));
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 30px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: var(--transition);
-        box-shadow: var(--shadow-sm);
-    }
-
-        .reset-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-    /* Animations */
     {
         from
 
@@ -502,7 +141,7 @@
 
     }
 
-  {
+    {
         from
 
     {
@@ -517,95 +156,334 @@
 
     }
 
-    /* Responsive */
-     {
-        .section-title
+    .modal-content {
+        background-color: white;
+        border-radius: var(--border-radius);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--box-shadow);
+        position: relative;
+        animation: slideUp 0.4s;
+    }
+
+    .modal-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.7rem;
+        }
+
+    .close-button {
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .close-button:hover {
+            color: #f44336;
+            transform: scale(1.1);
+        }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+    .form-text {
+        font-size: 0.8rem;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    .btn-submit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: var(--transition);
+        font-weight: 500;
+        margin-top: 10px;
+    }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+    /* Loading indicator */
+    .loading-indicator {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-left: 4px solid var(--primary-color);
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+    }
+
+    {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* Results styling */
+    .results-container {
+        max-width: 900px;
+        margin: 40px auto;
+        animation: fadeIn 0.5s;
+    }
+
+    .result-card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+    }
+
+    .result-header {
+        padding: 20px;
+        color: white;
+    }
+
+    .success-header {
+        background-color: var(--primary-color);
+    }
+
+    .error-header {
+        background-color: #f44336;
+    }
+
+    .result-body {
+        padding: 25px;
+    }
+
+    .result-alert {
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .success-alert {
+        background-color: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .error-alert {
+        background-color: rgba(244, 67, 54, 0.1);
+        border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .info-section {
+        background-color: rgba(33, 150, 243, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .info-badge {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .warning-badge {
+        background-color: #ff9800;
+        color: white;
+    }
+
+    /* Image upload styling */
+    .image-upload {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .image-upload:hover {
+            border-color: var(--primary-color);
+        }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 300px;
+        margin: 15px auto;
+        display: none;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+    /* Responsive adjustments */
+    {
+        .hero-section h1
 
     {
         font-size: 2rem;
     }
 
-    .analysis-buttons {
-        grid-template-columns: 1fr;
+    .analysis-card {
+        width: 100%;
+        max-width: 400px;
     }
 
-    .modal-container {
+    .modal-content {
         width: 95%;
     }
 
     }
+
+    /* Deneme hakları sıfırlama butonu */
+    .reset-trials {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 300px;
+    }
+
+    .reset-button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .reset-button:hover {
+            background-color: #1976D2;
+        }
 </style>
 
-<div class="analysis-container">
-    <div class="section-header">
-        <h1 class="section-title">Bitki Hastalık Tahmini</h1>
-        <p class="section-subtitle">Toprak değerlerinizi analiz ederek size uygun bitki önerisi alın veya görüntü yükleyerek bitki hastalığı tespiti yapın.</p>
-    </div>
+<div class="hero-section">
+    <h1>Bitki Hastalık Tahmini</h1>
+    <p>Toprak değerlerinizi analiz ederek size uygun bitki önerisi alın veya görüntü yükleyerek bitki hastalığı tespiti yapın.</p>
+</div>
 
-    <div class="analysis-buttons">
-        <div class="analysis-card blue">
-            <div class="card-content">
-                <div class="card-icon">
-                    <i class="fas fa-seedling"></i>
-                </div>
-                <h3 class="card-title">Toprak Hastalık Analizi</h3>
-                <p class="card-description">Azot, fosfor, potasyum ve pH değerlerini girerek toprağınıza uygun bitki önerisi alın.</p>
-                <span class="card-badge" id="soilTrialsLeft">Kalan deneme: 2</span>
-                <button class="card-button" id="soilButton" onclick="openModal('soil')">Analiz Başlat</button>
-            </div>
+<div class="analysis-cards">
+    <div class="analysis-card">
+        <div class="card-icon">🌱</div>
+        <h3>Toprak Hastalık Analizi</h3>
+        <p>Azot, fosfor, potasyum ve pH değerlerini girerek toprağınıza uygun bitki önerisi alın.</p>
+        <div class="trial-badge">
+            <span id="soilTrialsLeft">100</span> analiz hakkınız kaldı
         </div>
+        <button class="analysis-button" id="soilButton" onclick="toggleModal('soil')">Analiz Başlat</button>
+    </div>
 
-        <div class="analysis-card green">
-            <div class="card-content">
-                <div class="card-icon">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <h3 class="card-title">Görüntü ile Hastalık Tespiti</h3>
-                <p class="card-description">Bitki fotoğrafı yükleyerek hastalık analizi yapın ve tedavi önerileri alın.</p>
-                <span class="card-badge" id="imageTrialsLeft">Kalan deneme: 2</span>
-                <button class="card-button" id="imageButton" onclick="openModal('image')">Analiz Başlat</button>
-            </div>
+    <div class="analysis-card">
+        <div class="card-icon">📷</div>
+        <h3>Görüntü ile Hastalık Tespiti</h3>
+        <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın ve tedavi önerileri alın.</p>
+        <div class="trial-badge">
+            <span id="imageTrialsLeft">100</span> analiz hakkınız kaldı
         </div>
-    </div>
-
-    <!-- Analiz Sonuçları -->
-    <div class="results-container" id="results-container">
-        <!-- Sonuçlar burada görüntülenecek -->
-    </div>
-
-    <!-- Hakları sıfırla butonu -->
-    <div class="reset-trials">
-        <button class="reset-button" onclick="resetTrials()">Deneme Haklarını Sıfırla</button>
+        <button class="analysis-button" id="imageButton" onclick="toggleModal('image')">Analiz Başlat</button>
     </div>
 </div>
 
+<!-- Hakları sıfırla butonu -->
+<div class="reset-trials">
+    <button class="reset-button" onclick="resetTrials()">Deneme Haklarını Sıfırla</button>
+</div>
+
 <!-- Toprak Analizi Modal -->
-<div id="soilModal" class="modal-overlay">
-    <div class="modal-container">
+<div id="soilModal" class="analysis-modal">
+    <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Toprak Hastalık Analizi</h3>
-            <button class="modal-close" onclick="closeModal('soil')">&times;</button>
+            <h2>Toprak Hastalık Analizi</h2>
+            <button class="close-button" onclick="toggleModal('soil')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="soilForm">
+            <form asp-action="AnalyzeSoil" asp-controller="User" method="post" id="soilForm">
                 <div class="form-group">
-                    <label for="azot" class="form-label">Azot Değeri (ppm):</label>
+                    <label for="azot">Azot Değeri (ppm):</label>
                     <input type="number" step="0.1" min="0" name="azot" id="azot" class="form-control" placeholder="Azot değerini girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="fosfor" class="form-label">Fosfor Değeri (ppm):</label>
+                    <label for="fosfor">Fosfor Değeri (ppm):</label>
                     <input type="number" step="0.1" min="0" name="fosfor" id="fosfor" class="form-control" placeholder="Fosfor değerini girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="potasyum" class="form-label">Potasyum Değeri (ppm):</label>
+                    <label for="potasyum">Potasyum Değeri (ppm):</label>
                     <input type="number" step="0.1" min="0" name="potasyum" id="potasyum" class="form-control" placeholder="Potasyum değerini girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="ph" class="form-label">pH Değeri:</label>
+                    <label for="ph">pH Değeri:</label>
                     <input type="number" step="0.1" min="0" max="14" name="ph" id="ph" class="form-control" placeholder="6.0-8.0 arası bir değer girin" required>
                 </div>
                 <div class="form-group">
-                    <label for="il" class="form-label">İl Seçin:</label>
+                    <label for="il">İl Seçin:</label>
                     <select name="il" id="il" class="form-control" required>
                         <option value="">İl Seçiniz</option>
                         @foreach (var city in ViewBag.Cities)
@@ -615,7 +493,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="ay" class="form-label">Ay Seçin:</label>
+                    <label for="ay">Ay Seçin:</label>
                     <select name="ay" id="ay" class="form-control" required>
                         <option value="">Ay Seçiniz</option>
                         @for (int i = 1; i <= 12; i++)
@@ -625,9 +503,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="apiUrl" class="form-label">API Sunucu URL:</label>
-                    <input type="text" name="apiUrl" id="apiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
-                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                    <label for="apiUrl">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="apiUrl" class="form-control" placeholder="API URL adresini girin" value="http://192.168.168.164:5000" required>
+                    <div class="form-text">Örnek: http://192.168.168.164:5000 veya https://example.com</div>
                 </div>
 
                 <div class="loading-indicator" id="soil-loading-indicator">
@@ -635,7 +513,7 @@
                     <p>Analiz yapılıyor, lütfen bekleyin...</p>
                 </div>
 
-                <button type="submit" class="submit-btn" id="soil-submit-btn">Analiz Et</button>
+                <button type="submit" class="btn-submit" id="soil-submit-btn">Analiz Et</button>
 
                 <!-- Hidden field to track trial usage -->
                 <input type="hidden" name="trialCount" id="soilTrialCount" value="0">
@@ -645,33 +523,29 @@
 </div>
 
 <!-- Görüntü Analizi Modal -->
-<div id="imageModal" class="modal-overlay green-modal">
-    <div class="modal-container">
+<div id="imageModal" class="analysis-modal">
+    <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Görüntü ile Hastalık Tespiti</h3>
-            <button class="modal-close" onclick="closeModal('image')">&times;</button>
+            <h2>Görüntü ile Hastalık Tespiti</h2>
+            <button class="close-button" onclick="toggleModal('image')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="imageForm" enctype="multipart/form-data">
+            <form asp-action="AnalyzeImage" asp-controller="User" method="post" id="imageForm" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="form-label">Bitki Görüntüsü:</label>
-                    <div class="upload-area" id="uploadArea" onclick="triggerFileInput()">
-                        <div class="upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
+                    <label for="plantImage">Bitki Görüntüsü:</label>
+                    <div class="image-upload" id="image-upload-area" onclick="triggerFileInput()">
+                        <p id="upload-text">Görüntü yüklemek için tıklayın veya sürükleyin</p>
+                        <input type="file" name="plantImage" id="plantImage" class="form-control" style="display: none;" accept="image/*" required>
+                        <div class="image-preview" id="image-preview">
+                            <img id="preview-img" src="#" alt="Bitki görüntüsü önizlemesi">
                         </div>
-                        <p class="upload-text" id="upload-text">Görüntü yüklemek için tıklayın veya sürükleyin</p>
-                        <p class="upload-hint">JPEG, PNG formatları desteklenir</p>
-                    </div>
-                    <input type="file" name="plantImage" id="plantImage" class="form-control" style="display: none;" accept="image/*" required>
-                    <div class="preview-container" id="image-preview">
-                        <img id="preview-img" src="#" alt="Bitki görüntüsü önizlemesi" class="image-preview">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="imageApiUrl" class="form-label">API Sunucu URL:</label>
-                    <input type="text" name="apiUrl" id="imageApiUrl" class="form-control" placeholder="API URL adresini girin" value="http://localhost:5000" required>
-                    <div class="form-text">Örnek: http://localhost:5000 veya https://example.com</div>
+                    <label for="imageApiUrl">API Sunucu URL:</label>
+                    <input type="text" name="apiUrl" id="imageApiUrl" class="form-control" placeholder="API URL adresini girin" value="http://192.168.168.164:5000" required>
+                    <div class="form-text">Örnek:http://192.168.168.164:5000 veya https://example.com</div>
                 </div>
 
                 <div class="loading-indicator" id="image-loading-indicator">
@@ -679,7 +553,7 @@
                     <p>Analiz yapılıyor, lütfen bekleyin...</p>
                 </div>
 
-                <button type="submit" class="submit-btn" id="image-submit-btn">Analiz Et</button>
+                <button type="submit" class="btn-submit" id="image-submit-btn">Analiz Et</button>
 
                 <!-- Hidden field to track trial usage -->
                 <input type="hidden" name="trialCount" id="imageTrialCount" value="0">
@@ -688,8 +562,65 @@
     </div>
 </div>
 
+<!-- Analiz Sonuçları -->
+<div class="results-container" id="results-container">
+    @if (ViewBag.ShowResults == true)
+    {
+        <div class="result-card">
+            <div class="result-header @(ViewBag.ResultCrop == "Hata" ? "error-header" : "success-header")">
+                <h2 style="text-align: center; margin: 0;">@(ViewBag.AnalysisType == "image" ? "Görüntü Analizi Sonucu" : "Toprak Analizi Sonucu")</h2>
+            </div>
+            <div class="result-body">
+                <div class="result-alert @(ViewBag.ResultCrop == "Hata" ? "error-alert" : "success-alert")">
+                    <h4 style="text-align: center; margin-top: 0;">@(ViewBag.AnalysisType == "image" ? "Tespit Edilen Hastalık" : "Tavsiye Edilen Bitki/Ürün")</h4>
+                    <h3 style="text-align: center; margin-bottom: 20px;"><strong>@ViewBag.ResultCrop</strong></h3>
+                    <hr style="border-top: 1px solid rgba(0,0,0,0.1); margin: 15px 0;">
+                    <p style="margin-bottom: 0;">@ViewBag.Explanation</p>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; margin-top: 20px; gap: 20px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <div class="info-section">
+                            <h5 style="margin-top: 0;">Analiz Güven Oranı</h5>
+                            @if (ViewBag.Confidence != null)
+                            {
+                                <span class="badge info-badge">%@(Math.Round((double)ViewBag.Confidence * 100, 2))</span>
+                            }
+                            else
+                            {
+                                <span class="badge warning-badge">Veri Yok</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (ViewBag.AnalysisType == "image" && ViewBag.ImageData != null)
+                    {
+                        <div style="flex: 1; min-width: 250px;">
+                            <div class="info-section">
+                                <h5 style="margin-top: 0;">Analiz Edilen Görüntü</h5>
+                                <img src="data:image/jpeg;base64,@ViewBag.ImageData" alt="Analiz edilen bitki görüntüsü" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="analysis-button" onclick="toggleModal('@(ViewBag.AnalysisType == "image" ? "image" : "soil")')" style="max-width: 200px;">Yeni Analiz Yap</button>
+                </div>
+            </div>
+
+            <div style="background-color: #f9f9f9; padding: 15px; text-align: center; border-top: 1px solid #eee;">
+                <div style="color: #777; font-size: 0.9rem;">
+                    Bu analiz Dr.PlantAI yapay zeka sistemi tarafından gerçekleştirilmiştir.
+                    Daha detaylı bilgi için uzman bir ziraat mühendisi ile iletişime geçebilirsiniz.
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
 <script>
-    // Sayfa yüklendiğinde çalışacak fonksiyonlar
+    // Kullanıcının deneme haklarını local storage'da saklayacağız
     document.addEventListener('DOMContentLoaded', function() {
         // Local storage'dan deneme haklarını kontrol et
         let soilTrials = localStorage.getItem('soilTrials');
@@ -697,12 +628,12 @@
 
         // Eğer daha önce kullanılmamışsa, 2 hak tanımla
         if (soilTrials === null) {
-            soilTrials = 2;
+            soilTrials = 100;
             localStorage.setItem('soilTrials', soilTrials);
         }
 
         if (imageTrials === null) {
-            imageTrials = 2;
+            imageTrials = 100;
             localStorage.setItem('imageTrials', imageTrials);
         }
 
@@ -716,10 +647,9 @@
         const soilForm = document.getElementById('soilForm');
         if (soilForm) {
             soilForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
                 // Eğer deneme hakkı kalmadıysa formu gönderme
                 if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                    e.preventDefault();
                     alert('Deneme hakkınız kalmadı!');
                     return false;
                 }
@@ -728,27 +658,15 @@
                 document.getElementById('soil-loading-indicator').style.display = 'block';
                 document.getElementById('soil-submit-btn').disabled = true;
 
-                // Form verilerini al
-                const formData = new FormData(soilForm);
+                // Deneme hakkını azalt
+                let remainingTrials = parseInt(localStorage.getItem('soilTrials')) - 1;
+                localStorage.setItem('soilTrials', remainingTrials);
 
-                // AJAX isteği yerine burada sonuçları göster
-                setTimeout(() => {
-                    // Deneme hakkını azalt
-                    let remainingTrials = parseInt(localStorage.getItem('soilTrials')) - 1;
-                    localStorage.setItem('soilTrials', remainingTrials);
-                    updateTrialDisplay();
-                    checkTrialAvailability();
+                // Deneme sayısını form ile gönder
+                document.getElementById('soilTrialCount').value = 100 - remainingTrials;
 
-                    // Modal'ı kapat
-                    closeModal('soil');
-
-                    // Loading göstergesini gizle
-                    document.getElementById('soil-loading-indicator').style.display = 'none';
-                    document.getElementById('soil-submit-btn').disabled = false;
-
-                    // Sonuçları göster
-                    showSoilResults(formData);
-                }, 1500);
+                // Form normal şekilde gönderilecek
+                return true;
             });
         }
 
@@ -756,18 +674,18 @@
         const imageForm = document.getElementById('imageForm');
         if (imageForm) {
             imageForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
                 // Eğer deneme hakkı kalmadıysa formu gönderme
                 if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                    e.preventDefault();
                     alert('Deneme hakkınız kalmadı!');
                     return false;
                 }
 
-                // Dosya seçildi mi kontrol et
+                // Dosya seçilmediyse form gönderimini engelle
                 const fileInput = document.getElementById('plantImage');
-                if (fileInput.files.length === 0) {
-                    alert('Lütfen bir bitki görüntüsü yükleyin!');
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Lütfen bir görüntü seçin!');
                     return false;
                 }
 
@@ -775,362 +693,180 @@
                 document.getElementById('image-loading-indicator').style.display = 'block';
                 document.getElementById('image-submit-btn').disabled = true;
 
-                // Form verilerini al
-                const formData = new FormData(imageForm);
-                const file = fileInput.files[0];
+                // Deneme hakkını azalt
+                let remainingTrials = parseInt(localStorage.getItem('imageTrials')) - 1;
+                localStorage.setItem('imageTrials', remainingTrials);
 
-                // Dosyayı oku ve Base64'e dönüştür
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageBase64 = e.target.result;
+                // Deneme sayısını form ile gönder
+                document.getElementById('imageTrialCount').value = 100 - remainingTrials;
 
-                    // AJAX isteği yerine burada sonuçları göster
-                    setTimeout(() => {
-                        // Deneme hakkını azalt
-                        let remainingTrials = parseInt(localStorage.getItem('imageTrials')) - 1;
-                        localStorage.setItem('imageTrials', remainingTrials);
-                        updateTrialDisplay();
-                        checkTrialAvailability();
-
-                        // Modal'ı kapat
-                        closeModal('image');
-
-                        // Loading göstergesini gizle
-                        document.getElementById('image-loading-indicator').style.display = 'none';
-                        document.getElementById('image-submit-btn').disabled = false;
-
-                        // Sonuçları göster
-                        showImageResults(formData, imageBase64);
-                    }, 1500);
-                };
-                reader.readAsDataURL(file);
+                // Form normal şekilde gönderilecek
+                return true;
             });
         }
 
-        // Dosya yükleme alanı için olayları dinle
-        const uploadArea = document.getElementById('uploadArea');
+        // Görüntü yükleme önizlemesi
         const fileInput = document.getElementById('plantImage');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                previewImage(this);
+            });
+        }
 
-        if (uploadArea && fileInput) {
-            // Dosya sürükle bırak işlemleri
-            uploadArea.addEventListener('dragover', function(e) {
+        // Görüntü için sürükle-bırak desteği
+        const dropArea = document.getElementById('image-upload-area');
+        if (dropArea) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
                 e.preventDefault();
-                uploadArea.style.borderColor = 'var(--primary-green)';
-                uploadArea.style.backgroundColor = 'rgba(76, 201, 240, 0.1)';
-            });
-
-            uploadArea.addEventListener('dragleave', function() {
-                uploadArea.style.borderColor = 'rgba(0, 0, 0, 0.1)';
-                uploadArea.style.backgroundColor = 'var(--light-bg)';
-            });
-
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadArea.style.borderColor = 'rgba(0, 0, 0, 0.1)';
-                uploadArea.style.backgroundColor = 'var(--light-bg)';
-
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    previewImage();
-                }
-            });
-
-            // Dosya seçme olayını dinle
-            fileInput.addEventListener('change', previewImage);
-        }
-
-           // Sayfa ilk yüklendiğinde mevcut sonuçlar varsa göster
-        if (localStorage.getItem('soilResult')) {
-            const soilResult = JSON.parse(localStorage.getItem('soilResult'));
-            displaySoilResults(soilResult);
-        }
-
-        if (localStorage.getItem('imageResult')) {
-            const imageResult = JSON.parse(localStorage.getItem('imageResult'));
-            displayImageResults(imageResult);
-        }
-    });
-
-    // Modal'ı açma fonksiyonu
-    function openModal(type) {
-        if (type === 'soil') {
-            document.getElementById('soilModal').classList.add('active');
-        } else if (type === 'image') {
-            document.getElementById('imageModal').classList.add('active');
-        }
-    }
-
-    // Modal'ı kapatma fonksiyonu
-    function closeModal(type) {
-        if (type === 'soil') {
-            document.getElementById('soilModal').classList.remove('active');
-        } else if (type === 'image') {
-            document.getElementById('imageModal').classList.remove('active');
-        }
-    }
-
-    // Görüntü önizleme fonksiyonu
-    function previewImage() {
-        const fileInput = document.getElementById('plantImage');
-        const previewContainer = document.getElementById('image-preview');
-        const previewImage = document.getElementById('preview-img');
-        const uploadText = document.getElementById('upload-text');
-
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewContainer.style.display = 'block';
-                uploadText.textContent = 'Resmi değiştirmek için tıklayın';
+                e.stopPropagation();
             }
 
-            reader.readAsDataURL(fileInput.files[0]);
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.style.borderColor = '#4CAF50';
+                dropArea.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+            }
+
+            function unhighlight() {
+                dropArea.style.borderColor = '#ddd';
+                dropArea.style.backgroundColor = '';
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length) {
+                    const fileInput = document.getElementById('plantImage');
+                    fileInput.files = files;
+                    previewImage(fileInput);
+                }
+            }
+        }
+
+        // Analiz sonuçları varsa otomatik olarak sayfayı kaydır
+    @if (ViewBag.ShowResults == true)
+    {
+        <text>
+                        setTimeout(() => {
+                            const resultElement = document.getElementById('results-container');
+                            if (resultElement) {
+                                resultElement.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }, 500);
+
+                        // Eğer analiz sonucu başarılıysa hakları güncelle
+                        updateTrialDisplay();
+                        checkTrialAvailability();
+        </text>
+    }
+    });
+
+    // Modal açma/kapama fonksiyonu
+        function toggleModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+
+        if (modal.style.display === 'flex') {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        } else {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
     }
 
-    // Dosya seçme fonksiyonu
+    // Dosya seçme diyaloğunu tetikle
     function triggerFileInput() {
         document.getElementById('plantImage').click();
     }
 
+    // Görüntü önizleme fonksiyonu
+    function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const uploadText = document.getElementById('upload-text');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+                uploadText.textContent = 'Görüntüyü değiştirmek için tıklayın';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Modal dışına tıklandığında kapatma
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('analysis-modal')) {
+            e.target.style.display = 'none';
+             document.body.style.overflow = '';
+        }
+    });
+
+    // Deneme haklarını güncelleme fonksiyonu
+    function updateTrialDisplay() {
+        const soilTrialsElement = document.getElementById('soilTrialsLeft');
+        const imageTrialsElement = document.getElementById('imageTrialsLeft');
+
+        if (soilTrialsElement) {
+            soilTrialsElement.textContent = localStorage.getItem('soilTrials') || 0;
+        }
+        if (imageTrialsElement) {
+            imageTrialsElement.textContent = localStorage.getItem('imageTrials') || 0;
+        }
+    }
+
     // Deneme hakkı kontrolü
     function checkTrialAvailability() {
-        const soilTrials = parseInt(localStorage.getItem('soilTrials'));
-        const imageTrials = parseInt(localStorage.getItem('imageTrials'));
-
-        // Toprak analizi butonu
         const soilButton = document.getElementById('soilButton');
-        if (soilButton) {
-            soilButton.disabled = soilTrials <= 0;
-        }
-
-        // Görüntü analizi butonu
         const imageButton = document.getElementById('imageButton');
+
+        // Toprak analizi butonunu kontrol et
+        if (soilButton) {
+            if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                soilButton.disabled = true;
+                soilButton.textContent = 'Deneme Hakkınız Bitti';
+            } else {
+                soilButton.disabled = false;
+                soilButton.textContent = 'Analiz Başlat';
+            }
+        }
+
+        // Görüntü analizi butonunu kontrol et
         if (imageButton) {
-            imageButton.disabled = imageTrials <= 0;
+            if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                imageButton.disabled = true;
+                imageButton.textContent = 'Deneme Hakkınız Bitti';
+            } else {
+                imageButton.disabled = false;
+                imageButton.textContent = 'Analiz Başlat';
+            }
         }
     }
 
-    // Deneme hakkı görüntüleme
-    function updateTrialDisplay() {
-        const soilTrials = localStorage.getItem('soilTrials');
-        const imageTrials = localStorage.getItem('imageTrials');
-
-        document.getElementById('soilTrialsLeft').textContent = `Kalan deneme: ${soilTrials}`;
-        document.getElementById('imageTrialsLeft').textContent = `Kalan deneme: ${imageTrials}`;
-    }
-
-    // Deneme haklarını sıfırlama
+    // Deneme haklarını sıfırlama fonksiyonu
     function resetTrials() {
-        localStorage.setItem('soilTrials', 2);
-        localStorage.setItem('imageTrials', 2);
+        localStorage.setItem('soilTrials', 100);
+        localStorage.setItem('imageTrials', 100);
         updateTrialDisplay();
         checkTrialAvailability();
         alert('Deneme haklarınız sıfırlandı!');
-    }
-
-    // Sonuçları gösterme fonksiyonu - Toprak Analizi
-    function showSoilResults(formData) {
-        // Form verilerini al
-        const azot = formData.get('azot');
-        const fosfor = formData.get('fosfor');
-        const potasyum = formData.get('potasyum');
-        const ph = formData.get('ph');
-        const il = formData.get('il');
-        const ay = formData.get('ay');
-
-        // Ay adını bul
-        const months = [
-            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
-        ];
-        const ayAdi = months[parseInt(ay) - 1];
-
-        // Bitki önerisi - örnek veri
-        const bitkiOnerisi = getBitkiOnerisi(azot, fosfor, potasyum, ph, il, ay);
-
-        // Sonuç nesnesini oluştur
-        const result = {
-            azot,
-            fosfor,
-            potasyum,
-            ph,
-            il,
-            ay: ayAdi,
-            bitkiOnerisi
-        };
-
-        // Local storage'a kaydet
-        localStorage.setItem('soilResult', JSON.stringify(result));
-
-        // Sonucu göster
-        displaySoilResults(result);
-    }
-
-    // Sonuçları görüntüleme fonksiyonu - Toprak Analizi
-    function displaySoilResults(result) {
-        const resultsContainer = document.getElementById('results-container');
-
-        // HTML oluştur
-        const html = `
-            <div class="result-card">
-                <div class="result-header">
-                    <h3>Toprak Analiz Sonuçları</h3>
-                </div>
-                <div class="result-body">
-                    <div class="result-alert">
-                        <h4>Toprak Değerleri</h4>
-                        <p><strong>Azot:</strong> ${result.azot} ppm</p>
-                        <p><strong>Fosfor:</strong> ${result.fosfor} ppm</p>
-                        <p><strong>Potasyum:</strong> ${result.potasyum} ppm</p>
-                        <p><strong>pH:</strong> ${result.ph}</p>
-                        <p><strong>İl:</strong> ${result.il}</p>
-                        <p><strong>Ay:</strong> ${result.ay}</p>
-                    </div>
-
-                    <h4><span class="badge info-badge">Önerilen Bitki</span></h4>
-                    <p>${result.bitkiOnerisi.adi}</p>
-
-                    <h4>Bitki Özellikleri</h4>
-                    <p>${result.bitkiOnerisi.aciklama}</p>
-
-                    <h4>Ekme ve Bakım Önerileri</h4>
-                    <p>${result.bitkiOnerisi.onerileri}</p>
-                </div>
-            </div>
-        `;
-
-        // Mevcut sonuçları silme
-        const existingResults = resultsContainer.querySelectorAll('.result-card');
-        existingResults.forEach(result => {
-            if (result.querySelector('.result-header').textContent.includes('Toprak Analiz Sonuçları')) {
-                result.remove();
-            }
-        });
-
-        // Sonuçları ekle
-        resultsContainer.insertAdjacentHTML('afterbegin', html);
-    }
-
-    // Görüntü analiz sonuçlarını gösterme
-    function showImageResults(formData, imageBase64) {
-        // Hastalık tespiti - örnek veri
-        const hastalikTespiti = getHastalikTespiti();
-
-        // Sonuç nesnesini oluştur
-        const result = {
-            imageBase64,
-            hastalikTespiti
-        };
-
-        // Local storage'a kaydet
-        localStorage.setItem('imageResult', JSON.stringify(result));
-
-        // Sonucu göster
-        displayImageResults(result);
-    }
-
-    // Görüntü sonuçlarını görüntüleme
-    function displayImageResults(result) {
-        const resultsContainer = document.getElementById('results-container');
-
-        // HTML oluştur
-        const html = `
-            <div class="result-card">
-                <div class="result-header green">
-                    <h3>Görüntü Analiz Sonuçları</h3>
-                </div>
-                <div class="result-body">
-                    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                        <img src="${result.imageBase64}" alt="Analiz edilmiş bitki" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
-                    </div>
-
-                    <div class="result-alert green">
-                        <h4><span class="badge green-badge">Tespit Edilen Hastalık</span></h4>
-                        <p><strong>${result.hastalikTespiti.hastalik}</strong></p>
-                        <p>Güven Oranı: %${result.hastalikTespiti.guvenOrani}</p>
-                    </div>
-
-                    <h4>Hastalık Bilgileri</h4>
-                    <p>${result.hastalikTespiti.bilgi}</p>
-
-                    <h4>Tedavi Önerileri</h4>
-                    <p>${result.hastalikTespiti.tedavi}</p>
-
-                    <h4>Önleme Yöntemleri</h4>
-                    <p>${result.hastalikTespiti.onleme}</p>
-                </div>
-            </div>
-        `;
-
-        // Mevcut sonuçları silme
-        const existingResults = resultsContainer.querySelectorAll('.result-card');
-        existingResults.forEach(result => {
-            if (result.querySelector('.result-header').textContent.includes('Görüntü Analiz Sonuçları')) {
-                result.remove();
-            }
-        });
-
-        // Sonuçları ekle
-        resultsContainer.insertAdjacentHTML('afterbegin', html);
-    }
-
-    // Örnek bitki önerisi getirme (normalde API'den gelecek)
-    function getBitkiOnerisi(azot, fosfor, potasyum, ph, il, ay) {
-        // Örnek veri - gerçek uygulamada API'den gelecek
-        const bitkiler = [
-            {
-                adi: "Domates",
-                aciklama: "Domates, ılıman iklim koşullarında yetişen, besin değeri yüksek bir sebzedir. Azot, fosfor ve potasyum değerleri dengeli topraklarda iyi gelişir.",
-                onerileri: "Tohumları önce fideliklerde çimlendirin, sonra açık araziye dikin. Düzenli sulama ve güneş ışığı gerektirir. Hastalıklara karşı düzenli kontrol önemlidir."
-            },
-            {
-                adi: "Buğday",
-                aciklama: "Buğday, tahıl grubu bir bitki olup, Türkiye'nin her bölgesinde yetişebilmektedir. Potasyum bakımından zengin toprakları sever.",
-                onerileri: "Ekim zamanına dikkat edin. Sulama ve gübreleme programını düzenli uygulayın. Yabancı ot kontrolü önemlidir."
-            },
-            {
-                adi: "Çilek",
-                aciklama: "Çilek, asitli toprakları seven, bol güneş alan yerlerde iyi gelişen meyveli bir bitkidir. Fosfor değeri yüksek topraklarda verimli olur.",
-                onerileri: "Nemli ve iyi drene edilmiş toprakları tercih edin. Düzenli sulama yapın. Mantari hastalıklara karşı tedbirli olun."
-            }
-        ];
-
-        // Örnek bir seçim algoritması
-        let index = (parseInt(azot) + parseInt(fosfor) + parseInt(potasyum)) % bitkiler.length;
-        return bitkiler[index];
-    }
-
-    // Örnek hastalık tespiti getirme (normalde API'den gelecek)
-    function getHastalikTespiti() {
-        // Örnek veri - gerçek uygulamada API'den gelecek
-        const hastaliklar = [
-            {
-                hastalik: "Yaprak Küfü (Powdery Mildew)",
-                guvenOrani: 87,
-                bilgi: "Yaprak küfü, bitkilerin yapraklarında beyaz, unsu bir görünüm oluşturan yaygın bir fungal hastalıktır. Yüksek nem ve ılıman sıcaklıklarda gelişir.",
-                tedavi: "Etkilenen yaprakları hemen uzaklaştırın. Kükürt bazlı fungisitler veya doğal tedaviler (karbonat çözeltisi) kullanılabilir. Bitkinin hava sirkülasyonunu artırın.",
-                onleme: "Bitkiler arasında yeterli boşluk bırakın. Sabah sulama yaparak yaprakların gün içinde kurumasını sağlayın. Dayanıklı bitki türleri seçin."
-            },
-            {
-                hastalik: "Bakteriyel Leke (Bacterial Spot)",
-                guvenOrani: 92,
-                bilgi: "Bakteriyel leke, yapraklarda küçük, sulu, koyu lekeler oluşturan ciddi bir bakteriyel hastalıktır. Yüksek nem ve yağışlı havalarda hızla yayılır.",
-                tedavi: "Bakır bazlı fungisitler kullanılabilir, ancak hastalık ilerlediyse etkilenen bitkileri uzaklaştırmak gerekebilir. İyi havalandırma sağlayın.",
-                onleme: "Dayanıklı türler seçin. Dönüşümlü ekim yapın. Temiz alet kullanın. Aşırı sulamadan kaçının."
-            },
-            {
-                hastalik: "Erken Yanıklık (Early Blight)",
-                guvenOrani: 78,
-                bilgi: "Erken yanıklık, önce alt yapraklarda görülen, koyu kahverengi konsantrik halkalar oluşturan bir fungal hastalıktır. Sıcak ve nemli havalarda yaygındır.",
-                tedavi: "Etkilenen yaprakları uzaklaştırın. Fungisit uygulaması yapın. Bitkiyi güçlendirmek için dengeli gübreleme yapın.",
-                onleme: "Bitki rotasyonu uygulayın. Damla sulama sistemi kullanın. Hasattan sonra bitki artıklarını temizleyin."
-            }
-        ];
-
-        // Rastgele bir hastalık seçimi
-        const randomIndex = Math.floor(Math.random() * hastaliklar.length);
-        return hastaliklar[randomIndex];
     }
 </script>
