@@ -15,6 +15,9 @@ namespace BitkiHastalikTahmini
         }
 
         public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+        
+        // Uygulama ayarları için koleksiyon
+        public IMongoCollection<AppSetting> AppSettings => _database.GetCollection<AppSetting>("AppSettings");
     }
 
     public class MongoDbSettings

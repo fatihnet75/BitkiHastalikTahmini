@@ -1,16 +1,18 @@
-﻿using BitkiHastalikTahmini.Models;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using BitkiHastalikTahmini.Models;
+using MongoDB.Driver;
 
 namespace BitkiHastalikTahmini.Controllers
 {
     public class AdminController : Controller
     {
         private readonly MongoDbContext _mongoContext;
+        private const string BACKGROUND_SETTING_KEY = "BackgroundImage";
 
         public AdminController(MongoDbContext mongoContext)
         {
@@ -30,110 +32,63 @@ namespace BitkiHastalikTahmini.Controllers
                 // İstatistikler
                 ViewBag.TotalUsers = users.Count;
                 ViewBag.ActiveUsers = users.Count; // Tüm kullanıcıları aktif kabul et
+                ViewBag.TotalAnalysis = 25; // Örnek değer
+                ViewBag.TodayAnalysis = 3;  // Örnek değer
 
-                // Analiz istatistikleri
-                ViewBag.TotalAnalysis = 0; // Analiz koleksiyonunuz varsa burayı düzenleyin
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda boş liste ile devam et
+                ViewBag.Users = new List<User>();
+                ViewBag.TotalUsers = 0;
+                ViewBag.ActiveUsers = 0;
+                ViewBag.TotalAnalysis = 0;
                 ViewBag.TodayAnalysis = 0;
-
-                return View();
-            }
-            catch (Exception ex)
-            {
-                // Hatayı logla
-                ViewBag.ErrorMessage = $"Veri yükleme sırasında bir hata oluştu: {ex.Message}";
+                ViewBag.ErrorMessage = $"Kullanıcılar yüklenirken hata: {ex.Message}";
                 return View();
             }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUser([FromBody] UserEditModel model)
+        public async Task<IActionResult> SetBackgroundImage([FromBody] string imagePath)
         {
+            if (string.IsNullOrEmpty(imagePath))
+            {
+                return Json(new { success = false, message = "Geçersiz resim yolu." });
+            }
+                
             try
             {
-                if (string.IsNullOrEmpty(model.Id))
-                {
-                    return Json(new { success = false, message = "Geçersiz kullanıcı ID." });
-                }
-
-                var filter = Builders<User>.Filter.Eq(u => u.Id, model.Id);
-
-                // Güncelleme tanımını oluştur
-                var update = Builders<User>.Update
-                    .Set(u => u.FirstName, model.FirstName)
-                    .Set(u => u.LastName, model.LastName)
-                    .Set(u => u.Email, model.Email);
-
-                // Şifre yalnızca girildiği takdirde güncellenir
-                if (!string.IsNullOrEmpty(model.Password))
-                {
-                    string hashedPassword = HashPassword(model.Password);
-                    update = update.Set(u => u.Password, hashedPassword);
-                }
-
-                // Güncellemeyi çalıştır
-                var result = await _mongoContext.Users.UpdateOneAsync(filter, update);
-
-                if (result.ModifiedCount > 0)
-                {
-                    return Json(new { success = true, message = "Kullanıcı başarıyla güncellendi." });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Kullanıcı güncellenemedi." });
-                }
+                // Arka plan ayarını veritabanında kaydet
+                var filter = Builders<AppSetting>.Filter.Eq(s => s.Key, BACKGROUND_SETTING_KEY);
+                var update = Builders<AppSetting>.Update.Set(s => s.Value, imagePath);
+                
+                var result = await _mongoContext.AppSettings.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
+                
+                // Session'a da kaydet
+                HttpContext.Session.SetString(BACKGROUND_SETTING_KEY, imagePath);
+                
+                return Json(new { success = true, imagePath });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Hata: {ex.Message}" });
+                return Json(new { success = false, message = ex.Message });
             }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteUser([FromBody] UserDeleteModel model)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(model.Id))
-                {
-                    return Json(new { success = false, message = "Geçersiz kullanıcı ID." });
-                }
-
-                var filter = Builders<User>.Filter.Eq(u => u.Id, model.Id);
-                var result = await _mongoContext.Users.DeleteOneAsync(filter);
-
-                if (result.DeletedCount > 0)
-                {
-                    return Json(new { success = true, message = "Kullanıcı başarıyla silindi." });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Kullanıcı bulunamadı veya silinemedi." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Hata: {ex.Message}" });
-            }
-        }
-
-        // Şifre hashleme yardımcı metodu
-        private string HashPassword(string password)
-        {
-            using var sha256 = System.Security.Cryptography.SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SaveSettings(IFormCollection form)
+        public async Task<IActionResult> SaveSettings(IFormCollection form)
         {
             try
             {
                 // Form verilerini al
                 int maxTrials = int.Parse(form["maxTrials"]);
                 bool maintenanceMode = form["maintenanceMode"] == "on" || form["maintenanceMode"] == "true";
+
+                // Ayarları veritabanına kaydet
+                await SaveSettingToDatabaseAsync("MaxTrials", maxTrials.ToString());
+                await SaveSettingToDatabaseAsync("MaintenanceMode", maintenanceMode.ToString());
 
                 // Resim dosyasını işle
                 if (Request.Form.Files.Count > 0 && Request.Form.Files[0] != null)
@@ -168,16 +123,17 @@ namespace BitkiHastalikTahmini.Controllers
                                 backgroundFile.CopyTo(fileStream);
                             }
 
-                            // Arka plan resim yolunu ayarlara kaydet
-                            // Veritabanı veya appsettings.json kullanabilirsiniz
-                            // Örnek: Burada session kullanıyorum
-                            HttpContext.Session.SetString("BackgroundImage", "/images/background/" + fileName);
+                            // Arka plan resim yolunu hem session'a hem de veritabanına kaydet
+                            string backgroundImage = "/images/background/" + fileName;
+                            HttpContext.Session.SetString(BACKGROUND_SETTING_KEY, backgroundImage);
+                            await SaveSettingToDatabaseAsync(BACKGROUND_SETTING_KEY, backgroundImage);
+                            
+                            TempData["SuccessMessage"] = "Arka plan resmi başarıyla güncellendi.";
                         }
                     }
                 }
 
-                // Diğer ayarları kaydet
-                // Veritabanı veya appsettings.json kullanabilirsiniz
+                // Diğer ayarları session'a kaydet
                 HttpContext.Session.SetInt32("MaxTrials", maxTrials);
                 HttpContext.Session.SetString("MaintenanceMode", maintenanceMode.ToString());
 
@@ -187,7 +143,54 @@ namespace BitkiHastalikTahmini.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
-        }  
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> UploadBackgroundImage(IFormFile file)
+        {
+            try
+            {
+                if (file != null && file.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "backgrounds");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    var imagePath = "/backgrounds/" + fileName;
+                    
+                    // Yüklenen resmi veritabanına ve session'a kaydet
+                    await SaveSettingToDatabaseAsync(BACKGROUND_SETTING_KEY, imagePath);
+                    HttpContext.Session.SetString(BACKGROUND_SETTING_KEY, imagePath);
+
+                    return Json(new { success = true, imagePath });
+                }
+                return Json(new { success = false, message = "Dosya yüklenemedi." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        
+        // Ayarları veritabanına kaydetme yardımcı metodu
+        private async Task SaveSettingToDatabaseAsync(string key, string value)
+        {
+            var filter = Builders<AppSetting>.Filter.Eq(s => s.Key, key);
+            var update = Builders<AppSetting>.Update.Set(s => s.Value, value);
+            
+            await _mongoContext.AppSettings.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
+        }
+
         [HttpGet]
         public IActionResult GetBackgroundImages()
         {
@@ -207,6 +210,19 @@ namespace BitkiHastalikTahmini.Controllers
                     images.AddRange(files);
                 }
 
+                // Aynı şekilde images/background klasöründeki resimleri de ekle
+                var bgFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "background");
+                if (Directory.Exists(bgFolder))
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var files = Directory.GetFiles(bgFolder)
+                        .Where(f => allowedExtensions.Contains(Path.GetExtension(f).ToLower()))
+                        .Select(f => "/images/background/" + Path.GetFileName(f))
+                        .ToList();
+
+                    images.AddRange(files);
+                }
+
                 // Varsayılan arka planı da listeye ekle
                 images.Add("/images/default-background.jpg");
 
@@ -217,66 +233,5 @@ namespace BitkiHastalikTahmini.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
-        [HttpPost]
-        public IActionResult SetBackgroundImage([FromBody] string imagePath)
-        {
-            if (!string.IsNullOrEmpty(imagePath))
-            {
-                HttpContext.Session.SetString("BackgroundImage", imagePath);
-                return Json(new { success = true, imagePath });
-            }
-            return Json(new { success = false, message = "Geçersiz resim yolu." });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UploadBackgroundImage(IFormFile file)
-        {
-            try
-            {
-                if (file != null && file.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "backgrounds");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    return Json(new { success = true, imagePath = "/backgrounds/" + fileName });
-                }
-                return Json(new { success = false, message = "Dosya yüklenemedi." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-    
-
-        
-    }
-
-    // Kullanıcı düzenleme isteği için model
-    public class UserEditModel
-    {
-        public string Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
-    // Kullanıcı silme isteği için model
-    public class UserDeleteModel
-    {
-        public string Id { get; set; }
     }
 }

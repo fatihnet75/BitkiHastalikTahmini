@@ -33,6 +33,13 @@ namespace BitkiHastalikTahmini.Controllers
         // Kullanıcı listesini görüntüle
         public IActionResult Index()
         {
+            // Session kontrolü
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Abone_Login");
+            }
+            
             var users = _context.Users.Find(_ => true).ToList();
 
             // Şehir ve ay listelerini ViewBag'e ekle

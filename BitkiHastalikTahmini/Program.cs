@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using BitkiHastalikTahmini.Models;
+using BitkiHastalikTahmini.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.IdleTimeout = TimeSpan.FromHours(6);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
@@ -50,6 +51,15 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession(); // Session middleware burada aktif edilmeli
+
+// Arka plan resmi middleware'i ekle
+app.UseMiddleware<BackgroundMiddleware>();
+
+// Deneme hakkı middleware'i ekle
+app.UseMiddleware<MaxTrialsMiddleware>();
+
+// AuthMiddleware'i ekle
+app.UseMiddleware<AuthMiddleware>();
 
 // Default route
 app.MapControllerRoute(

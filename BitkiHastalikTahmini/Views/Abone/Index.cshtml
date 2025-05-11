@@ -1,7 +1,10 @@
 ﻿@model IEnumerable<BitkiHastalikTahmini.Models.User>
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "abone";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var maxTrials = HttpContextAccessor.HttpContext.Session.GetInt32("MaxTrials") ?? 100;
+    var storagePrefix = "abone_"; // Local storage için benzersiz önek
 }
 
 <style>
@@ -436,7 +439,7 @@
         <h3>Toprak Hastalık Analizi</h3>
         <p>Azot, fosfor, potasyum ve pH değerlerini girerek toprağınıza uygun bitki önerisi alın.</p>
         <div class="trial-badge">
-            <span id="soilTrialsLeft">100</span> analiz hakkınız kaldı
+            <span id="soilTrialsLeft">@maxTrials</span> analiz hakkınız kaldı
         </div>
         <button class="analysis-button" id="soilButton" onclick="toggleModal('soil')">Analiz Başlat</button>
     </div>
@@ -446,7 +449,7 @@
         <h3>Görüntü ile Hastalık Tespiti</h3>
         <p>Bitki fotoğrafı yükleyerek hastalık analizi yapın ve tedavi önerileri alın.</p>
         <div class="trial-badge">
-            <span id="imageTrialsLeft">100</span> analiz hakkınız kaldı
+            <span id="imageTrialsLeft">@maxTrials</span> analiz hakkınız kaldı
         </div>
         <button class="analysis-button" id="imageButton" onclick="toggleModal('image')">Analiz Başlat</button>
     </div>
@@ -465,7 +468,7 @@
             <button class="close-button" onclick="toggleModal('soil')">&times;</button>
         </div>
         <div class="modal-body">
-            <form asp-action="AnalyzeSoil" asp-controller="User" method="post" id="soilForm">
+            <form asp-action="AnalyzeSoil" asp-controller="Abone" method="post" id="soilForm">
                 <div class="form-group">
                     <label for="azot">Azot Değeri (ppm):</label>
                     <input type="number" step="0.1" min="0" name="azot" id="azot" class="form-control" placeholder="Azot değerini girin" required>
@@ -530,7 +533,7 @@
             <button class="close-button" onclick="toggleModal('image')">&times;</button>
         </div>
         <div class="modal-body">
-            <form asp-action="AnalyzeImage" asp-controller="User" method="post" id="imageForm" enctype="multipart/form-data">
+            <form asp-action="AnalyzeImage" asp-controller="Abone" method="post" id="imageForm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="plantImage">Bitki Görüntüsü:</label>
                     <div class="image-upload" id="image-upload-area" onclick="triggerFileInput()">
@@ -623,18 +626,20 @@
     // Kullanıcının deneme haklarını local storage'da saklayacağız
     document.addEventListener('DOMContentLoaded', function() {
         // Local storage'dan deneme haklarını kontrol et
-        let soilTrials = localStorage.getItem('soilTrials');
-        let imageTrials = localStorage.getItem('imageTrials');
+        let soilTrials = localStorage.getItem('@storagePrefix'+'soilTrials');
+        let imageTrials = localStorage.getItem('@storagePrefix'+'imageTrials');
 
-        // Eğer daha önce kullanılmamışsa, 2 hak tanımla
+        // Eğer daha önce kullanılmamışsa, session'dan gelen değeri kullan
+        let maxTrials = @maxTrials;
+        
         if (soilTrials === null) {
-            soilTrials = 100;
-            localStorage.setItem('soilTrials', soilTrials);
+            localStorage.setItem('@storagePrefix'+'soilTrials', maxTrials);
+            soilTrials = maxTrials;
         }
-
+        
         if (imageTrials === null) {
-            imageTrials = 100;
-            localStorage.setItem('imageTrials', imageTrials);
+            localStorage.setItem('@storagePrefix'+'imageTrials', maxTrials);
+            imageTrials = maxTrials;
         }
 
         // Kalan hakları göster
@@ -648,7 +653,7 @@
         if (soilForm) {
             soilForm.addEventListener('submit', function(e) {
                 // Eğer deneme hakkı kalmadıysa formu gönderme
-                if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+                if (parseInt(localStorage.getItem('@storagePrefix'+'soilTrials')) <= 0) {
                     e.preventDefault();
                     alert('Deneme hakkınız kalmadı!');
                     return false;
@@ -659,11 +664,11 @@
                 document.getElementById('soil-submit-btn').disabled = true;
 
                 // Deneme hakkını azalt
-                let remainingTrials = parseInt(localStorage.getItem('soilTrials')) - 1;
-                localStorage.setItem('soilTrials', remainingTrials);
+                let remainingTrials = parseInt(localStorage.getItem('@storagePrefix'+'soilTrials')) - 1;
+                localStorage.setItem('@storagePrefix'+'soilTrials', remainingTrials);
 
                 // Deneme sayısını form ile gönder
-                document.getElementById('soilTrialCount').value = 100 - remainingTrials;
+                document.getElementById('soilTrialCount').value = @maxTrials - remainingTrials;
 
                 // Form normal şekilde gönderilecek
                 return true;
@@ -675,7 +680,7 @@
         if (imageForm) {
             imageForm.addEventListener('submit', function(e) {
                 // Eğer deneme hakkı kalmadıysa formu gönderme
-                if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+                if (parseInt(localStorage.getItem('@storagePrefix'+'imageTrials')) <= 0) {
                     e.preventDefault();
                     alert('Deneme hakkınız kalmadı!');
                     return false;
@@ -694,11 +699,11 @@
                 document.getElementById('image-submit-btn').disabled = true;
 
                 // Deneme hakkını azalt
-                let remainingTrials = parseInt(localStorage.getItem('imageTrials')) - 1;
-                localStorage.setItem('imageTrials', remainingTrials);
+                let remainingTrials = parseInt(localStorage.getItem('@storagePrefix'+'imageTrials')) - 1;
+                localStorage.setItem('@storagePrefix'+'imageTrials', remainingTrials);
 
                 // Deneme sayısını form ile gönder
-                document.getElementById('imageTrialCount').value = 100 - remainingTrials;
+                document.getElementById('imageTrialCount').value = @maxTrials - remainingTrials;
 
                 // Form normal şekilde gönderilecek
                 return true;
@@ -826,10 +831,10 @@
         const imageTrialsElement = document.getElementById('imageTrialsLeft');
 
         if (soilTrialsElement) {
-            soilTrialsElement.textContent = localStorage.getItem('soilTrials') || 0;
+            soilTrialsElement.textContent = localStorage.getItem('@storagePrefix'+'soilTrials') || 0;
         }
         if (imageTrialsElement) {
-            imageTrialsElement.textContent = localStorage.getItem('imageTrials') || 0;
+            imageTrialsElement.textContent = localStorage.getItem('@storagePrefix'+'imageTrials') || 0;
         }
     }
 
@@ -840,7 +845,7 @@
 
         // Toprak analizi butonunu kontrol et
         if (soilButton) {
-            if (parseInt(localStorage.getItem('soilTrials')) <= 0) {
+            if (parseInt(localStorage.getItem('@storagePrefix'+'soilTrials')) <= 0) {
                 soilButton.disabled = true;
                 soilButton.textContent = 'Deneme Hakkınız Bitti';
             } else {
@@ -851,7 +856,7 @@
 
         // Görüntü analizi butonunu kontrol et
         if (imageButton) {
-            if (parseInt(localStorage.getItem('imageTrials')) <= 0) {
+            if (parseInt(localStorage.getItem('@storagePrefix'+'imageTrials')) <= 0) {
                 imageButton.disabled = true;
                 imageButton.textContent = 'Deneme Hakkınız Bitti';
             } else {
@@ -863,8 +868,9 @@
 
     // Deneme haklarını sıfırlama fonksiyonu
     function resetTrials() {
-        localStorage.setItem('soilTrials', 100);
-        localStorage.setItem('imageTrials', 100);
+        let maxTrials = @maxTrials;
+        localStorage.setItem('@storagePrefix'+'soilTrials', maxTrials);
+        localStorage.setItem('@storagePrefix'+'imageTrials', maxTrials);
         updateTrialDisplay();
         checkTrialAvailability();
         alert('Deneme haklarınız sıfırlandı!');

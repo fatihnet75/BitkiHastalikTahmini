@@ -424,10 +424,10 @@
                         foreach (var user in ViewBag.Users)
                         {
                             <tr data-user-id="@user.Id">
-                                <td>@user.UserId</td>
+                                <td>@(user.UserId == 0 ? user.Id.Substring(0, 5) : user.UserId.ToString())</td>
                                 <td>@user.FirstName @user.LastName</td>
                                 <td>@user.Email</td>
-                                <td>Aktif</td>
+                                <td>@(user.IsEmailVerified ? "Aktif" : "Doğrulanmamış")</td>
                                 <td>
                                     <button class="btn btn-primary edit-btn" data-user-id="@user.Id">Düzenle</button>
                                     <button class="btn btn-danger delete-btn" data-user-id="@user.Id">Sil</button>
@@ -448,7 +448,7 @@
 
     <div class="admin-section">
         <h2>Sistem Ayarları</h2>
-        <form id="settingsForm">
+        <form id="settingsForm" enctype="multipart/form-data" method="post" action="/Admin/SaveSettings">
             <div class="form-group">
                 <label>Maksimum Deneme Hakkı:</label>
                 <input type="number" name="maxTrials" id="maxTrials" value="3">
@@ -461,7 +461,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Arka Plan Resmi:</label>
+                <label>Arka Plan Resmi Yükle:</label>
+                <input type="file" name="backgroundFile" id="backgroundFile" accept="image/*" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Mevcut Arka Plan Resimler:</label>
                 <div id="backgroundGallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
                     <!-- Resimler buraya yüklenecek -->
                 </div>
@@ -469,10 +473,6 @@
                     <button type="button" id="refreshBackgrounds" class="btn btn-secondary">
                         <i class="fas fa-sync-alt"></i> Resimleri Yenile
                     </button>
-                    <button type="button" id="uploadNewBackground" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Yeni Resim Yükle
-                    </button>
-                    <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
                 </div>
             </div>
             <div class="button-group">
@@ -758,17 +758,26 @@
                         checkIcon.style.display = 'block';
                         imgContainer.style.borderColor = 'var(--primary-color)';
 
-                        const response = await fetch('/Admin/SetBackgroundImage', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(imagePath)
-                        });
+                        try {
+                            const response = await fetch('/Admin/SetBackgroundImage', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(imagePath)
+                            });
 
-                        const result = await response.json();
-                        if (!result.success) {
-                            alert('Hata: ' + result.message);
+                            const result = await response.json();
+                            if (result.success) {
+                                // Arka planı hemen güncelle
+                                document.body.style.backgroundImage = `url('${imagePath}')`;
+                                alert('Arka plan resmi başarıyla güncellendi! Tüm sayfalarda görünecektir.');
+                            } else {
+                                alert('Hata: ' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('Hata:', error);
+                            alert('Bir hata oluştu: ' + error);
                         }
                     });
 
@@ -801,37 +810,37 @@
         loadBackgroundImages();
 
         document.getElementById('refreshBackgrounds').addEventListener('click', loadBackgroundImages);
-
-        document.getElementById('uploadNewBackground').addEventListener('click', () => {
-            document.getElementById('backgroundUpload').click();
-        });
-
-        document.getElementById('backgroundUpload').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                try {
-                    const response = await fetch('/Admin/UploadBackgroundImage', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        alert('Resim başarıyla yüklendi!');
-                        loadBackgroundImages();
-                    } else {
-                        alert('Hata: ' + result.message);
-                    }
-                } catch (error) {
-                    console.error('Hata:', error);
-                    alert('Bir hata oluştu: ' + error.message);
-                }
-
-                e.target.value = '';
+        
+        // Form submit olayını yakalayalım
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            if (document.getElementById('backgroundFile').files.length === 0) {
+                // Dosya yoksa normal post işlemi devam etsin
+                return true;
             }
+            
+            // Dosya varsa AJAX ile form gönderilsin
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/Admin/SaveSettings', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Ayarlar başarıyla kaydedildi!');
+                    // Sayfayı yenile
+                    window.location.reload();
+                } else {
+                    alert('Hata: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert('Bir hata oluştu: ' + error);
+            });
         });
     });
 </script>
