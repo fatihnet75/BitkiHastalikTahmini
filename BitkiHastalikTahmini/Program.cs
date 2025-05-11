@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using BitkiHastalikTahmini.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +22,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 
 // MVC yapılandırması
 builder.Services.AddControllersWithViews();
+
+// Register Email Service
+builder.Services.AddSingleton<EmailService>();
 
 var app = builder.Build();
 

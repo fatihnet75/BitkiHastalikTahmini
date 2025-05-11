@@ -43,15 +43,30 @@ namespace BitkiHastalikTahmini.Controllers
 
                 if (user == null)
                 {
-                    ViewData["LoginError"] = "E-posta veya şifre hatalı.";
+                    ViewData["LoginError"] = "E-posta veya şifre hatalı. (Kullanıcı bulunamadı)";
                     return View();
                 }
 
-                // Şifre kontrolü
+                // E-posta doğrulaması zorunlu
+                if (!user.IsEmailVerified)
+                {
+                    ViewData["LoginError"] = "Lütfen önce email adresinizi doğrulayın. Doğrulama kodunu içeren e-posta size gönderildi.";
+                    return View();
+                }
+
+                // Şifre kontrolü - Debug için hashleri yazdıracağız
+                Console.WriteLine("Login İşlemi Debug Bilgileri:");
+                Console.WriteLine($"Kullanıcı ID: {user.Id}");
+                Console.WriteLine($"Email: {email}");
+                Console.WriteLine($"Girilen Şifre: {password}");
                 var hashedPassword = HashPassword(password);
+                Console.WriteLine($"Giriş için hesaplanan hash: {hashedPassword}");
+                Console.WriteLine($"Veri tabanındaki hash: {user.Password}");
+                Console.WriteLine($"Hash uzunlukları - Girilen: {hashedPassword.Length}, DB: {user.Password.Length}");
+                
                 if (user.Password != hashedPassword)
                 {
-                    ViewData["LoginError"] = "E-posta veya şifre hatalı.";
+                    ViewData["LoginError"] = "E-posta veya şifre hatalı. (Şifre eşleşmedi)";
                     return View();
                 }
 

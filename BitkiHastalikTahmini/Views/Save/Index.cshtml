@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Kayıt Ol";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool isVerificationPending = TempData["VerificationPending"] != null && (bool)TempData["VerificationPending"];
+    string email = TempData["Email"]?.ToString();
 }
 
 <style>
@@ -144,6 +146,83 @@
         color: #155724;
         border: 1px solid #c3e6cb;
     }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    
+    .verification-container {
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .verification-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark-color, #333);
+    }
+    
+    .verification-message {
+        margin-bottom: 1.5rem;
+        color: #666;
+    }
+    
+    .verification-email {
+        font-weight: bold;
+        color: var(--primary-color, #4CAF50);
+    }
+    
+    .verification-form {
+        margin-bottom: 1.5rem;
+    }
+    
+    .verification-code-input {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto 1rem;
+        text-align: center;
+        font-size: 1.5rem;
+        letter-spacing: 0.2rem;
+        padding: 0.5rem;
+    }
+    
+    .btn-verify {
+        background-color: var(--primary-color, #4CAF50);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-verify:hover {
+        background-color: #3f9c35;
+    }
+    
+    .resend-link {
+        display: block;
+        margin-top: 1rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .resend-link button {
+        background: none;
+        border: none;
+        color: var(--primary-color, #4CAF50);
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 0;
+    }
+    
+    .resend-link button:hover {
+        color: #3f9c35;
+    }
 </style>
 
 <div class="register-page">
@@ -171,38 +250,66 @@
                     @TempData["SuccessMessage"]
                 </div>
             }
-            <form method="post" asp-controller="Save" asp-action="Index">
-                @Html.AntiForgeryToken()
-                <div class="name-row">
-                    <div class="form-group">
-                        <label for="FirstName">Ad</label>
-                        <input type="text" id="FirstName" name="FirstName" class="form-control" required />
-                        <span asp-validation-for="FirstName" class="validation-message"></span>
+            
+            @if (isVerificationPending)
+            {
+                <div class="verification-container">
+                    <div class="verification-title">E-posta Doğrulama</div>
+                    
+                    <div class="verification-message">
+                        <p><span class="verification-email">@email</span> adresine bir doğrulama kodu gönderdik.</p>
+                        <p>Lütfen e-postanızı kontrol edin ve aşağıya doğrulama kodunu girin.</p>
+                    </div>
+                    
+                    <form asp-action="VerifyEmail" asp-controller="Save" method="post" class="verification-form">
+                        @Html.AntiForgeryToken()
+                        <input type="text" name="verificationCode" class="form-control verification-code-input" placeholder="######" maxlength="6" required />
+                        <button type="submit" class="btn-verify">Doğrula</button>
+                    </form>
+                    
+                    <div class="resend-link">
+                        <form asp-action="ResendVerificationCode" asp-controller="Save" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit">Doğrulama kodunu tekrar gönder</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <form method="post" asp-controller="Save" asp-action="Index">
+                    @Html.AntiForgeryToken()
+                    <div class="name-row">
+                        <div class="form-group">
+                            <label for="FirstName">Ad</label>
+                            <input type="text" id="FirstName" name="FirstName" class="form-control" required />
+                            <span asp-validation-for="FirstName" class="validation-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="LastName">Soyad</label>
+                            <input type="text" id="LastName" name="LastName" class="form-control" required />
+                            <span asp-validation-for="LastName" class="validation-message"></span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="LastName">Soyad</label>
-                        <input type="text" id="LastName" name="LastName" class="form-control" required />
-                        <span asp-validation-for="LastName" class="validation-message"></span>
+                        <label for="Email">E-posta</label>
+                        <input type="email" id="Email" name="Email" class="form-control" required />
+                        <span asp-validation-for="Email" class="validation-message"></span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="Email">E-posta</label>
-                    <input type="email" id="Email" name="Email" class="form-control" required />
-                    <span asp-validation-for="Email" class="validation-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="Password">Şifre</label>
-                    <input type="password" id="Password" name="Password" class="form-control" minlength="6" required />
-                    <span asp-validation-for="Password" class="validation-message"></span>
-                    <div class="password-requirements">
-                        Şifreniz en az 6 karakter uzunluğunda olmalıdır.
+                    <div class="form-group">
+                        <label for="Password">Şifre</label>
+                        <input type="password" id="Password" name="Password" class="form-control" minlength="6" required />
+                        <span asp-validation-for="Password" class="validation-message"></span>
+                        <div class="password-requirements">
+                            Şifreniz en az 6 karakter uzunluğunda olmalıdır.
+                        </div>
                     </div>
+                    <button type="submit" class="btn-register">Kayıt Ol</button>
+                </form>
+                <div class="login-link">
+                    Zaten hesabınız var mı? <a href="/Abone_Login">Giriş Yap</a>
                 </div>
-                <button type="submit" class="btn-register">Kayıt Ol</button>
-            </form>
-            <div class="login-link">
-                Zaten hesabınız var mı? <a href="/Abone_Login">Giriş Yap</a>
-            </div>
+            }
         </div>
     </div>
 </div>
