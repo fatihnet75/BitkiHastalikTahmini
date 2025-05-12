@@ -61,3 +61,4 @@ namespace BitkiHastalikTahmini.Models
         }
     }
 }
+//Fatihmehmetg20@gmail.com soru ve öneri için
