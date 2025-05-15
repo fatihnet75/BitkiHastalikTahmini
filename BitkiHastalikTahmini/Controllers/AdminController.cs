@@ -3,9 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using BitkiHastalikTahmini.Models;
 using MongoDB.Driver;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BitkiHastalikTahmini.Controllers
 {
@@ -182,15 +185,6 @@ namespace BitkiHastalikTahmini.Controllers
             }
         }
         
-        // Ayarları veritabanına kaydetme yardımcı metodu
-        private async Task SaveSettingToDatabaseAsync(string key, string value)
-        {
-            var filter = Builders<AppSetting>.Filter.Eq(s => s.Key, key);
-            var update = Builders<AppSetting>.Update.Set(s => s.Value, value);
-            
-            await _mongoContext.AppSettings.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
-        }
-
         [HttpGet]
         public IActionResult GetBackgroundImages()
         {
@@ -233,5 +227,117 @@ namespace BitkiHastalikTahmini.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser([FromBody] EditUserViewModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.Id))
+                {
+                    return Json(new { success = false, message = "Kullanıcı ID'si geçersiz." });
+                }
+
+                // Kullanıcıyı bul
+                var filter = Builders<User>.Filter.Eq(u => u.Id, model.Id);
+                var user = await _mongoContext.Users.Find(filter).FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "Kullanıcı bulunamadı." });
+                }
+
+                // Kullanıcı bilgilerini güncelle
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Email = model.Email;
+
+                // Şifre değiştirilecekse güncelle
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    // SHA256 hashleme işlemi
+                    user.Password = HashPassword(model.Password);
+                }
+
+                // Kullanıcı bilgilerini güncelle
+                var result = await _mongoContext.Users.ReplaceOneAsync(filter, user);
+
+                if (result.ModifiedCount > 0 || result.MatchedCount > 0)
+                {
+                    return Json(new { success = true, message = "Kullanıcı başarıyla güncellendi." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Kullanıcı güncellenemedi." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserViewModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.Id))
+                {
+                    return Json(new { success = false, message = "Kullanıcı ID'si geçersiz." });
+                }
+
+                // Kullanıcıyı sil
+                var filter = Builders<User>.Filter.Eq(u => u.Id, model.Id);
+                var result = await _mongoContext.Users.DeleteOneAsync(filter);
+
+                if (result.DeletedCount > 0)
+                {
+                    return Json(new { success = true, message = "Kullanıcı başarıyla silindi." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Kullanıcı silinemedi veya bulunamadı." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        
+        // Şifre hashleme yardımcı metodu
+        private string HashPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+        }
+
+        // Ayarları veritabanına kaydetme yardımcı metodu
+        private async Task SaveSettingToDatabaseAsync(string key, string value)
+        {
+            var filter = Builders<AppSetting>.Filter.Eq(s => s.Key, key);
+            var update = Builders<AppSetting>.Update.Set(s => s.Value, value);
+            
+            await _mongoContext.AppSettings.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
+        }
+    }
+
+    // View Models for Admin actions
+    public class EditUserViewModel
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class DeleteUserViewModel
+    {
+        public string Id { get; set; }
     }
 }
